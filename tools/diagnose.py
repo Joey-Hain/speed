@@ -22,7 +22,7 @@ p = argparse.ArgumentParser()
 p.add_argument("--feed", required=True)
 p.add_argument("--polls", type=int, default=2)
 p.add_argument("--match", default="")
-p.add_argument("--limit", type=int, default=25)
+p.add_argument("--limit", type=int, default=60)
 p.add_argument("--rt", default="", help="override the realtime path, e.g. /v2/gtfs/vehiclepos/nswtrains")
 a = p.parse_args()
 feed = BY_KEY[a.feed]
@@ -32,6 +32,8 @@ print("realtime path:", a.rt or feed.rt)
 rtype = st.routes["route_type"].to_dict() if "route_type" in st.routes else {}
 shown = 0
 speeds = defaultdict(list)
+stopkinds = defaultdict(Counter)   # route -> kind of stop_id
+nonloc = defaultdict(list)         # route -> examples of non-Loc stop_ids with position
 for i in range(a.polls):
     m = gtfs_realtime_pb2.FeedMessage()
     m.ParseFromString(api.get(a.rt or feed.rt))
@@ -48,11 +50,25 @@ for i in range(a.polls):
         elif a.match and not re.search(a.match, txt):
             continue
         key = f"{rid} rail={is_rail} line={st.route_line.get(rid, '?')}"
+        sid = v.stop_id
+        kind = "Loc" if sid.endswith(" Loc") else ("empty" if not sid else "other")
+        stopkinds[key][kind] += 1
+        if kind != "Loc" and len(nonloc[key]) < 40:
+            nonloc[key].append(f"{v.vehicle.label or v.vehicle.id} stop_id={sid!r} status={v.current_status} "
+                               f"{v.position.latitude:.5f},{v.position.longitude:.5f} ts={v.timestamp}")
         speeds[key].append(round(v.position.speed * 3.6, 1) if v.position.HasField("speed") else None)
         if shown < a.limit:
             print(txt[:900]); shown += 1
     if i < a.polls - 1:
         time.sleep(20)
+print("\nstop_id kinds by route:")
+for k, c in sorted(stopkinds.items()):
+    print(" ", k, dict(c))
+print("\nnon-Loc positions by route:")
+for k, v in sorted(nonloc.items()):
+    print(" ", k)
+    for x in v:
+        print("     ", x)
 print("\nspeed (km/h) by route:")
 for k, v in sorted(speeds.items()):
     print(" ", k, v[:12])
