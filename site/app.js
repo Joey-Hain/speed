@@ -82,28 +82,41 @@
     }
     return out;
   }
-  // Track-circuit segments of a branch, from the fixed list in config.js
-  function trackCircuitArea(branch, nSeg) {
-    const tc = new Set();
-    const none = { tc, whole: false, partial: false };
-    if (state.feed !== "sydneytrains") return none;
-    const rule = (CFG.trackCircuit || {})[state.line];
-    if (rule === "none") return none;
-    if (!rule) {
-      for (let i = 0; i < nSeg; i++) tc.add(i);
-      return { tc, whole: true, partial: false };
-    }
-    const st = (branch.stations || []).find((x) => x.name === rule);
-    if (!st) return none;
+  // Position source per segment of a branch, from the fixed list in config.js:
+  // Map seg -> "tc" | "beacon" (GPS segments are left out)
+  function positionSources(branch, nSeg) {
+    const out = new Map();
+    if (state.feed !== "sydneytrains") return out;
+    const rule = (CFG.positionSource || {})[state.line] || [["tc"]];
     // which end is Sydney: the one nearer Central
     const a = branch.lonlat[0], z = branch.lonlat[branch.lonlat.length - 1];
     const d2 = (p) => (p[0] - 151.2065) ** 2 + (p[1] + 33.8832) ** 2;
     const sydneyAtStart = d2(a) <= d2(z);
-    const cut = Math.floor(st.s / state.geom.segment_m);
-    for (let i = 0; i < nSeg; i++) if (sydneyAtStart ? i < cut : i >= cut) tc.add(i);
-    const share = tc.size / nSeg;
-    return { tc, whole: share >= 0.99, partial: share > 0 && share < 0.99 };
+    const segM = state.geom.segment_m;
+    const dist = (sgm) => (sydneyAtStart ? sgm * segM : branch.length_m - (sgm + 1) * segM);
+    // boundaries in metres from the Sydney end
+    const bounds = rule.map(([kind, upTo]) => {
+      if (!upTo) return [kind, Infinity];
+      const st = (branch.stations || []).find((x) => x.name === upTo);
+      if (!st) return [kind, null];
+      return [kind, sydneyAtStart ? st.s : branch.length_m - st.s];
+    });
+    for (let i = 0; i < nSeg; i++) {
+      const m = Math.max(0, dist(i));
+      let kind = null;
+      for (const [k, upTo] of bounds) {
+        if (upTo === null) continue;  // station not on this branch: skip that boundary
+        if (m < upTo) { kind = k; break; }
+      }
+      if (kind === "tc" || kind === "beacon") out.set(i, kind);
+    }
+    return out;
   }
+
+  const SOURCE_TEXT = {
+    tc: "Sydney Trains track circuits, estimated from movement between track sections",
+    beacon: "MetroNet radio beacons at stations, averaged station to station",
+  };
 
   // great-circle metres
   function hav(a, b) {
@@ -267,13 +280,21 @@
 
     // a flat step per segment, so speed limits read as level runs
     const x0 = (s) => x(s * segKm), x1 = (s) => x(Math.min((s + 1) * segKm, L_km));
-    // shade track-circuit sections when only part of the line is tracked that way
+    // shade sections by position source when the line has more than one
     if (tcSegs && tcSegs.size) {
-      const list = [...tcSegs].sort((a, b) => a - b);
+      const hatchId = "hatch-" + Math.random().toString(36).slice(2);
+      const pat = add(svg.querySelector("defs"), "pattern",
+        { id: hatchId, width: 6, height: 6, patternUnits: "userSpaceOnUse", patternTransform: "rotate(45)" });
+      add(pat, "line", { x1: 0, y1: 0, x2: 0, y2: 6, class: "hatch" });
+      const list = [...tcSegs.keys()].sort((a, b) => a - b);
       for (let i = 0; i < list.length;) {  // one rect per run, so no seams
         let j = i;
-        while (j + 1 < list.length && list[j + 1] === list[j] + 1) j++;
-        add(plot, "rect", { class: "tc", x: x0(list[i]), y: M.t, width: Math.max(1, x1(list[j]) - x0(list[i])), height: H - M.t - M.b });
+        const kind = tcSegs.get(list[i]);
+        while (j + 1 < list.length && list[j + 1] === list[j] + 1 && tcSegs.get(list[j + 1]) === kind) j++;
+        const attrs = { class: kind === "beacon" ? "beacon" : "tc", x: x0(list[i]), y: M.t,
+          width: Math.max(1, x1(list[j]) - x0(list[i])), height: H - M.t - M.b };
+        if (kind === "beacon") attrs.fill = `url(#${hatchId})`;
+        add(plot, "rect", attrs);
         i = j + 1;
       }
     }
@@ -382,17 +403,23 @@
     const colour = colourScale(vmax, ramp);
 
     const nSeg = Math.ceil(branch.length_m / g.segment_m);
-    const { tc, whole, partial } = trackCircuitArea(branch, nSeg);
-    if (whole) {
-      el.note.textContent = "Tracked by Sydney Trains track circuits: speeds are estimated from movement between track sections, not measured on the train.";
-      el.note.hidden = false;
-    } else if (partial) {
-      el.note.textContent = "Shaded sections are tracked by Sydney Trains track circuits: speeds there are estimated from movement between track sections, not measured on the train.";
+    const sources = positionSources(branch, nSeg);
+    const kinds = [...new Set(sources.values())];
+    if (!sources.size) {
+      el.note.hidden = true;
+    } else if (sources.size === nSeg && kinds.length === 1) {
+      el.note.textContent = `Tracked by ${SOURCE_TEXT[kinds[0]]}; not measured on the train.`;
       el.note.hidden = false;
     } else {
-      el.note.hidden = true;
+      const parts = [];
+      if (kinds.includes("tc")) parts.push(`Shaded: ${SOURCE_TEXT.tc}.`);
+      if (kinds.includes("beacon")) parts.push(`Hatched: ${SOURCE_TEXT.beacon}.`);
+      if (sources.size < nSeg) parts.push("Unshaded: GPS, measured on the train.");
+      el.note.textContent = parts.join(" ");
+      el.note.hidden = false;
     }
-    if (cells.size) drawChart(branch, cells, stat, vmax, lc, partial ? tc : null);
+    const whole = sources.size === nSeg && kinds.length === 1;
+    if (cells.size) drawChart(branch, cells, stat, vmax, lc, whole ? null : sources);
     else el.chart.innerHTML = `<div class="empty-chart">No data yet for this selection</div>`;
 
     mapLayer.clearLayers();

@@ -26,6 +26,9 @@ from .api import Api, ApiError, QuotaExceeded
 from .feeds import BY_KEY, FEEDS, Feed
 from .gtfs_static import load_static
 from .speed import MAX_KMH, MOVE_EPS_M, Accumulator, SpeedEstimator
+
+BEACON_MAX_GAP_S = 1800  # beacons further apart in time than this aren't paired
+BEACON_STATION_M = 300   # a stop this close to either beacon counts as inside the hop
 from .delta import write_delta
 from .store import (apply_migrations, merge_line, merge_positions, prune_expired, prune_obsolete,
                     train_network, update_index, write_status)
@@ -58,6 +61,7 @@ class FeedRunner:
         self.speed_ok: set[str] = set()
         self.last_pos: dict[str, tuple] = {}
         self.tc_seen: dict[str, int] = {}  # vehicle -> time of its last track-circuit fix
+        self.beacon_last: dict[str, dict] = {}  # vehicle -> last MetroNet beacon it passed
         self.alias: "FeedRunner | None" = None   # store these lines on another feed's lines
         self._alias_lines: set[str] | None = None
         self.svc_cache: dict[tuple, str] = {}
@@ -211,10 +215,14 @@ class FeedRunner:
             # still comes from the signalling, so a train that showed a Loc
             # in the last 10 minutes counts as track-circuit there too.
             # (Outside the signalled area, e.g. the Hunter, there are no Locs.)
+            # MetroNet.<n> stop_ids are old train-radio beacons (at stations, e.g.
+            # north of Wyee and between Bell and Lithgow): the position is the
+            # last beacon passed, held until the next one. Not track circuits.
+            metronet = v.stop_id.startswith("MetroNet.")
             tc = v.stop_id.endswith(" Loc")
             if tc:
                 self.tc_seen[vid] = ts
-            elif f.key == "sydneytrains" and ts - self.tc_seen.get(vid, -10**9) <= 600:
+            elif not metronet and f.key == "sydneytrains" and ts - self.tc_seen.get(vid, -10**9) <= 600:
                 tc = True
             if tc:
                 self.stats["fixes_track_circuit"] += 1
@@ -234,6 +242,12 @@ class FeedRunner:
                 self.speed_mode == "auto" and has_speed and vid in self.speed_ok)
 
             vmax = f.max_kmh or MAX_KMH.get(f.mode, 150)
+            if metronet and not use_reported:
+                self.stats["fixes_metronet"] += 1
+                self.est.vehicles.pop(vid, None)  # no span across into the beacon area
+                self.beacon_hop(vid, tid, d, pos, v, header_ts, g, sk, sf, line, svc, vmax)
+                continue
+            self.beacon_last.pop(vid, None)
             if use_reported:
                 if repeat:
                     continue
@@ -263,6 +277,38 @@ class FeedRunner:
 
         self.check_auto()
         self.est.forget_older_than(header_ts)
+
+    def beacon_hop(self, vid, tid, d, pos, v, header_ts, g, sk, sf, line, svc, vmax):
+        """Average speed between two MetroNet beacons (stations). Counted with
+        stops always; as running speed only if the trip doesn't stop at either
+        beacon's station or any station between, since the dwell is inside."""
+        sid = v.stop_id
+        last = self.beacon_last.get(vid)
+        if last and last["sid"] == sid and last["tid"] == tid:
+            return  # still reporting the same beacon
+        t = int(v.timestamp) or header_ts
+        self.beacon_last[vid] = {"sid": sid, "tid": tid, "d": d, "pos": dict(pos), "t": t}
+        if not last or last["tid"] != tid or last["d"] != d:
+            return
+        dt = t - last["t"]
+        if not 0 < dt <= BEACON_MAX_GAP_S:
+            return
+        served = (self.static.served_station_names(tid) if tid else None) or set()
+        for b, s1 in pos.items():
+            s0 = last["pos"].get(b)
+            if s0 is None or s1 - s0 < 200:
+                continue  # not on this branch both times, or not moving forward
+            kmh = (s1 - s0) / dt * 3.6
+            if kmh > vmax:
+                self.stats["rejected_fast"] += 1
+                continue
+            stations = g.data["directions"][d]["branches"][b].get("stations", [])
+            stops = any(s0 - BEACON_STATION_M <= x["s"] <= s1 + BEACON_STATION_M and x["name"] in served
+                        for x in stations)
+            last_seg = g.n_seg(d, b) - 1
+            for seg in range(int(s0 // sf.segment_m), min(int(s1 // sf.segment_m), last_seg) + 1):
+                self.acc.add(sk, line, d, b, seg, t, None if stops else kmh, kmh, g.hist_kmh, svc)
+            self.stats["samples_beacon"] += 1
 
     def infer_direction(self, vid, g, x, y):
         dirs = list(g.directions)
