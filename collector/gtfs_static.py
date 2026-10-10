@@ -110,18 +110,25 @@ class StaticGtfs:
         return self._stops
 
     def stops_for_trips(self, trip_ids: set[str]) -> dict[str, list[str]]:
-        """trip_id -> ordered stop_ids, scanning stop_times in chunks."""
+        """trip_id -> ordered stop_ids where the trip actually stops.
+
+        Sydney Trains timetables also list every station a train runs through,
+        with pickup_type and drop_off_type both 1 (no pickup, no drop-off);
+        those are left out so expresses only show the stations they serve.
+        """
         out: dict[str, list[tuple[int, str]]] = {}
         with zipfile.ZipFile(self.zip_path) as z:
             names = {n.split("/")[-1]: n for n in z.namelist()}
             if "stop_times.txt" not in names:
                 return {}
             with z.open(names["stop_times.txt"]) as f:
-                cols = ["trip_id", "stop_id", "stop_sequence"]
+                cols = ["trip_id", "stop_id", "stop_sequence", "pickup_type", "drop_off_type"]
                 for chunk in pd.read_csv(io.TextIOWrapper(f, "utf-8-sig"),
                                          usecols=lambda c: c in cols, dtype=str,
-                                         chunksize=1_000_000):
+                                         keep_default_na=False, chunksize=1_000_000):
                     hit = chunk[chunk.trip_id.isin(trip_ids)]
+                    if "pickup_type" in hit and "drop_off_type" in hit:
+                        hit = hit[~((hit.pickup_type == "1") & (hit.drop_off_type == "1"))]
                     for t, s, q in zip(hit.trip_id, hit.stop_id, hit.stop_sequence):
                         out.setdefault(t, []).append((int(q), s))
         return {t: [s for _, s in sorted(v)] for t, v in out.items()}

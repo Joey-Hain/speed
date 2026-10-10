@@ -31,6 +31,7 @@ METRIC_CRS = "EPSG:7856"  # GDA2020 / MGA zone 56; fine across NSW for distances
 _FWD = Transformer.from_crs("EPSG:4326", METRIC_CRS, always_xy=True)
 
 MAX_BRANCHES = 6
+STATIONS_VERSION = 2  # 2: served stops only (no pass-through stations or track-circuit points)
 STATION_MODES = {"train", "metro", "lightrail", "ferry"}
 
 
@@ -173,6 +174,7 @@ def build_line(static: StaticGtfs, line: str) -> dict | None:
         "segment_m": feed.segment_m,
         "hist_kmh": feed.hist_width,
         "built": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        "stations_version": STATIONS_VERSION,
         "static_source": static.source_path,
         "directions": directions,
     }
@@ -196,11 +198,33 @@ def _add_stations(static, directions, station_trips, tol):
         s = shapely.line_locate_point(line, pts)
         off = shapely.distance(line, pts)
         seen = set()
-        for name, si, oi, lat, lon in zip(st.station, s, off, st.lat, st.lon):
+        for name, si, oi, lat, lon, sid in zip(st.station, s, off, st.lat, st.lon, st.index):
+            # track-circuit location points ("... Loc") aren't stations
+            if str(name).endswith(" Loc") or str(sid).endswith(" Loc"):
+                continue
             if oi <= tol * 2 and name not in seen:
                 seen.add(name)
                 b["stations"].append({"name": name, "s": round(float(si), 1),
                                       "lat": round(float(lat), 6), "lon": round(float(lon), 6)})
+
+
+def refresh_stations(static: StaticGtfs, data: dict):
+    """Recompute a frozen geometry's stations in place. Stations don't affect
+    segment numbering, so the line's collected totals stay valid."""
+    trips = static.trips[static.trips.line == data["line"]]
+    in_service = trips[~trips.trip_headsign.str.contains(NOT_IN_SERVICE, regex=True)]
+    if not in_service.empty:
+        trips = in_service
+    station_trips = {}
+    for d, v in data["directions"].items():
+        for i, b in enumerate(v["branches"]):
+            b["stations"] = []
+            ids = list(trips.loc[(trips.direction_id == d) & (trips.shape_id == b.get("shape_id")), "trip_id"].iloc[:25])
+            if ids:
+                station_trips[(d, i)] = ids
+    if station_trips:
+        _add_stations(static, data["directions"], station_trips, max(static.feed.tolerance_m, 50))
+    data["stations_version"] = STATIONS_VERSION
 
 
 # ---------------------------------------------------------------- persistence
@@ -212,7 +236,11 @@ def geometry_path(store: Path, feed_key: str, line: str) -> Path:
 def load_or_build(store: Path, static: StaticGtfs, line: str, rebuild: bool = False):
     p = geometry_path(store, static.feed.key, line)
     if p.exists() and not rebuild:
-        return LineGeometry(json.loads(p.read_text()))
+        data = json.loads(p.read_text())
+        if data.get("stations_version", 1) < STATIONS_VERSION and static.feed.mode in STATION_MODES:
+            refresh_stations(static, data)
+            p.write_text(json.dumps(data, separators=(",", ":")))
+        return LineGeometry(data)
     data = build_line(static, line)
     if data is None:
         return None
