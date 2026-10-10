@@ -62,7 +62,7 @@ class FeedRunner:
         self.last_pos: dict[str, tuple] = {}
         self.tc_seen: dict[str, int] = {}  # vehicle -> time of its last track-circuit fix
         self.beacon_last: dict[str, dict] = {}  # vehicle -> last MetroNet beacon it passed
-        self.clamped: set[str] = set()  # vehicles whose reported speed is at the feed's ceiling
+        self.last_fix: dict[str, tuple] = {}  # vehicle -> (trip, dir, pos, ts), for feeds with a speed ceiling
         self.alias: "FeedRunner | None" = None   # store these lines on another feed's lines
         self._alias_lines: set[str] | None = None
         self.svc_cache: dict[tuple, str] = {}
@@ -256,19 +256,24 @@ class FeedRunner:
                 kmh = max(0.0, v.position.speed * f.speed_scale * 3.6)
                 ceiling = f.speed_ceiling_kmh
                 if ceiling:
-                    # the estimator follows every fix so it has a span ready, but its
-                    # spans are only used while the reported speed sits at the ceiling
-                    est_out = self.est.update(vid, tid, d, pos, ts, header_ts)
-                    at_ceiling = kmh >= ceiling - 1.0
-                    if at_ceiling:
-                        self.clamped.add(vid)
+                    # the feed clamps speed here (L1: 50.4 km/h). At the ceiling use
+                    # the distance moved since this vehicle's previous fix instead:
+                    # GPS hops of 15 s are ~250 m at 60 km/h, so a few metres of
+                    # GPS error is a few per cent. Never below the ceiling itself.
+                    prev = self.last_fix.get(vid)
+                    self.last_fix[vid] = (tid, d, dict(pos), ts)
+                    if kmh >= ceiling - 1.0:
                         self.stats["fixes_at_speed_ceiling"] += 1
-                    if est_out and vid in self.clamped:
-                        spans = est_out
-                        if not at_ceiling:
-                            self.clamped.discard(vid)
-                    if at_ceiling:
-                        kmh = None
+                        hop = None
+                        if prev and prev[0] == tid and prev[1] == d and 5 <= ts - prev[3] <= 60:
+                            moved = [pos[b] - prev[2][b] for b in pos if b in prev[2]]
+                            if moved and max(moved) > 0:
+                                hop = max(moved) / (ts - prev[3]) * 3.6
+                        if hop is None:
+                            self.stats["ceiling_without_hop"] += 1
+                            continue
+                        kmh = max(hop, ceiling)
+                        self.stats["speeds_from_movement"] += 1
                 if kmh is not None and kmh <= vmax:
                     moving = kmh if kmh >= MIN_REPORTED_KMH else None
                     for b, s in pos.items():

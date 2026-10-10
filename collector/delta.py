@@ -72,6 +72,21 @@ def _compatible(a: dict, b: dict) -> bool:
     return True
 
 
+# Deltas collected before a fix are dropped for the lines it affects, so an
+# old local copy of the collector (or a run already under way) can't bring
+# the bad numbers back. feed or "feed|line" -> earliest accepted start (UTC).
+MIN_STARTED = {
+    "sydneytrains": "2026-10-10T20:25:00Z",           # backwards position glitches
+    "lightrail-innerwest|L1": "2026-10-10T20:25:00Z",  # speed ceiling from movement
+}
+
+
+def _too_old(key: str, started: str | None) -> bool:
+    feed = key.split("|", 1)[0]
+    need = MIN_STARTED.get(key) or MIN_STARTED.get(feed)
+    return bool(need) and (started or "") < need
+
+
 def merge_delta(delta: Path, store: Path) -> dict:
     from .geometry import LineGeometry
     meta = json.loads((delta / "meta.json").read_text())
@@ -79,7 +94,11 @@ def merge_delta(delta: Path, store: Path) -> dict:
     status["migrations"] = st.apply_migrations(store)
     touched, geoms, shares, skipped = {}, {}, {}, []
     rebuilt = set(meta.get("rebuilt", []))
+    too_old = []
     for key in meta["lines"]:
+        if _too_old(key, status.get("started")):
+            too_old.append(key)
+            continue
         feed, line = key.split("|", 1)
         dg = json.loads((delta / feed / line / "geometry.json").read_text())
         sp = store / feed / line / "geometry.json"
@@ -114,6 +133,8 @@ def merge_delta(delta: Path, store: Path) -> dict:
     status["removed_lines"] = st.prune_obsolete(store, {k: set(v) for k, v in meta["valid"].items()})
     if skipped:
         status["skipped_incompatible_lines"] = skipped
+    if too_old:
+        status["skipped_collected_before_fix"] = too_old
     if meta.get("source", "actions") == "actions":
         st.write_status(store, status)
     else:  # keep status.json about the Actions collector; note local uploads apart

@@ -90,11 +90,27 @@ def span_check():
     print("min span: ok")
 
 
+def backwards_check():
+    # the airport line case: Central (stopped) -> 6454 -> 6917 -> 6279 (misplaced
+    # circuit) -> 7455, at ~15-40 s steps. Before the fix the glitch became a
+    # 'stop' and 6279 -> 7455 in 33 s was recorded at 128 km/h
+    est = SpeedEstimator(90)
+    seq = [(5982, 0), (5982, 15), (5982, 45), (5982, 75), (6454, 75 + 74), (6917, 75 + 112),
+           (6279, 75 + 130), (7455, 75 + 163), (8000, 75 + 190), (8600, 75 + 215), (9200, 75 + 240)]
+    out = []
+    for s, t in seq:
+        out += est.update("v", "t", "0", {0: float(s)}, t, t)
+    fast = [(a, z, m, ma) for _, a, z, m, ma in out if max(m or 0, ma or 0) * 3.6 > 100]
+    assert not fast, f"backwards glitch produced {fast}"
+    print("backwards glitch: ok", [(round(a), round(z), m and round(m * 3.6), ma and round(ma * 3.6)) for _, a, z, m, ma in out])
+
+
 def main():
     shutil.rmtree(OUT, ignore_errors=True)
     loop_check()
     ceiling_check()
     span_check()
+    backwards_check()
     print("OK")
 
 

@@ -280,6 +280,11 @@ MIGRATIONS = {
     # the feed's 50.4 km/h ceiling now come from movement. Positions are kept.
     "spans-90s-loop-start-l1-ceiling-2026-10-10": [("sydneytrains", "*", ("speeds.csv",)),
                                                    ("lightrail-innerwest", "L1", ("speeds.csv",))],
+    # a single misplaced track circuit (airport line SR1.3BER) was read as a
+    # stop, then the next fix as a 120+ km/h departure; L1 ceiling now uses
+    # the hop since the previous fix
+    "backwards-glitch-l1-hop-2026-10-11": [("sydneytrains", "*", ("speeds.csv",)),
+                                           ("lightrail-innerwest", "L1", ("speeds.csv",))],
 }
 
 

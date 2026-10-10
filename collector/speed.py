@@ -125,6 +125,7 @@ class VehicleState:
     pos: dict[int, float]             # current position (branch -> s)
     t_first: int                      # first seen at current position
     t_seen: int                       # last seen at current position
+    back: int = 0                     # consecutive fixes that went backwards
 
 
 class SpeedEstimator:
@@ -171,10 +172,18 @@ class SpeedEstimator:
                 st.anchor, st.t_anchor, st.t_anchor_all = dict(st.pos), None, st.t_first
             return out
         if ts <= st.t_first or ds < 0:
-            if ds < 0:  # went backwards: position glitch, start again here
-                t = max(ts, obs)
-                self.vehicles[vid] = VehicleState(trip, direction, dict(pos), None, ts, dict(pos), ts, t)
+            if ds < 0:
+                # went backwards. Usually one misplaced position (some track
+                # circuits' coordinates are off: the airport line's SR1.3BER sits
+                # behind the circuit before it), so ignore it and carry on from
+                # the last good one. Only after several in a row start again,
+                # and with no anchor, so nothing is measured from the glitch.
+                st.back += 1
+                if st.back >= 3:
+                    t = max(ts, obs)
+                    self.vehicles[vid] = VehicleState(trip, direction, None, None, ts, dict(pos), ts, t)
             return []
+        st.back = 0
 
         if st.t_anchor is None:
             # departing after a stop. Where in its stopping block the train stood,

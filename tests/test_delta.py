@@ -22,6 +22,7 @@ from tests import test_synthetic as ts
 from collector import collect
 from collector.delta import combine_delta, merge_delta, pack, unpack
 from collector.publish import publish
+import collector.delta as _delta
 
 OUT = Path(__file__).parent / "_out_delta"
 
@@ -53,6 +54,10 @@ def git(cwd, *a):
 
 def main():
     shutil.rmtree(OUT, ignore_errors=True)
+    # deltas from before a fix are refused for its lines; check that, then turn it off
+    assert _delta._too_old("sydneytrains|T1", "2026-10-10T19:00:00Z")
+    assert not _delta._too_old("buses|333", "2020-01-01T00:00:00Z")
+    _delta.MIN_STARTED.clear()
     cache = OUT / "cache"
     api = fixtures(cache)
     A, B = OUT / "A", OUT / "B"
