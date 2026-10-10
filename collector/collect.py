@@ -280,7 +280,8 @@ def main():
     p.add_argument("--cache", default="gtfs_cache", help="static GTFS cache directory")
     p.add_argument("--feeds", help="comma-separated feed keys (default: all)")
     p.add_argument("--rebuild", action="append", default=[],
-                   help="feed:line whose geometry should be rebuilt (drops its totals)")
+                   help="feed:line (comma-separated for several) whose geometry should be "
+                        "rebuilt; drops their totals")
     p.add_argument("--once", action="store_true", help="poll each feed once, for testing")
     p.add_argument("--refresh-static", action="store_true", help="re-download static GTFS now")
     args = p.parse_args()
@@ -288,8 +289,9 @@ def main():
     REFRESH_STATIC = args.refresh_static
 
     feeds = FEEDS if not args.feeds else [BY_KEY[k.strip()] for k in args.feeds.split(",")]
+    rebuild = {x.strip() for r in args.rebuild for x in r.split(",") if x.strip()}
     status = run(feeds, args.minutes, Path(args.store), Path(args.cache),
-                 set(args.rebuild), once=args.once)
+                 rebuild, once=args.once)
 
     print(f"\n{status['samples']} samples from {status['requests']} requests")
     for k, s in status["feeds"].items():

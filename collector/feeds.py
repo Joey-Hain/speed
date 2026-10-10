@@ -58,7 +58,7 @@ FEEDS: list[Feed] = [
     # ---- track-circuit based: speed has to be estimated
     Feed("sydneytrains", "Sydney Trains", "train",
          "/v2/gtfs/vehiclepos/sydneytrains",
-         ("/v2/gtfs/schedule/sydneytrains", "/v1/gtfs/schedule/sydneytrains"),
+         ("/v1/gtfs/schedule/sydneytrains",),  # there is no v2 schedule (404)
          speed="estimated", interval=15, segment_m=250, tolerance_m=200),
     # L1 positions look signalling-based but the feed does carry a real speed
     Feed("lightrail-innerwest", "Inner West Light Rail (L1)", "lightrail",

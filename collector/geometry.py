@@ -102,9 +102,16 @@ def _pick_branches(shape_ids: list[str], shapes: dict, tol: float) -> list[str]:
     return chosen
 
 
+NOT_IN_SERVICE = r"(?i)\b(?:empty train|not in service|out of service|non[ _-]?revenue|depot)\b"
+
+
 def build_line(static: StaticGtfs, line: str) -> dict | None:
     feed = static.feed
     trips = static.trips[(static.trips.line == line) & (static.trips.shape_id != "")]
+    # empty runs shouldn't pick the branches or name the directions
+    in_service = trips[~trips.trip_headsign.str.contains(NOT_IN_SERVICE, regex=True)]
+    if not in_service.empty:
+        trips = in_service
     if trips.empty:
         return None
     shapes = static.shapes()
