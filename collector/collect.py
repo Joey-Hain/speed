@@ -25,7 +25,7 @@ from . import geometry as geo
 from .api import Api, ApiError, QuotaExceeded
 from .feeds import BY_KEY, FEEDS, Feed
 from .gtfs_static import load_static
-from .speed import MAX_KMH, MOVE_EPS_M, Accumulator, SpeedEstimator
+from .speed import MAX_KMH, MIN_SPAN_S, MOVE_EPS_M, Accumulator, SpeedEstimator
 
 BEACON_MAX_GAP_S = 1800  # beacons further apart in time than this aren't paired
 BEACON_STATION_M = 300   # a stop this close to either beacon counts as inside the hop
@@ -45,7 +45,7 @@ class FeedRunner:
         self.acc, self.rebuild = acc, rebuild
         self.static = None
         self.geoms: dict[str, geo.LineGeometry | None] = {}
-        self.est = SpeedEstimator()
+        self.est = SpeedEstimator(feed.min_span_s or MIN_SPAN_S)
         self.last_ts: dict[str, int] = {}
         self.dir_guess: dict[str, tuple[float, str]] = {}
         self.speed_mode = feed.speed
@@ -62,6 +62,7 @@ class FeedRunner:
         self.last_pos: dict[str, tuple] = {}
         self.tc_seen: dict[str, int] = {}  # vehicle -> time of its last track-circuit fix
         self.beacon_last: dict[str, dict] = {}  # vehicle -> last MetroNet beacon it passed
+        self.clamped: set[str] = set()  # vehicles whose reported speed is at the feed's ceiling
         self.alias: "FeedRunner | None" = None   # store these lines on another feed's lines
         self._alias_lines: set[str] | None = None
         self.svc_cache: dict[tuple, str] = {}
@@ -248,18 +249,36 @@ class FeedRunner:
                 self.beacon_hop(vid, tid, d, pos, v, header_ts, g, sk, sf, line, svc, vmax)
                 continue
             self.beacon_last.pop(vid, None)
+            spans = None
             if use_reported:
                 if repeat:
                     continue
                 kmh = max(0.0, v.position.speed * f.speed_scale * 3.6)
-                if kmh <= vmax:
+                ceiling = f.speed_ceiling_kmh
+                if ceiling:
+                    # the estimator follows every fix so it has a span ready, but its
+                    # spans are only used while the reported speed sits at the ceiling
+                    est_out = self.est.update(vid, tid, d, pos, ts, header_ts)
+                    at_ceiling = kmh >= ceiling - 1.0
+                    if at_ceiling:
+                        self.clamped.add(vid)
+                        self.stats["fixes_at_speed_ceiling"] += 1
+                    if est_out and vid in self.clamped:
+                        spans = est_out
+                        if not at_ceiling:
+                            self.clamped.discard(vid)
+                    if at_ceiling:
+                        kmh = None
+                if kmh is not None and kmh <= vmax:
                     moving = kmh if kmh >= MIN_REPORTED_KMH else None
                     for b, s in pos.items():
                         seg = min(int(s // sf.segment_m), g.n_seg(d, b) - 1)
                         self.acc.add(sk, line, d, b, seg, ts, moving, kmh, g.hist_kmh, svc)
                     self.stats["samples_reported"] += 1
             else:
-                for b, a, z, mps, mps_all in self.est.update(vid, tid, d, pos, ts, header_ts):
+                spans = self.est.update(vid, tid, d, pos, ts, header_ts)
+            if spans:
+                for b, a, z, mps, mps_all in spans:
                     kmh = mps * 3.6 if mps is not None else None
                     if (kmh or 0) > vmax:
                         self.stats["rejected_fast"] += 1

@@ -35,6 +35,8 @@ class Feed:
     speed_scale: float = 1.0  # multiply reported speed by this to get m/s
     hist_kmh: int = 0         # histogram bin width; 0 = 1 km/h for rail modes, 5 otherwise
     max_kmh: int = 0          # faster samples are rejected; 0 = the mode's default
+    speed_ceiling_kmh: float = 0  # the feed clamps reported speed here; at it, use movement instead
+    min_span_s: int = 0           # shortest span for movement-based speed; 0 = speed.MIN_SPAN_S
 
     @property
     def hist_width(self) -> int:
@@ -66,12 +68,16 @@ FEEDS: list[Feed] = [
          "/v2/gtfs/vehiclepos/sydneytrains",
          ("/v1/gtfs/schedule/sydneytrains",),  # there is no v2 schedule (404)
          speed="estimated", interval=15, segment_m=250, tolerance_m=200,
-         max_kmh=140),  # nothing in the Sydney Trains network runs faster
-    # L1 positions look signalling-based but the feed does carry a real speed
+         max_kmh=140,  # nothing in the Sydney Trains network runs faster
+         # track circuits are a few hundred metres long, so a 45 s span reads
+         # 115 km/h track at ~125 in the 85th percentile; 90 s halves that error
+         min_span_s=90),
+    # L1 carries a real speed, but the feed clamps it at 14 m/s (50.4 km/h):
+    # at the ceiling, speed is worked out from movement instead
     Feed("lightrail-innerwest", "Inner West Light Rail (L1)", "lightrail",
          "/v2/gtfs/vehiclepos/lightrail/innerwest",
          ("/v2/gtfs/schedule/lightrail/innerwest", "/v1/gtfs/schedule/lightrail/innerwest"),
-         speed="auto", interval=15, segment_m=100, tolerance_m=80),
+         speed="auto", interval=15, segment_m=100, tolerance_m=80, speed_ceiling_kmh=50.4),
 
     # ---- GPS based
     # Metro: polled often and cut into 100 m segments, because the main use is

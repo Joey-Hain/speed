@@ -34,6 +34,7 @@ _FWD = Transformer.from_crs("EPSG:4326", METRIC_CRS, always_xy=True)
 MAX_BRANCHES = 6
 HINT_BACK_M = 1500    # projection window around a vehicle's previous position
 HINT_AHEAD_M = 8000
+AMBIGUOUS_GAP_M = 1500  # other passes of the shape closer along the line than this don't count
 STATIONS_VERSION = 4  # 2: served stops only (no pass-through stations or track-circuit points)
                       # 3: every station the line serves along the branch, not one trip's
                       # 4: (refresh only)
@@ -59,6 +60,9 @@ class LineGeometry:
         self.data = data
         self.segment_m = data["segment_m"]
         self.hist_kmh = data.get("hist_kmh", 5)
+        # only rail shapes are checked for passing the same spot twice: bus
+        # routes that run out and back along one street would never place
+        self.rail = data.get("mode") in ("train", "metro", "lightrail")
         self.directions: dict[str, list[Branch]] = {
             d: [Branch(b, self.segment_m) for b in v["branches"]]
             for d, v in data["directions"].items()
@@ -83,6 +87,11 @@ class LineGeometry:
                 continue
             s_global = float(b.line.project(p))
             h = (hints or {}).get(b.id)
+            if h is None and self.rail and self._ambiguous(b, p, s_global, tolerance):
+                # no previous position to go by, and the shape passes here twice
+                # (a train starting at Central on a City Circle shape could be at
+                # either end of the loop): wait for a fix that isn't ambiguous
+                continue
             if h is not None and abs(s_global - h) > HINT_BACK_M:
                 a, z = max(0.0, h - HINT_BACK_M), min(b.length, h + HINT_AHEAD_M)
                 if z - a > 1:
@@ -91,6 +100,15 @@ class LineGeometry:
                         s_global = a + float(win.project(p))
             out.append((b.id, s_global))
         return out
+
+    @staticmethod
+    def _ambiguous(b, p, s: float, tolerance: float) -> bool:
+        """Another part of the branch, well away along the line, is also within
+        tolerance of the point."""
+        for a, z in ((0.0, s - AMBIGUOUS_GAP_M), (s + AMBIGUOUS_GAP_M, b.length)):
+            if z - a > 1 and substring(b.line, a, z).distance(p) <= tolerance:
+                return True
+        return False
 
     def n_seg(self, direction: str, branch_id: int) -> int:
         return self.directions[direction][branch_id].n_seg

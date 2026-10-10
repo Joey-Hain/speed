@@ -39,6 +39,8 @@ DWELL_S = 40        # stationary longer than this counts as a stop
 MAX_GAP_S = 600     # ignore blocks that took longer than this
 MOVE_EPS_M = 20     # smaller jumps are treated as standing still
 MIN_SPAN_S = 45     # shortest running span a speed is measured over
+A_MAX = 1.5         # m/s^2: no train, tram or bus pulls away faster than this
+DEPART_SLACK = 1.25 # allowance for position/timing error on the departure hop
 MAX_KMH = {"train": 170, "metro": 120, "lightrail": 90, "bus": 110, "ferry": 80}
 
 BANDS = [  # (name, start hour inclusive, end hour exclusive), local time
@@ -133,8 +135,9 @@ class SpeedEstimator:
     dwells never sit inside one.
     """
 
-    def __init__(self):
+    def __init__(self, min_span: float = MIN_SPAN_S):
         self.vehicles: dict[str, VehicleState] = {}
+        self.min_span = min_span
 
     def update(self, vid: str, trip: str, direction: str, pos: dict[int, float],
                ts: int, obs: int):
@@ -180,13 +183,19 @@ class SpeedEstimator:
             dt_all = ts - min(st.t_anchor_all, st.t_first)
             if st.anchor is not None and 0 < dt_all <= MAX_GAP_S:
                 for b in pos:
-                    if b in st.pos and pos[b] - st.pos[b] >= MOVE_EPS_M:
-                        out.append((b, st.pos[b], pos[b], None, (pos[b] - st.pos[b]) / dt_all))
+                    d = pos[b] - st.pos[b] if b in st.pos else 0
+                    if d < MOVE_EPS_M:
+                        continue
+                    # starting from rest, the average over d can't exceed
+                    # sqrt(A_MAX * d / 2); faster means the start position was wrong
+                    if d / dt_all > DEPART_SLACK * (A_MAX * d / 2) ** 0.5:
+                        continue
+                    out.append((b, st.pos[b], pos[b], None, d / dt_all))
             st.anchor, st.t_anchor, st.t_anchor_all = dict(pos), ts, ts
             st.pos, st.t_first, st.t_seen = dict(pos), ts, max(ts, obs)
             return out
         st.pos, st.t_first, st.t_seen = dict(pos), ts, max(ts, obs)
-        if ts - st.t_anchor >= MIN_SPAN_S:
+        if ts - st.t_anchor >= self.min_span:
             out = self._span(st, pos, ts)
             st.anchor, st.t_anchor, st.t_anchor_all = dict(pos), ts, ts
         return out

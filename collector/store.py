@@ -275,6 +275,11 @@ MIGRATIONS = {
     "reset-sydneytrains-2026-10-10b": [("sydneytrains", "*")],
     # platform fixes now count as track-circuit too; recount the shares
     "recount-track-circuit-2026-10-10": [("sydneytrains", "*", ("positions.csv",))],
+    # Sydney Trains: 90 s minimum spans, City Circle loop starts placed
+    # correctly, departure hops checked against acceleration. L1: speeds above
+    # the feed's 50.4 km/h ceiling now come from movement. Positions are kept.
+    "spans-90s-loop-start-l1-ceiling-2026-10-10": [("sydneytrains", "*", ("speeds.csv",)),
+                                                   ("lightrail-innerwest", "L1", ("speeds.csv",))],
 }
 
 
