@@ -5,7 +5,7 @@ name: Collect speeds
 # group queues overlapping runs instead of running two collectors at once.
 on:
   schedule:
-    - cron: "7 * * * *"
+    - cron: "7 * * * *"   # backup; runs chain themselves (see the last step)
   workflow_dispatch:
     inputs:
       minutes:
@@ -20,9 +20,13 @@ on:
       refresh:
         description: "Re-download static GTFS (yes/no)"
         default: "no"
+      chain:
+        description: "Start the next run when this one finishes (yes/no)"
+        default: "yes"
 
 permissions:
   contents: write
+  actions: write   # to start the next run
 
 concurrency:
   group: collect
@@ -99,3 +103,13 @@ jobs:
             git commit -q -m "$msg"
           fi
           git push -q -f "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:data
+
+      # GitHub's hourly schedule is unreliable (it can lag hours, and on new
+      # repos may not fire at all), so each full-length run starts the next one.
+      # A workflow_dispatch from GITHUB_TOKEN is allowed to start a new run; the
+      # concurrency group keeps it to one at a time. Short test runs don't chain.
+      - name: Start next run
+        if: always() && (github.event_name == 'schedule' || (github.event.inputs.chain != 'no' && github.event.inputs.feeds == '' && fromJSON(github.event.inputs.minutes || '50') >= 30))
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run collect.yml --repo "$GITHUB_REPOSITORY" --ref main
