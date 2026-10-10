@@ -418,7 +418,7 @@
   // are regrouped into Sydney Trains / Intercity / Regional across both train
   // feeds, and NSW TrainLink coaches move under buses.
   const INTERCITY = new Set(["BMT", "CCN", "HUN", "SCO", "SHL"]);
-  const TRAIN_GROUPS = { sydney: "Sydney Trains", intercity: "Intercity trains", regional: "Regional trains" };
+  const TRAIN_GROUPS = { sydney: "Sydney Trains", intercity: "Intercity Trains", regional: "Regional Trains" };
   const TRAIN_FEEDS = new Set(["sydneytrains", "nswtrains"]);
 
   function classify(feedKey, f, line, l) {
