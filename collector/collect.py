@@ -26,6 +26,7 @@ from .api import Api, ApiError, QuotaExceeded
 from .feeds import BY_KEY, FEEDS, Feed
 from .gtfs_static import load_static
 from .speed import MAX_KMH, MOVE_EPS_M, Accumulator, SpeedEstimator
+from .delta import write_delta
 from .store import (apply_migrations, merge_line, merge_positions, prune_expired, prune_obsolete,
                     train_network, update_index, write_status)
 
@@ -344,10 +345,15 @@ class FeedRunner:
 
 
 def run(feeds: list[Feed], minutes: float, store: Path, cache: Path,
-        rebuild: set[str], api: Api | None = None, once: bool = False) -> dict:
+        rebuild: set[str], api: Api | None = None, once: bool = False,
+        delta: Path | None = None, source: str = "actions") -> dict:
+    """Poll for `minutes`. Without `delta`, totals are merged straight into
+    `store`. With `delta`, `store` is only read for geometry and this run's
+    totals go to the delta folder, for collector.publish to add to the latest
+    data branch (safe when several collectors run at once)."""
     api = api or Api()
     store.mkdir(parents=True, exist_ok=True)
-    migrated = apply_migrations(store)
+    migrated = [] if delta else apply_migrations(store)
     acc = Accumulator()
     runners = [FeedRunner(f, api, store, cache, acc, rebuild) for f in feeds]
     gps_runs: dict[str, int] = {}  # run number -> last time NSW TrainLink reported it
@@ -356,9 +362,17 @@ def run(feeds: list[Feed], minutes: float, store: Path, cache: Path,
     by_key = {r.feed.key: r for r in runners}
     if "nswtrains" in by_key and "sydneytrains" in by_key:
         by_key["nswtrains"].alias = by_key["sydneytrains"]
+    started = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
     deadline = time.time() + minutes * 60
     stop = {"flag": False}
     signal.signal(signal.SIGTERM, lambda *_: stop.update(flag=True))
+
+    def _interrupt(*_):  # first Ctrl+C finishes up and saves; a second one aborts
+        if stop["flag"]:
+            raise KeyboardInterrupt
+        stop["flag"] = True
+        print("\nstopping after this poll and saving what was collected (Ctrl+C again to abort)", flush=True)
+    signal.signal(signal.SIGINT, _interrupt)
     fatal = None
 
     # lines asked to be rebuilt are rebuilt now, even if no vehicle shows up this run
@@ -400,6 +414,19 @@ def run(feeds: list[Feed], minutes: float, store: Path, cache: Path,
         # back off a feed that keeps failing (endpoint down or retired)
         wait = r.feed.interval if r.fail_streak < 3 else min(600, r.feed.interval * 2 ** r.fail_streak)
         heapq.heappush(queue, (max(time.time(), due + wait), i))
+
+    if delta is not None:
+        status = {
+            "started": started,
+            "minutes": minutes,
+            "requests": api.requests,
+            "samples": acc.samples,
+            "fatal": fatal,
+            "stopped": stop["flag"],
+            "feeds": {r.feed.key: r.summary() for r in runners},
+        }
+        write_delta(delta, acc, runners, store, status, rebuilt=rebuild, source=source)
+        return status
 
     # ---- merge
     touched = {}
@@ -443,6 +470,8 @@ def main():
     p.add_argument("--rebuild", action="append", default=[],
                    help="feed:line (comma-separated for several) whose geometry should be "
                         "rebuilt; drops their totals")
+    p.add_argument("--delta", help="write this run's totals to this folder instead of "
+                                   "merging into --store (publish with collector.publish)")
     p.add_argument("--once", action="store_true", help="poll each feed once, for testing")
     p.add_argument("--refresh-static", action="store_true", help="re-download static GTFS now")
     args = p.parse_args()
@@ -452,7 +481,7 @@ def main():
     feeds = FEEDS if not args.feeds else [BY_KEY[k.strip()] for k in args.feeds.split(",")]
     rebuild = {x.strip() for r in args.rebuild for x in r.split(",") if x.strip()}
     status = run(feeds, args.minutes, Path(args.store), Path(args.cache),
-                 rebuild, once=args.once)
+                 rebuild, once=args.once, delta=Path(args.delta) if args.delta else None)
 
     print(f"\n{status['samples']} samples from {status['requests']} requests")
     for k, s in status["feeds"].items():

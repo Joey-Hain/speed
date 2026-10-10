@@ -74,9 +74,9 @@ def _hist_text(h: dict[int, int]) -> str:
     return ";".join(f"{b}:{h[b]}" for b in sorted(h))
 
 
-def merge_line(store: Path, feed: str, line: str, cells: dict) -> int:
-    """Add this run's Cells into the line's speeds.csv. Returns total running samples."""
-    p = store / feed / line / "speeds.csv"
+def read_speed_totals(p: Path) -> dict[tuple, list]:
+    """speeds.csv -> {key: [n, sum, sumsq, hist, n_all, sum_all, sumsq_all, hist_all]},
+    dropping weeks outside the retention window."""
     totals: dict[tuple, list] = {}
     keep_from = oldest_week_kept()
     if p.exists():
@@ -91,15 +91,19 @@ def merge_line(store: Path, feed: str, line: str, cells: dict) -> int:
                              _hist_parse(r.get("hist", "")),
                              int(r.get("n_all") or 0), float(r.get("sum_all") or 0),
                              float(r.get("sumsq_all") or 0), _hist_parse(r.get("hist_all", ""))]
-    for k, c in cells.items():
-        if k[3] < keep_from:
-            continue
-        t = totals.setdefault(k, [0, 0.0, 0.0, {}, 0, 0.0, 0.0, {}])
-        t[0] += c.n; t[1] += c.sum; t[2] += c.sumsq
-        t[4] += c.n_all; t[5] += c.sum_all; t[6] += c.sumsq_all
-        for src, dst in ((c.hist, t[3]), (c.hist_all, t[7])):
-            for b, n in src.items():
-                dst[b] = dst.get(b, 0) + n
+    return totals
+
+
+def _add_totals(totals: dict, k: tuple, add: list):
+    t = totals.setdefault(k, [0, 0.0, 0.0, {}, 0, 0.0, 0.0, {}])
+    for i in (0, 1, 2, 4, 5, 6):
+        t[i] += add[i]
+    for i in (3, 7):
+        for b, n in add[i].items():
+            t[i][b] = t[i].get(b, 0) + n
+
+
+def write_speed_totals(p: Path, totals: dict) -> int:
     p.parent.mkdir(parents=True, exist_ok=True)
     tmp = p.with_suffix(".tmp")
     with tmp.open("w", newline="") as f:
@@ -113,16 +117,42 @@ def merge_line(store: Path, feed: str, line: str, cells: dict) -> int:
     return int(sum(t[0] for t in totals.values()))
 
 
-def merge_positions(store: Path, feed: str, line: str, cells: dict) -> tuple[int, int]:
-    """positions.csv: dir,branch,seg,fixes,tc. 'tc' counts fixes positioned by
-    track circuits rather than GPS (Sydney Trains' stop_id "... Loc").
-    Returns line totals (fixes, tc)."""
-    p = store / feed / line / "positions.csv"
+def merge_line(store: Path, feed: str, line: str, cells: dict) -> int:
+    """Add this run's Cells into the line's speeds.csv. Returns total running samples."""
+    p = store / feed / line / "speeds.csv"
+    totals = read_speed_totals(p)
+    keep_from = oldest_week_kept()
+    for k, c in cells.items():
+        if k[3] < keep_from:
+            continue
+        _add_totals(totals, k, [c.n, c.sum, c.sumsq, c.hist, c.n_all, c.sum_all, c.sumsq_all, c.hist_all])
+    return write_speed_totals(p, totals)
+
+
+def merge_speed_file(store: Path, feed: str, line: str, delta_file: Path) -> int:
+    """Add another collector's speeds.csv (a delta) into the store's."""
+    p = store / feed / line / "speeds.csv"
+    totals = read_speed_totals(p)
+    for k, add in read_speed_totals(delta_file).items():
+        _add_totals(totals, k, add)
+    return write_speed_totals(p, totals)
+
+
+def read_positions(p: Path) -> dict[tuple, list[int]]:
     totals: dict[tuple, list[int]] = {}
     if p.exists():
         with p.open() as f:
             for r in csv.DictReader(f):
                 totals[(r["dir"], int(r["branch"]), int(r["seg"]))] = [int(r["fixes"]), int(r.get("tc") or 0)]
+    return totals
+
+
+def merge_positions(store: Path, feed: str, line: str, cells: dict) -> tuple[int, int]:
+    """positions.csv: dir,branch,seg,fixes,tc. 'tc' counts fixes positioned by
+    track circuits rather than GPS (Sydney Trains' stop_id "... Loc").
+    Returns line totals (fixes, tc)."""
+    p = store / feed / line / "positions.csv"
+    totals = read_positions(p)
     for k, (n, sh) in cells.items():
         t = totals.setdefault(k, [0, 0])
         t[0] += n

@@ -115,6 +115,32 @@ summary (`status.json`) shows which mode the Metro feed ends up in.
    * Custom domains > `speed.joeyhain.org`. Cloudflare adds the CNAME itself
      since joeyhain.org is already on Cloudflare.
 
+## Collecting from your own computer
+
+To build up data faster than Actions alone, run the collector locally too. No
+git needed: download the repo as a zip, add `.env` with `TFNSW_API_KEY`, then
+
+```
+pip install -r requirements.txt
+python tools/local_collect.py              # until Ctrl+C (or --hours 3)
+```
+
+It downloads the line geometry from the data branch (so segments line up),
+polls every feed, and keeps `inbox/local-<date>-<time>.zip` up to date every
+30 minutes. When finished, upload that zip to the `inbox/` folder on GitHub
+(Add file > Upload files). The **Merge local data** workflow adds it to the
+data branch and deletes it from `inbox/`.
+
+Both the Actions collector and inbox merges add their totals to the latest
+data branch and push with `--force-with-lease`, retrying if someone else
+pushed first, so neither overwrites the other. Overlapping collection counts
+the same trains twice, which adds weight but doesn't bias the averages.
+
+Quota: 60,000 requests a day per key. Actions uses about 42,000 a day and the
+local collector about 1,750 an hour, so on the same key keep local runs under
+about 9 hours a day (`--max-requests`, default 15,000, stops it). A second key
+from another Open Data application avoids sharing.
+
 ## Running locally
 
 ```

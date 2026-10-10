@@ -80,29 +80,24 @@ jobs:
           [ -n "$FEEDS" ] && args+=(--feeds "$FEEDS")
           [ -n "$REBUILD" ] && args+=(--rebuild "$REBUILD")
           [ "$REFRESH" = "yes" ] && args+=(--refresh-static)
-          python -m collector.collect "${args[@]}" | tee summary.txt
+          python -m collector.collect "${args[@]}" --delta delta | tee summary.txt
           { echo '```'; cat summary.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
 
       # The data branch is kept as a single commit that is replaced every run.
-      # Totals cover a rolling ~30 days, so history isn't needed. Amending the
-      # fetched commit means each push only uploads the files that changed.
+      # Totals cover a rolling ~30 days, so history isn't needed. This run's
+      # totals are added to the latest data branch (fetched now, not at the
+      # start) and pushed with a lease, so local uploads merged meanwhile
+      # aren't overwritten; if someone pushed in between it fetches and retries.
       - name: Publish data branch
         if: success() || failure()
         env:
           TOKEN: ${{ github.token }}
         run: |
-          [ -f store/index.json ] || { echo "nothing to publish"; exit 0; }
-          cd store
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add -A
-          msg="Data update $(date -u +%Y-%m-%dT%H:%MZ)"
-          if git rev-parse -q --verify HEAD >/dev/null; then
-            git commit -q --amend --reset-author -m "$msg"
-          else
-            git commit -q -m "$msg"
-          fi
-          git push -q -f "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:data
+          [ -f delta/meta.json ] || { echo "nothing to publish"; exit 0; }
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python -m collector.publish --delta delta --dir store \
+            --remote "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
 
       # GitHub's hourly schedule is unreliable (it can lag hours, and on new
       # repos may not fire at all), so each full-length run starts the next one.

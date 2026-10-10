@@ -6,3 +6,6 @@ site/data/
 __pycache__/
 *.pyc
 shapes_bundle.zip
+.local/
+delta/
+tests/_out_delta/

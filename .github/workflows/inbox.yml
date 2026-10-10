@@ -1,0 +1,56 @@
+name: Merge local data
+
+# Zips from tools/local_collect.py uploaded to inbox/ on main are added to the
+# data branch, then removed from inbox/.
+on:
+  push:
+    branches: [main]
+    paths: ["inbox/*.zip"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: inbox
+  cancel-in-progress: false
+
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Merge into the data branch
+        id: merge
+        env:
+          TOKEN: ${{ github.token }}
+        run: |
+          shopt -s nullglob
+          zips=(inbox/*.zip)
+          if [ ${#zips[@]} -eq 0 ]; then echo "inbox is empty"; exit 0; fi
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python -m collector.inbox --dir store --used used.txt \
+            --remote "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git" \
+            "${zips[@]}" | tee summary.txt
+          { echo '```'; cat summary.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Clear merged uploads from inbox/
+        run: |
+          [ -s used.txt ] || exit 0
+          xargs git rm -q < used.txt
+          git commit -q -m "Clear merged local data from inbox"
+          for i in 1 2 3 4 5; do
+            git push -q origin HEAD:main && exit 0
+            git pull -q --rebase origin main
+          done
+          exit 1
