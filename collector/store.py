@@ -273,6 +273,8 @@ MIGRATIONS = {
     # restart Sydney Trains totals with the 140 km/h network cap, express/all-
     # stations tagging and TrainLink's intercity GPS merged in
     "reset-sydneytrains-2026-10-10b": [("sydneytrains", "*")],
+    # platform fixes now count as track-circuit too; recount the shares
+    "recount-track-circuit-2026-10-10": [("sydneytrains", "*", ("positions.csv",))],
 }
 
 
@@ -283,10 +285,11 @@ def apply_migrations(store: Path) -> list[str]:
     for name, lines in MIGRATIONS.items():
         if name in done:
             continue
-        for feed, line in lines:
+        for feed, line, *files in lines:
+            files = files[0] if files else ("speeds.csv", "positions.csv")
             dirs = [d for d in (store / feed).glob("*") if d.is_dir()] if line == "*" else [store / feed / line]
             for d in dirs:
-                for f in ("speeds.csv", "positions.csv"):
+                for f in files:
                     (d / f).unlink(missing_ok=True)
         done.add(name)
         applied.append(name)

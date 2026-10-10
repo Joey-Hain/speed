@@ -34,7 +34,8 @@ _FWD = Transformer.from_crs("EPSG:4326", METRIC_CRS, always_xy=True)
 MAX_BRANCHES = 6
 HINT_BACK_M = 1500    # projection window around a vehicle's previous position
 HINT_AHEAD_M = 8000
-STATIONS_VERSION = 2  # 2: served stops only (no pass-through stations or track-circuit points)
+STATIONS_VERSION = 3  # 2: served stops only (no pass-through stations or track-circuit points)
+                      # 3: every station the line serves along the branch, not one trip's
 STATION_MODES = {"train", "metro", "lightrail", "ferry"}
 
 
@@ -177,7 +178,8 @@ def build_line(static: StaticGtfs, line: str) -> dict | None:
         return None
 
     if feed.mode in STATION_MODES:
-        _add_stations(static, directions, station_trips, tol)
+        dir_trips = {d: list(dt.trip_id) for d, dt in trips.groupby("direction_id")}
+        _add_stations(static, directions, station_trips, tol, dir_trips)
 
     for d in directions.values():
         if not d["headsign"]:
@@ -199,32 +201,39 @@ def build_line(static: StaticGtfs, line: str) -> dict | None:
     }
 
 
-def _add_stations(static, directions, station_trips, tol):
-    # stations come from the trip on each shape that stops most often, so a
-    # short working (Central to Wyong on a Newcastle shape) can't truncate them
-    stop_lists = static.stops_for_trips({t for ts in station_trips.values() for t in ts})
+def _add_stations(static, directions, station_trips, tol, dir_trips=None):
+    """Stations on each branch: every station the line serves along it.
+
+    Starts from the trip on the branch's shape that stops most often (so a
+    short working can't truncate the list), then adds any station another trip
+    of the line in that direction serves right on the branch. One trip alone
+    can be an express (T7 event trains), which would hide stations and make
+    real expresses look like all-stations trains."""
+    stop_lists = static.all_stop_lists()
     stops = static.stops()
     for (d, i), trip_ids in station_trips.items():
-        best = max(trip_ids, key=lambda t: len(stop_lists.get(t, [])))
-        ids = [s for s in stop_lists.get(best, []) if s in stops.index]
-        if not ids:
-            continue
-        st = stops.loc[ids]
         b = directions[d]["branches"][i]
         line = LineString(to_metric(np.asarray(b["lonlat"])))
-        xy = to_metric(st[["lon", "lat"]].to_numpy(dtype=float))
-        pts = shapely.points(xy)
-        s = shapely.line_locate_point(line, pts)
-        off = shapely.distance(line, pts)
-        seen = set()
-        for name, si, oi, lat, lon, sid in zip(st.station, s, off, st.lat, st.lon, st.index):
-            # track-circuit location points ("... Loc") aren't stations
-            if str(name).endswith(" Loc") or str(sid).endswith(" Loc"):
+        best = max(trip_ids, key=lambda t: len(stop_lists.get(t, [])))
+        own = [s for s in stop_lists.get(best, []) if s in stops.index]
+        others = {s for t in (dir_trips or {}).get(d, ()) for s in stop_lists.get(t, ())
+                  if s in stops.index} - set(own)
+        found = {}
+        for ids, max_off in ((own, tol * 2), (sorted(others), tol)):
+            if not ids:
                 continue
-            if oi <= tol * 2 and name not in seen:
-                seen.add(name)
-                b["stations"].append({"name": name, "s": round(float(si), 1),
-                                      "lat": round(float(lat), 6), "lon": round(float(lon), 6)})
+            st = stops.loc[ids]
+            pts = shapely.points(to_metric(st[["lon", "lat"]].to_numpy(dtype=float)))
+            s_along = shapely.line_locate_point(line, pts)
+            off = shapely.distance(line, pts)
+            for name, si, oi, lat, lon, sid in zip(st.station, s_along, off, st.lat, st.lon, st.index):
+                # track-circuit location points ("... Loc") aren't stations
+                if str(name).endswith(" Loc") or str(sid).endswith(" Loc"):
+                    continue
+                if oi <= max_off and name not in found:
+                    found[name] = {"name": name, "s": round(float(si), 1),
+                                   "lat": round(float(lat), 6), "lon": round(float(lon), 6)}
+        b["stations"] = sorted(found.values(), key=lambda x: x["s"])
 
 
 def refresh_stations(static: StaticGtfs, data: dict):
@@ -242,7 +251,8 @@ def refresh_stations(static: StaticGtfs, data: dict):
             if ids:
                 station_trips[(d, i)] = ids
     if station_trips:
-        _add_stations(static, data["directions"], station_trips, max(static.feed.tolerance_m, 50))
+        dir_trips = {d: list(dt.trip_id) for d, dt in trips.groupby("direction_id")}
+        _add_stations(static, data["directions"], station_trips, max(static.feed.tolerance_m, 50), dir_trips)
     data["stations_version"] = STATIONS_VERSION
 
 

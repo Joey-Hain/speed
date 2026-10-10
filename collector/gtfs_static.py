@@ -127,22 +127,28 @@ class StaticGtfs:
     def served_station_names(self, trip_id: str) -> set[str] | None:
         """Station names a trip picks up or sets down at (all trips loaded once)."""
         if getattr(self, "_served", None) is None:
-            self._served = {}
+            stations = self.stops()["station"].to_dict()
+            self._served = {t: {stations.get(x, x) for x in v} for t, v in self.all_stop_lists().items()}
+        return self._served.get(trip_id)
+
+    def all_stop_lists(self) -> dict[str, list[str]]:
+        """trip_id -> ordered stop_ids it serves, for every trip (loaded once)."""
+        if getattr(self, "_stop_lists", None) is None:
+            out: dict[str, list[tuple[int, str]]] = {}
             with zipfile.ZipFile(self.zip_path) as z:
                 names = {n.split("/")[-1]: n for n in z.namelist()}
                 if "stop_times.txt" in names:
-                    cols = ["trip_id", "stop_id", "pickup_type", "drop_off_type"]
+                    cols = ["trip_id", "stop_id", "stop_sequence", "pickup_type", "drop_off_type"]
                     with z.open(names["stop_times.txt"]) as f:
                         for chunk in pd.read_csv(io.TextIOWrapper(f, "utf-8-sig"),
                                                  usecols=lambda c: c in cols, dtype=str,
                                                  keep_default_na=False, chunksize=1_000_000):
                             if "pickup_type" in chunk and "drop_off_type" in chunk:
                                 chunk = chunk[~((chunk.pickup_type == "1") & (chunk.drop_off_type == "1"))]
-                            for t, sid in zip(chunk.trip_id, chunk.stop_id):
-                                self._served.setdefault(t, []).append(sid)
-            stations = self.stops()["station"].to_dict()
-            self._served = {t: {stations.get(x, x) for x in v} for t, v in self._served.items()}
-        return self._served.get(trip_id)
+                            for t, sid, q in zip(chunk.trip_id, chunk.stop_id, chunk.stop_sequence):
+                                out.setdefault(t, []).append((int(q), sid))
+            self._stop_lists = {t: [x for _, x in sorted(v)] for t, v in out.items()}
+        return self._stop_lists
 
     def stops_for_trips(self, trip_ids: set[str]) -> dict[str, list[str]]:
         """trip_id -> ordered stop_ids where the trip actually stops.

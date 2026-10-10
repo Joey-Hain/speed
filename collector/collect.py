@@ -57,6 +57,7 @@ class FeedRunner:
         self.speed_samples: list[float] = []
         self.speed_ok: set[str] = set()
         self.last_pos: dict[str, tuple] = {}
+        self.tc_seen: dict[str, int] = {}  # vehicle -> time of its last track-circuit fix
         self.alias: "FeedRunner | None" = None   # store these lines on another feed's lines
         self._alias_lines: set[str] | None = None
         self.svc_cache: dict[tuple, str] = {}
@@ -205,14 +206,22 @@ class FeedRunner:
                 from google.protobuf import text_format
                 self.raw_samples.append(text_format.MessageToString(ent, as_one_line=True)[:1500])
             # Sydney Trains puts the track-circuit location in stop_id
-            # ("Ashfield.Burwood 5 Loc"); those positions aren't GPS
+            # ("Ashfield.Burwood 5 Loc"); those positions aren't GPS. At a
+            # platform the stop_id is the platform instead, but the position
+            # still comes from the signalling, so a train that showed a Loc
+            # in the last 10 minutes counts as track-circuit there too.
+            # (Outside the signalled area, e.g. the Hunter, there are no Locs.)
             tc = v.stop_id.endswith(" Loc")
+            if tc:
+                self.tc_seen[vid] = ts
+            elif f.key == "sydneytrains" and ts - self.tc_seen.get(vid, -10**9) <= 600:
+                tc = True
             if tc:
                 self.stats["fixes_track_circuit"] += 1
             for b, sb in pos.items():
                 seg = min(int(sb // sf.segment_m), g.n_seg(d, b) - 1)
                 self.acc.add_position(sk, line, d, b, seg, tc)
-            svc = self.service(tid, g, d, min(pos)) if f.mode == "train" else "all"
+            svc = self.service(tid, g, d, pos) if f.mode == "train" else "all"
             if has_speed:
                 self.stats["with_speed"] += 1
                 if v.position.speed > 0:
@@ -292,20 +301,24 @@ class FeedRunner:
             self._alias_lines = set(self.alias.static.route_line.values())
         return line in self._alias_lines
 
-    def service(self, tid: str, g, d: str, branch: int) -> str:
-        """'exp' if the trip skips a station between its first and last stop on
-        this branch, else 'all'."""
-        key = (tid, d, branch)
+    def service(self, tid: str, g, d: str, branches) -> str:
+        """'exp' if the trip skips a station between its first and last stop,
+        else 'all'. The fix may lie on several branches (a shared trunk); the
+        trip counts as all-stations if it stops everywhere along any of them,
+        so a Sydenham train isn't called express against the Airport branch."""
+        key = (tid, d, tuple(sorted(branches)))
         if key not in self.svc_cache:
-            svc = "all"
             served = self.static.served_station_names(tid) if tid else None
-            stations = g.data["directions"][d]["branches"][branch].get("stations", [])
-            if served and len(stations) >= 3:
+            verdicts = []
+            for b in key[2]:
+                stations = g.data["directions"][d]["branches"][b].get("stations", [])
+                if not served or len(stations) < 3:
+                    continue
                 names = [x["name"] for x in sorted(stations, key=lambda x: x["s"])]
                 hit = [i for i, n in enumerate(names) if n in served]
                 if len(hit) >= 2:
-                    skipped = sum(1 for n in names[hit[0]:hit[-1] + 1] if n not in served)
-                    svc = "exp" if skipped else "all"
+                    verdicts.append(any(n not in served for n in names[hit[0]:hit[-1] + 1]))
+            svc = "exp" if verdicts and all(verdicts) else "all"
             self.svc_cache[key] = svc
             self.stats["trips_express" if svc == "exp" else "trips_all_stations"] += 1
         return self.svc_cache[key]
