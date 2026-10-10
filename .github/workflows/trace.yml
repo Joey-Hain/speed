@@ -1,0 +1,66 @@
+name: Trace speeds
+
+# Runs the collector against the live feed and logs where speeds above a
+# threshold come from on one stretch of one line. Output goes to the "diag"
+# branch as trace-<line>.txt. Writes nothing to the data.
+on:
+  workflow_dispatch:
+    inputs:
+      line:
+        default: "T8"
+      dir:
+        default: "0"
+      from_km:
+        default: "6"
+      to_km:
+        default: "7.5"
+      over:
+        default: "85"
+      minutes:
+        default: "25"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: diag
+  cancel-in-progress: false
+
+jobs:
+  trace:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Static GTFS cache
+        uses: actions/cache/restore@v4
+        with:
+          path: gtfs_cache
+          key: gtfs-none
+          restore-keys: gtfs-
+      - run: git clone -q --depth 1 --branch data "https://github.com/${GITHUB_REPOSITORY}.git" store
+      - name: Trace
+        env:
+          TFNSW_API_KEY: ${{ secrets.TFNSW_API_KEY }}
+        run: |
+          python tools/trace.py --line "${{ github.event.inputs.line }}" --dir "${{ github.event.inputs.dir }}" \
+            --from-km "${{ github.event.inputs.from_km }}" --to-km "${{ github.event.inputs.to_km }}" \
+            --over "${{ github.event.inputs.over }}" --minutes "${{ github.event.inputs.minutes }}" 2>&1 | tee out.txt
+      - name: Publish output
+        if: always()
+        env:
+          TOKEN: ${{ github.token }}
+          LINE: ${{ github.event.inputs.line }}
+        run: |
+          mkdir pub && cd pub
+          git init -q -b diag
+          git fetch -q --depth 1 "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git" diag && git checkout -q FETCH_HEAD -- . || true
+          cp ../out.txt "trace-$LINE.txt"
+          git add -A
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit -q -m "trace $LINE"
+          git push -q -f "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:diag
