@@ -100,7 +100,7 @@ a { color: var(--muted); }
 .chart { --line: var(--text); }
 .chart .stat { fill: none; stroke: var(--line); stroke-width: 2; stroke-linejoin: round; }
 .chart .stat-thin { fill: none; stroke: var(--line); stroke-width: 1.5; stroke-dasharray: 3 3; opacity: 0.55; }
-.chart .tc { fill: rgba(0, 0, 0, 0.045); }
+.chart .tc { fill: rgba(128, 128, 128, 0.13); }
 .chart .iqr { fill: color-mix(in srgb, var(--line) 16%, transparent); stroke: none; }
 .chart .cross line { stroke: var(--muted); stroke-width: 1; }
 .chart .cross rect { fill: color-mix(in srgb, var(--line) 14%, transparent); }

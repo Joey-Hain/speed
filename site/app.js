@@ -82,16 +82,31 @@
     }
     return out;
   }
-  // segments of a branch whose positions are mostly track-circuit based
-  function tcSegments(dir, bi) {
+  // segments of a branch whose positions are mostly track-circuit based.
+  // GPS trains report every ~30 s, so at speed most short segments get only a
+  // fix or two: every fix counts, and gaps between two segments of the same
+  // kind take that kind, so a GPS stretch isn't drowned out by busier
+  // track-circuit ones.
+  function tcSegments(dir, bi, nSeg) {
     const tc = new Set();
-    let seen = 0;
-    if (!state.pos) return { tc, seen };
+    if (!state.pos) return { tc, seen: 0 };
+    const cls = new Int8Array(nSeg).fill(-1);
     for (const [k, [n, t]] of state.pos) {
       const [d, b, sgm] = k.split("|");
-      if (d !== dir || +b !== bi || n < 3) continue;
+      if (d !== dir || +b !== bi || n < 1 || +sgm >= nSeg) continue;
+      cls[+sgm] = t / n >= 0.5 ? 1 : 0;
+    }
+    let prev = -1;
+    for (let i = 0; i < nSeg; i++) {
+      if (cls[i] < 0) continue;
+      if (prev >= 0 && i - prev > 1 && cls[prev] === cls[i]) cls.fill(cls[i], prev + 1, i);
+      prev = i;
+    }
+    let seen = 0;
+    for (let i = 0; i < nSeg; i++) {
+      if (cls[i] < 0) continue;
       seen++;
-      if (t / n >= 0.5) tc.add(+sgm);
+      if (cls[i] === 1) tc.add(i);
     }
     return { tc, seen };
   }
@@ -368,10 +383,10 @@
     const ramp = rampFor(lc);
     const colour = colourScale(vmax, ramp);
 
-    const { tc, seen } = tcSegments(dir, bi);
+    const { tc, seen } = tcSegments(dir, bi, Math.ceil(branch.length_m / g.segment_m));
     const tcShare = seen ? tc.size / seen : 0;
-    const partial = tcShare > 0.05 && tcShare < 0.9;
-    if (tcShare >= 0.9) {
+    const partial = tcShare > 0.02 && tcShare < 0.97;
+    if (tcShare >= 0.97) {
       el.note.textContent = "Tracked by Sydney Trains track circuits: speeds are estimated from movement between track sections, not measured on the train.";
       el.note.hidden = false;
     } else if (partial) {
