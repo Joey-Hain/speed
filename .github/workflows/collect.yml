@@ -57,12 +57,11 @@ jobs:
         env:
           TOKEN: ${{ github.token }}
         run: |
-          if git clone -q --depth 1 --branch data \
+          if ! git clone -q --depth 1 --branch data \
               "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git" store; then
-            rm -rf store/.git
-          else
             echo "No data branch yet, starting fresh"
             mkdir -p store
+            git -C store init -q -b data
           fi
 
       - name: Collect
@@ -81,8 +80,8 @@ jobs:
           { echo '```'; cat summary.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
 
       # The data branch is kept as a single commit that is replaced every run.
-      # The totals are cumulative, so history isn't needed, and the repo stays
-      # small however long this runs.
+      # Totals cover a rolling ~30 days, so history isn't needed. Amending the
+      # fetched commit means each push only uploads the files that changed.
       - name: Publish data branch
         if: success() || failure()
         env:
@@ -90,9 +89,13 @@ jobs:
         run: |
           [ -f store/index.json ] || { echo "nothing to publish"; exit 0; }
           cd store
-          git init -q -b data
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
-          git -c user.name="github-actions[bot]" \
-              -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
-              commit -q -m "Data update $(date -u +%Y-%m-%dT%H:%MZ)"
-          git push -q -f "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git" data
+          msg="Data update $(date -u +%Y-%m-%dT%H:%MZ)"
+          if git rev-parse -q --verify HEAD >/dev/null; then
+            git commit -q --amend --reset-author -m "$msg"
+          else
+            git commit -q -m "$msg"
+          fi
+          git push -q -f "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:data

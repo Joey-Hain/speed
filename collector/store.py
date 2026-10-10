@@ -12,6 +12,9 @@ speeds.csv columns:
   dir       GTFS direction_id
   branch    branch index within that direction (see geometry.json)
   seg       segment index along the branch (segment_m metres each)
+  week      Monday of the week the samples are from (local time). Weeks that
+            ended more than RETENTION_DAYS ago are dropped, so the totals
+            always cover roughly the last 30 days.
   day       wd = weekday, we = weekend (local time)
   band      night 00-06, am 06-10, mid 10-15, pm 15-19, eve 19-24
   n, sum, sumsq, hist
@@ -22,7 +25,7 @@ speeds.csv columns:
   hist      speed histogram, "bin:count;bin:count", bin width hist_kmh from
             geometry.json (1 km/h for rail, 5 otherwise), for percentiles
 
-Totals only ever get added to, so any number of runs merge cleanly.
+Within a week, totals only ever get added to, so any number of runs merge cleanly.
 mean = sum / n,  sd = sqrt(sumsq / n - mean^2)
 """
 
@@ -31,12 +34,29 @@ from __future__ import annotations
 import csv
 import json
 import time
+from datetime import date, datetime, timedelta
 from pathlib import Path
+from zoneinfo import ZoneInfo
 
 from .feeds import BY_KEY
 
-COLS = ["dir", "branch", "seg", "day", "band",
+COLS = ["dir", "branch", "seg", "week", "day", "band",
         "n", "sum", "sumsq", "hist", "n_all", "sum_all", "sumsq_all", "hist_all"]
+RETENTION_DAYS = 30
+TZ = ZoneInfo("Australia/Sydney")
+
+
+def oldest_week_kept(today: date | None = None) -> str:
+    """Monday of the oldest week still inside the retention window."""
+    today = today or datetime.now(TZ).date()
+    cutoff = today - timedelta(days=RETENTION_DAYS)
+    # keep a week while any of its days is inside the window
+    return (cutoff - timedelta(days=cutoff.weekday())).isoformat()
+
+
+def _this_week() -> str:
+    t = datetime.now(TZ).date()
+    return (t - timedelta(days=t.weekday())).isoformat()
 
 
 def _hist_parse(txt: str) -> dict[int, int]:
@@ -56,15 +76,21 @@ def merge_line(store: Path, feed: str, line: str, cells: dict) -> int:
     """Add this run's Cells into the line's speeds.csv. Returns total running samples."""
     p = store / feed / line / "speeds.csv"
     totals: dict[tuple, list] = {}
+    keep_from = oldest_week_kept()
     if p.exists():
         with p.open() as f:
             for r in csv.DictReader(f):
-                k = (r["dir"], int(r["branch"]), int(r["seg"]), r["day"], r["band"])
+                week = r.get("week") or _this_week()  # rows from before weekly buckets
+                if week < keep_from:
+                    continue
+                k = (r["dir"], int(r["branch"]), int(r["seg"]), week, r["day"], r["band"])
                 totals[k] = [int(r["n"]), float(r["sum"]), float(r["sumsq"]),
                              _hist_parse(r.get("hist", "")),
                              int(r.get("n_all") or 0), float(r.get("sum_all") or 0),
                              float(r.get("sumsq_all") or 0), _hist_parse(r.get("hist_all", ""))]
     for k, c in cells.items():
+        if k[3] < keep_from:
+            continue
         t = totals.setdefault(k, [0, 0.0, 0.0, {}, 0, 0.0, 0.0, {}])
         t[0] += c.n; t[1] += c.sum; t[2] += c.sumsq
         t[4] += c.n_all; t[5] += c.sum_all; t[6] += c.sumsq_all
@@ -105,6 +131,28 @@ def merge_positions(store: Path, feed: str, line: str, cells: dict) -> tuple[int
         for k in sorted(totals):
             w.writerow([*k, *totals[k]])
     return sum(t[0] for t in totals.values()), sum(t[1] for t in totals.values())
+
+
+def prune_expired(store: Path, skip: set[tuple[str, str]]) -> dict[tuple[str, str], int]:
+    """Drop expired weeks from lines this run didn't touch (touched lines were
+    pruned while merging). Returns new running-sample totals for lines changed."""
+    keep_from = oldest_week_kept()
+    changed = {}
+    for p in store.glob("*/*/speeds.csv"):
+        key = (p.parent.parent.name, p.parent.name)
+        if key in skip:
+            continue
+        with p.open() as f:
+            rows = list(csv.DictReader(f))
+        kept = [r for r in rows if (r.get("week") or keep_from) >= keep_from]
+        if len(kept) == len(rows):
+            continue
+        with p.open("w", newline="") as f:
+            w = csv.DictWriter(f, fieldnames=COLS, extrasaction="ignore")
+            w.writeheader()
+            w.writerows(kept)
+        changed[key] = sum(int(r["n"]) for r in kept)
+    return changed
 
 
 INTERCITY = {"BMT", "CCN", "HUN", "SCO", "SHL"}

@@ -26,7 +26,7 @@ from .api import Api, ApiError, QuotaExceeded
 from .feeds import BY_KEY, FEEDS, Feed
 from .gtfs_static import load_static
 from .speed import MAX_KMH, MOVE_EPS_M, Accumulator, SpeedEstimator
-from .store import merge_line, merge_positions, update_index, write_status
+from .store import merge_line, merge_positions, prune_expired, update_index, write_status
 
 _TO_METRIC = Transformer.from_crs("EPSG:4326", geo.METRIC_CRS, always_xy=True)
 REFRESH_STATIC = False  # --refresh-static: re-download static GTFS this run
@@ -323,6 +323,8 @@ def run(feeds: list[Feed], minutes: float, store: Path, cache: Path,
         geoms[(feed, line)] = runner.geoms.get(line)
         if runner.static is not None:
             metas[(feed, line)] = runner.static.line_meta(line)
+    for key, total in prune_expired(store, set(touched)).items():
+        touched[key] = total
     update_index(store, touched, geoms, metas, shares)
     status = {
         "minutes": minutes,

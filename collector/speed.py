@@ -30,7 +30,7 @@ Samples are accumulated by (direction, branch, segment, day type, time band).
 from __future__ import annotations
 
 from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
 TZ = ZoneInfo("Australia/Sydney")
@@ -46,13 +46,15 @@ BANDS = [  # (name, start hour inclusive, end hour exclusive), local time
 ]
 
 
-def band_of(ts: int) -> tuple[str, str]:
+def band_of(ts: int) -> tuple[str, str, str]:
+    """(week, day type, time band) in Sydney time; week is the Monday's date."""
     t = datetime.fromtimestamp(ts, TZ)
+    week = (t.date() - timedelta(days=t.weekday())).isoformat()
     day = "we" if t.weekday() >= 5 else "wd"
     for name, a, b in BANDS:
         if a <= t.hour < b:
-            return day, name
-    return day, "night"
+            return week, day, name
+    return week, day, "night"
 
 
 
@@ -82,7 +84,7 @@ class Cell:
 
 
 class Accumulator:
-    """(feed, line) -> {(dir, branch, seg, day, band): Cell}"""
+    """(feed, line) -> {(dir, branch, seg, week, day, band): Cell}"""
 
     def __init__(self):
         self.data: dict[tuple[str, str], dict[tuple, Cell]] = {}
@@ -99,9 +101,9 @@ class Accumulator:
             kmh_run: float | None, kmh_all: float | None, width: int = 5):
         """kmh_run: running speed (None if stopped); kmh_all: speed with stops included.
         width: histogram bin width in km/h (from the line's geometry)."""
-        day, band = band_of(ts)
+        week, day, band = band_of(ts)
         cell = self.data.setdefault((feed, line), {}).setdefault(
-            (d, branch, seg, day, band), Cell())
+            (d, branch, seg, week, day, band), Cell())
         if kmh_run is not None:
             cell.add(kmh_run, True, width)
             self.samples += 1

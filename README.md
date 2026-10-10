@@ -33,10 +33,13 @@ GitHub Actions (hourly, polls ~50 min)          Cloudflare Pages
   segment numbers stay valid when TfNSW reissues shape ids. Each fix is
   projected onto every branch it lies near, so a shared trunk feeds every
   branch's profile.
-* **Storage** is running totals, not raw fixes: `n`, `sum`, `sumsq` per
-  direction, branch, segment, weekday/weekend and time band. It stays small
-  forever and any number of runs merge by addition. The `data` branch is
-  force-pushed as one commit each run, so the repo never grows from history.
+* **Storage** is running totals, not raw fixes: `n`, `sum`, `sumsq` and a
+  speed histogram per direction, branch, segment, week, weekday/weekend and
+  time band. Runs merge by addition. **Retention is a rolling 30 days**: each
+  run drops weeks that ended more than 30 days ago (`RETENTION_DAYS` in
+  `collector/store.py`), so the site always shows the last 30 to 37 days. The
+  `data` branch is one commit, amended and force-pushed each run, so the repo
+  never grows from history and each push only uploads changed files.
 
 Data layout on the `data` branch:
 

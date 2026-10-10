@@ -21,6 +21,9 @@ import pandas as pd
 from google.transit import gtfs_realtime_pb2
 
 from collector import collect
+import collector.store as _store
+
+_store.RETENTION_DAYS = 36500  # fixtures use fixed 2025 timestamps
 from collector.feeds import Feed
 
 OUT = Path(__file__).parent / "_out"
