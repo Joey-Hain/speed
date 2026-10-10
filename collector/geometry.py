@@ -148,7 +148,7 @@ def build_line(static: StaticGtfs, line: str) -> dict | None:
                 "draw": "".join("0" if c else "1" for c in covered),
                 "stations": [],
             })
-            station_trips[(d, i)] = dt.loc[dt.shape_id == sid, "trip_id"].iloc[0]
+            station_trips[(d, i)] = list(dt.loc[dt.shape_id == sid, "trip_id"].iloc[:25])
         directions[d] = {
             "headsign": headsign[0][0] if headsign else "",
             "branches": branches,
@@ -179,10 +179,13 @@ def build_line(static: StaticGtfs, line: str) -> dict | None:
 
 
 def _add_stations(static, directions, station_trips, tol):
-    stop_lists = static.stops_for_trips(set(station_trips.values()))
+    # stations come from the trip on each shape that stops most often, so a
+    # short working (Central to Wyong on a Newcastle shape) can't truncate them
+    stop_lists = static.stops_for_trips({t for ts in station_trips.values() for t in ts})
     stops = static.stops()
-    for (d, i), trip_id in station_trips.items():
-        ids = [s for s in stop_lists.get(trip_id, []) if s in stops.index]
+    for (d, i), trip_ids in station_trips.items():
+        best = max(trip_ids, key=lambda t: len(stop_lists.get(t, [])))
+        ids = [s for s in stop_lists.get(best, []) if s in stops.index]
         if not ids:
             continue
         st = stops.loc[ids]
