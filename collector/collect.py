@@ -46,6 +46,7 @@ class FeedRunner:
         self.disabled = False
         self.fail_streak = 0
         self.unmatched_routes: Counter = Counter()
+        self.nt_examples: list[dict] = []
         self.stats = Counter()
         self.errors: deque[str] = deque(maxlen=20)
 
@@ -102,6 +103,11 @@ class FeedRunner:
                     self.unmatched_routes[rid or f"trip:{tid}"] += 1
                 elif tid.startswith("NonTimetabled"):
                     self.stats["non_timetabled"] += 1
+                    if len(self.nt_examples) < 6:
+                        self.nt_examples.append({
+                            "trip": tid, "route": rid, "label": v.vehicle.label,
+                            "id": v.vehicle.id, "start": v.trip.start_time,
+                            "sched": v.trip.schedule_relationship})
                 continue
             g = self.geometry(line)
             if g is None:
@@ -189,6 +195,10 @@ class FeedRunner:
         s["speed_mode"] = self.speed_mode
         s["static_source"] = self.static.source_path if self.static else None
         s["lines_seen"] = sum(1 for g in self.geoms.values() if g is not None)
+        if self.static is not None and getattr(self.static, "notes", None):
+            s["static_notes"] = self.static.notes
+        if self.nt_examples:
+            s["non_timetabled_examples"] = self.nt_examples
         if self.unmatched_routes:
             s["unmatched_examples"] = [r for r, _ in self.unmatched_routes.most_common(8)]
         if self.errors:

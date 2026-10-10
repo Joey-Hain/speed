@@ -130,6 +130,7 @@ def load_static(feed: Feed, api: Api, cache_dir: Path, max_age_days: float = 3) 
     zp = cache_dir / f"{feed.key}.zip"
     src_file = cache_dir / f"{feed.key}.source"
     fresh = zp.exists() and time.time() - zp.stat().st_mtime < max_age_days * 86400
+    notes = []
     if not fresh:
         last_err = None
         for path in feed.static:
@@ -143,9 +144,12 @@ def load_static(feed: Feed, api: Api, cache_dir: Path, max_age_days: float = 3) 
                 break
             except ApiError as e:
                 last_err = e
+                notes.append(f"{path}: {e}")
         else:
             if not zp.exists():
                 raise ApiError(f"no static GTFS for {feed.key}: {last_err}")
             # keep using the stale copy rather than failing
     source = src_file.read_text().strip() if src_file.exists() else feed.static[0]
-    return StaticGtfs(feed, zp, source)
+    st = StaticGtfs(feed, zp, source)
+    st.notes = notes
+    return st
