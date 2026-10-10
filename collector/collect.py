@@ -222,6 +222,15 @@ def run(feeds: list[Feed], minutes: float, store: Path, cache: Path,
     signal.signal(signal.SIGTERM, lambda *_: stop.update(flag=True))
     fatal = None
 
+    # lines asked to be rebuilt are rebuilt now, even if no vehicle shows up this run
+    for item in sorted(rebuild):
+        fk, _, line = item.partition(":")
+        r = next((r for r in runners if r.feed.key == fk), None)
+        if r and line and r.ensure_static():
+            g = r.geometry(line)
+            if g is not None:
+                acc.data.setdefault((fk, line), {})
+
     # stagger first polls so feeds don't all fire together
     queue = [(time.time() + i * 0.5, i) for i in range(len(runners))]
     heapq.heapify(queue)
