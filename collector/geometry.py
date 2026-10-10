@@ -24,6 +24,7 @@ import numpy as np
 import shapely
 from pyproj import Transformer
 from shapely.geometry import LineString
+from shapely.ops import substring
 
 from .gtfs_static import StaticGtfs
 
@@ -31,6 +32,8 @@ METRIC_CRS = "EPSG:7856"  # GDA2020 / MGA zone 56; fine across NSW for distances
 _FWD = Transformer.from_crs("EPSG:4326", METRIC_CRS, always_xy=True)
 
 MAX_BRANCHES = 6
+HINT_BACK_M = 1500    # projection window around a vehicle's previous position
+HINT_AHEAD_M = 8000
 STATIONS_VERSION = 2  # 2: served stops only (no pass-through stations or track-circuit points)
 STATION_MODES = {"train", "metro", "lightrail", "ferry"}
 
@@ -59,16 +62,32 @@ class LineGeometry:
             for d, v in data["directions"].items()
         }
 
-    def project(self, direction: str, x: float, y: float, tolerance: float):
-        """[(branch_id, s)] for every branch of `direction` within tolerance."""
+    def project(self, direction: str, x: float, y: float, tolerance: float,
+                hints: dict[int, float] | None = None):
+        """[(branch_id, s)] for every branch of `direction` within tolerance.
+
+        A shape can pass the same track twice (the City Circle loop on T2, T3
+        and T8), where the nearest point may be on the wrong pass. With a hint
+        (the vehicle's previous s on that branch) the fix is placed within a
+        window around it, so the position can't jump to the other pass.
+        """
         branches = self.directions.get(direction)
         if not branches:
             return []
         p = shapely.Point(x, y)
         out = []
         for b in branches:
-            if b.line.distance(p) <= tolerance:
-                out.append((b.id, float(b.line.project(p))))
+            if b.line.distance(p) > tolerance:
+                continue
+            s_global = float(b.line.project(p))
+            h = (hints or {}).get(b.id)
+            if h is not None and abs(s_global - h) > HINT_BACK_M:
+                a, z = max(0.0, h - HINT_BACK_M), min(b.length, h + HINT_AHEAD_M)
+                if z - a > 1:
+                    win = substring(b.line, a, z)
+                    if win.distance(p) <= tolerance:
+                        s_global = a + float(win.project(p))
+            out.append((b.id, s_global))
         return out
 
     def n_seg(self, direction: str, branch_id: int) -> int:

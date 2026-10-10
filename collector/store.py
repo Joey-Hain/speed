@@ -232,6 +232,31 @@ def prune_obsolete(store: Path, valid: dict[str, set[str]]) -> list[str]:
     return removed
 
 
+# One-off data repairs, each applied once per store and recorded in migrations.json
+MIGRATIONS = {
+    # City Circle loop let fixes jump between passes (660 km/h on T8); clear the
+    # totals collected before the fix. Geometry is kept, so segments still line up.
+    "clear-city-circle-2026-10-10": [("sydneytrains", "T2"), ("sydneytrains", "T3"), ("sydneytrains", "T8")],
+}
+
+
+def apply_migrations(store: Path) -> list[str]:
+    p = store / "migrations.json"
+    done = set(json.loads(p.read_text())) if p.exists() else set()
+    applied = []
+    for name, lines in MIGRATIONS.items():
+        if name in done:
+            continue
+        for feed, line in lines:
+            for f in ("speeds.csv", "positions.csv"):
+                (store / feed / line / f).unlink(missing_ok=True)
+        done.add(name)
+        applied.append(name)
+    if applied:
+        p.write_text(json.dumps(sorted(done)))
+    return applied
+
+
 def write_status(store: Path, status: dict):
     status["finished"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
     (store / "status.json").write_text(json.dumps(status, indent=1, sort_keys=True))

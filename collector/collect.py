@@ -26,7 +26,7 @@ from .api import Api, ApiError, QuotaExceeded
 from .feeds import BY_KEY, FEEDS, Feed
 from .gtfs_static import load_static
 from .speed import MAX_KMH, MOVE_EPS_M, Accumulator, SpeedEstimator
-from .store import (merge_line, merge_positions, prune_expired, prune_obsolete,
+from .store import (apply_migrations, merge_line, merge_positions, prune_expired, prune_obsolete,
                     train_network, update_index, write_status)
 
 _TO_METRIC = Transformer.from_crs("EPSG:4326", geo.METRIC_CRS, always_xy=True)
@@ -55,6 +55,7 @@ class FeedRunner:
         self.prev_coord: dict[str, tuple] = {}
         self.speed_samples: list[float] = []
         self.speed_ok: set[str] = set()
+        self.last_pos: dict[str, tuple] = {}
         self.gps_runs: dict[str, int] = {}
         self.excluded: dict[str, bool] = {}
         self.raw_samples: list[str] = []
@@ -153,7 +154,11 @@ class FeedRunner:
                 if d is None:
                     continue
 
-            pos = dict(g.project(d, x, y, f.tolerance_m))
+            prev = self.last_pos.get(vid)
+            hints = prev[2] if prev and prev[0] == tid and prev[1] == d else None
+            pos = dict(g.project(d, x, y, f.tolerance_m, hints))
+            if pos:
+                self.last_pos[vid] = (tid, d, pos)
             if not pos:
                 self.stats["off_line"] += 1
                 continue
@@ -217,6 +222,11 @@ class FeedRunner:
                         self.stats["rejected_fast"] += 1
                         continue
                     kmh_all = mps_all * 3.6 if mps_all is not None else None
+                    if kmh_all is not None and kmh_all > vmax:
+                        kmh_all = None  # same cap as running speed
+                        self.stats["rejected_fast"] += 1
+                    if kmh is None and kmh_all is None:
+                        continue
                     last = g.n_seg(d, b) - 1
                     for seg in range(int(a // f.segment_m), min(int(z // f.segment_m), last) + 1):
                         self.acc.add(f.key, line, d, b, seg, ts, kmh, kmh_all, g.hist_kmh)
@@ -293,6 +303,7 @@ def run(feeds: list[Feed], minutes: float, store: Path, cache: Path,
         rebuild: set[str], api: Api | None = None, once: bool = False) -> dict:
     api = api or Api()
     store.mkdir(parents=True, exist_ok=True)
+    migrated = apply_migrations(store)
     acc = Accumulator()
     runners = [FeedRunner(f, api, store, cache, acc, rebuild) for f in feeds]
     gps_runs: dict[str, int] = {}  # run number -> last time NSW TrainLink reported it
@@ -368,6 +379,7 @@ def run(feeds: list[Feed], minutes: float, store: Path, cache: Path,
         "samples": acc.samples,
         "fatal": fatal,
         "removed_lines": removed,
+        "migrations": migrated,
         "feeds": {r.feed.key: r.summary() for r in runners},
     }
     write_status(store, status)
