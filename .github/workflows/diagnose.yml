@@ -1,0 +1,33 @@
+name: Diagnose feed
+
+# Manual only. Prints raw vehicle entities from one feed; doesn't touch data.
+on:
+  workflow_dispatch:
+    inputs:
+      feed:
+        description: "Feed key (see collector/feeds.py)"
+        default: "nswtrains"
+      match:
+        description: "Regex on the entity text, or 'rail'"
+        default: "rail"
+      polls:
+        default: "2"
+
+jobs:
+  diagnose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Dump
+        env:
+          TFNSW_API_KEY: ${{ secrets.TFNSW_API_KEY }}
+          FEED: ${{ github.event.inputs.feed }}
+          MATCH: ${{ github.event.inputs.match }}
+          POLLS: ${{ github.event.inputs.polls }}
+        run: python tools/diagnose.py --feed "$FEED" --match "$MATCH" --polls "$POLLS" | tee out.txt
