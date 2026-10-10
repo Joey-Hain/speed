@@ -23,16 +23,18 @@ p.add_argument("--feed", required=True)
 p.add_argument("--polls", type=int, default=2)
 p.add_argument("--match", default="")
 p.add_argument("--limit", type=int, default=25)
+p.add_argument("--rt", default="", help="override the realtime path, e.g. /v2/gtfs/vehiclepos/nswtrains")
 a = p.parse_args()
 feed = BY_KEY[a.feed]
 api = Api()
 st = load_static(feed, api, Path("gtfs_cache"))
+print("realtime path:", a.rt or feed.rt)
 rtype = st.routes["route_type"].to_dict() if "route_type" in st.routes else {}
 shown = 0
 speeds = defaultdict(list)
 for i in range(a.polls):
     m = gtfs_realtime_pb2.FeedMessage()
-    m.ParseFromString(api.get(feed.rt))
+    m.ParseFromString(api.get(a.rt or feed.rt))
     for e in m.entity:
         if not e.HasField("vehicle"):
             continue

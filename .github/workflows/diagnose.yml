@@ -12,6 +12,9 @@ on:
         default: "rail"
       polls:
         default: "2"
+      rt:
+        description: "Override realtime path (optional)"
+        default: ""
 
 permissions:
   contents: write
@@ -37,19 +40,21 @@ jobs:
           FEED: ${{ github.event.inputs.feed }}
           MATCH: ${{ github.event.inputs.match }}
           POLLS: ${{ github.event.inputs.polls }}
-        run: python tools/diagnose.py --feed "$FEED" --match "$MATCH" --polls "$POLLS" | tee out.txt
+          RT: ${{ github.event.inputs.rt }}
+        run: python tools/diagnose.py --feed "$FEED" --match "$MATCH" --polls "$POLLS" --rt "$RT" 2>&1 | tee out.txt
       # output goes on a throwaway "diag" branch so it can be read without the log UI
       - name: Publish output
         if: always()
         env:
           TOKEN: ${{ github.token }}
           FEED: ${{ github.event.inputs.feed }}
+          RT: ${{ github.event.inputs.rt }}
         run: |
           mkdir pub && cp out.txt "pub/$FEED.txt" && cd pub
           git init -q -b diag
           git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit -q --allow-empty -m "diag" >/dev/null
           git fetch -q --depth 1 "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git" diag 2>/dev/null && git checkout -q FETCH_HEAD -- . 2>/dev/null || true
-          cp ../out.txt "$FEED.txt"
+          cp ../out.txt "$FEED${RT//\//_}.txt"
           git add -A
           git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit -q -m "diag $FEED"
           git push -q -f "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:diag
