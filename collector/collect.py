@@ -48,9 +48,8 @@ class FeedRunner:
         self.fail_streak = 0
         self.unmatched_routes: Counter = Counter()
         self.nt_examples: list[dict] = []
-        # positioning diagnostics: GPS fixes never land on exactly the same
-        # coordinates as another vehicle's; track-circuit positions do (the
-        # circuit's reference point), so shared coordinates mark TC sections
+        # positioning diagnostics: GPS fixes rarely land on exactly the same
+        # coordinates as another vehicle's; track-circuit positions do
         self.coord_owner: dict[tuple, set] = {}
         self.prev_coord: dict[str, tuple] = {}
         self.speed_samples: list[float] = []
@@ -165,9 +164,14 @@ class FeedRunner:
             if len(self.raw_samples) < 3 and not repeat:
                 from google.protobuf import text_format
                 self.raw_samples.append(text_format.MessageToString(ent, as_one_line=True)[:1500])
+            # Sydney Trains puts the track-circuit location in stop_id
+            # ("Ashfield.Burwood 5 Loc"); those positions aren't GPS
+            tc = v.stop_id.endswith(" Loc")
+            if tc:
+                self.stats["fixes_track_circuit"] += 1
             for b, sb in pos.items():
                 seg = min(int(sb // f.segment_m), g.n_seg(d, b) - 1)
-                self.acc.add_position(f.key, line, d, b, seg, shared)
+                self.acc.add_position(f.key, line, d, b, seg, tc)
             if has_speed:
                 self.stats["with_speed"] += 1
                 if v.position.speed > 0:
@@ -240,6 +244,7 @@ class FeedRunner:
         if self.errors:
             s["errors"] = list(self.errors)[-5:]
         if s.get("fixes_on_line"):
+            s["track_circuit_share"] = round(s.get("fixes_track_circuit", 0) / s["fixes_on_line"], 3)
             s["shared_position_share"] = round(s.get("fixes_shared_position", 0) / s["fixes_on_line"], 3)
         if self.speed_samples:
             v = sorted(self.speed_samples)

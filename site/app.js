@@ -33,7 +33,7 @@
   const el = {
     mode: $("mode"), feed: $("feed"), line: $("line"), lines: $("lines"), dir: $("dir"),
     branch: $("branch"), day: $("day"), band: $("band"), stat: $("stat"), stops: $("stops"),
-    chart: $("chart"), legend: $("legend"), updated: $("updated"),
+    chart: $("chart"), legend: $("legend"), updated: $("updated"), note: $("note"),
   };
   const state = { index: null, feed: null, line: null, geom: null, rows: null, cache: new Map() };
 
@@ -64,6 +64,35 @@
       o.hasAll = o.n_all > 0;
       return o;
     });
+  }
+
+  // positions.csv: per segment, how many fixes came from track circuits
+  function parsePositions(text) {
+    const out = new Map();
+    if (!text || !text.trim()) return out;
+    const lines = text.trim().split(/\r?\n/);
+    const head = lines.shift().split(",");
+    const iD = head.indexOf("dir"), iB = head.indexOf("branch"), iS = head.indexOf("seg");
+    const iF = head.indexOf("fixes"), iT = head.indexOf("tc");
+    if (iT < 0) return out;
+    for (const l of lines) {
+      const v = l.split(",");
+      out.set(`${v[iD]}|${v[iB]}|${v[iS]}`, [+v[iF], +v[iT]]);
+    }
+    return out;
+  }
+  // segments of a branch whose positions are mostly track-circuit based
+  function tcSegments(dir, bi) {
+    const tc = new Set();
+    let seen = 0;
+    if (!state.pos) return { tc, seen };
+    for (const [k, [n, t]] of state.pos) {
+      const [d, b, sgm] = k.split("|");
+      if (d !== dir || +b !== bi || n < 3) continue;
+      seen++;
+      if (t / n >= 0.5) tc.add(+sgm);
+    }
+    return { tc, seen };
   }
 
   // great-circle metres
@@ -171,7 +200,7 @@
   }
 
   // ------------------------------------------------------------------ chart
-  function drawChart(branch, cells, stat, vmax, colour) {
+  function drawChart(branch, cells, stat, vmax, colour, tcSegs) {
     const host = el.chart;
     host.style.setProperty("--line", colour);
     host.innerHTML = "";
@@ -227,6 +256,12 @@
 
     // a flat step per segment, so speed limits read as level runs
     const x0 = (s) => x(s * segKm), x1 = (s) => x(Math.min((s + 1) * segKm, L_km));
+    // shade track-circuit sections when only part of the line is tracked that way
+    if (tcSegs && tcSegs.size) {
+      for (const sgm of tcSegs) {
+        add(plot, "rect", { class: "tc", x: x0(sgm), y: M.t, width: Math.max(1, x1(sgm) - x0(sgm)), height: H - M.t - M.b });
+      }
+    }
     const segs = [...cells.keys()].sort((a, b) => a - b);
     const runs = [];
     let cur = [];
@@ -331,7 +366,19 @@
     const ramp = rampFor(lc);
     const colour = colourScale(vmax, ramp);
 
-    if (cells.size) drawChart(branch, cells, stat, vmax, lc);
+    const { tc, seen } = tcSegments(dir, bi);
+    const tcShare = seen ? tc.size / seen : 0;
+    const partial = tcShare > 0.05 && tcShare < 0.9;
+    if (tcShare >= 0.9) {
+      el.note.textContent = "Tracked by Sydney Trains track circuits: speeds are estimated from movement between track sections, not measured on the train.";
+      el.note.hidden = false;
+    } else if (partial) {
+      el.note.textContent = "Shaded sections are tracked by Sydney Trains track circuits: speeds there are estimated from movement between track sections, not measured on the train.";
+      el.note.hidden = false;
+    } else {
+      el.note.hidden = true;
+    }
+    if (cells.size) drawChart(branch, cells, stat, vmax, lc, partial ? tc : null);
     else el.chart.innerHTML = `<div class="empty-chart">No data yet for this selection</div>`;
 
     mapLayer.clearLayers();
@@ -445,16 +492,19 @@
     try {
       if (!state.cache.has(ck)) {
         const base = `${feed}/${encodeURIComponent(key)}/`;
-        const [geom, csv] = await Promise.all([fetchData(base + "geometry.json", "json"), fetchData(base + "speeds.csv")]);
-        state.cache.set(ck, { geom, rows: parseCSV(csv) });
+        const [geom, csv, pos] = await Promise.all([
+          fetchData(base + "geometry.json", "json"), fetchData(base + "speeds.csv"),
+          fetchData(base + "positions.csv").catch(() => ""),
+        ]);
+        state.cache.set(ck, { geom, rows: parseCSV(csv), pos: parsePositions(pos) });
       }
     } catch (e) {
       el.chart.innerHTML = `<div class="empty-chart">Couldn't load ${escapeHtml(key)}</div>`;
       return;
     }
     if (state.feed !== feed || state.line !== key) return;
-    const { geom, rows } = state.cache.get(ck);
-    state.geom = geom; state.rows = rows;
+    const { geom, rows, pos } = state.cache.get(ck);
+    state.geom = geom; state.rows = rows; state.pos = pos;
     el.dir.innerHTML = Object.entries(geom.directions)
       .map(([d, v]) => `<option value="${d}">to ${escapeHtml(v.headsign || "direction " + d)}</option>`).join("");
     const want = params.get("d");

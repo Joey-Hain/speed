@@ -78,6 +78,18 @@ a { color: var(--muted); }
 }
 .speed-tools .check input { width: 1.05rem; height: 1.05rem; margin: 0; accent-color: var(--text); cursor: pointer; }
 
+/* Track-circuit note */
+
+.note {
+  margin: 0 0 0.75rem;
+  padding: 0.45rem 0.7rem;
+  font-size: 0.85rem;
+  color: var(--muted);
+  background: #f6f6f6;
+  border-left: 3px solid #bbb;
+  border-radius: 0 6px 6px 0;
+}
+
 /* Chart */
 
 .chart { position: relative; width: 100%; min-height: 300px; }
@@ -88,6 +100,7 @@ a { color: var(--muted); }
 .chart { --line: var(--text); }
 .chart .stat { fill: none; stroke: var(--line); stroke-width: 2; stroke-linejoin: round; }
 .chart .stat-thin { fill: none; stroke: var(--line); stroke-width: 1.5; stroke-dasharray: 3 3; opacity: 0.55; }
+.chart .tc { fill: rgba(0, 0, 0, 0.045); }
 .chart .iqr { fill: color-mix(in srgb, var(--line) 16%, transparent); stroke: none; }
 .chart .cross line { stroke: var(--muted); stroke-width: 1; }
 .chart .cross rect { fill: color-mix(in srgb, var(--line) 14%, transparent); }

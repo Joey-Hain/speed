@@ -5,6 +5,8 @@ The data store (checked out from the repo's `data` branch).
   <store>/status.json                      last run: per-feed health
   <store>/<feed>/<line>/geometry.json      frozen branches + stations
   <store>/<feed>/<line>/speeds.csv         running totals per segment
+  <store>/<feed>/<line>/positions.csv      fixes per segment, and how many were
+                                           track-circuit positions
 
 speeds.csv columns:
   dir       GTFS direction_id
@@ -83,15 +85,15 @@ def merge_line(store: Path, feed: str, line: str, cells: dict) -> int:
 
 
 def merge_positions(store: Path, feed: str, line: str, cells: dict) -> tuple[int, int]:
-    """positions.csv: dir,branch,seg,fixes,shared. 'shared' counts fixes whose exact
-    coordinates another vehicle also reported, which happens with track-circuit
-    positioning and not with GPS. Returns line totals (fixes, shared)."""
+    """positions.csv: dir,branch,seg,fixes,tc. 'tc' counts fixes positioned by
+    track circuits rather than GPS (Sydney Trains' stop_id "... Loc").
+    Returns line totals (fixes, tc)."""
     p = store / feed / line / "positions.csv"
     totals: dict[tuple, list[int]] = {}
     if p.exists():
         with p.open() as f:
             for r in csv.DictReader(f):
-                totals[(r["dir"], int(r["branch"]), int(r["seg"]))] = [int(r["fixes"]), int(r["shared"])]
+                totals[(r["dir"], int(r["branch"]), int(r["seg"]))] = [int(r["fixes"]), int(r.get("tc") or 0)]
     for k, (n, sh) in cells.items():
         t = totals.setdefault(k, [0, 0])
         t[0] += n
@@ -99,7 +101,7 @@ def merge_positions(store: Path, feed: str, line: str, cells: dict) -> tuple[int
     p.parent.mkdir(parents=True, exist_ok=True)
     with p.open("w", newline="") as f:
         w = csv.writer(f)
-        w.writerow(["dir", "branch", "seg", "fixes", "shared"])
+        w.writerow(["dir", "branch", "seg", "fixes", "tc"])
         for k in sorted(totals):
             w.writerow([*k, *totals[k]])
     return sum(t[0] for t in totals.values()), sum(t[1] for t in totals.values())
@@ -148,7 +150,7 @@ def update_index(store: Path, touched: dict[tuple[str, str], int], geometries: d
             entry["network"] = net
         fx, sh = (shares or {}).get((feed, line), (0, 0))
         if fx:
-            entry["shared_positions"] = round(sh / fx, 3)
+            entry["track_circuit"] = round(sh / fx, 3)
         entry["samples"] = total
         entry["updated"] = now
         if g is not None:
