@@ -86,7 +86,15 @@ class Accumulator:
 
     def __init__(self):
         self.data: dict[tuple[str, str], dict[tuple, Cell]] = {}
+        self.positions: dict[tuple[str, str], dict[tuple, list[int]]] = {}
         self.samples = 0
+
+    def add_position(self, feed: str, line: str, d: str, branch: int, seg: int, shared: bool):
+        """Count a fix on a segment, and whether its coordinates were shared with
+        another vehicle (the sign of track-circuit positioning)."""
+        c = self.positions.setdefault((feed, line), {}).setdefault((d, branch, seg), [0, 0])
+        c[0] += 1
+        c[1] += int(shared)
 
     def add(self, feed: str, line: str, d: str, branch: int, seg: int, ts: int,
             kmh_run: float | None, kmh_all: float | None, width: int = 5):

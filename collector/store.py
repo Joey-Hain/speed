@@ -82,6 +82,29 @@ def merge_line(store: Path, feed: str, line: str, cells: dict) -> int:
     return int(sum(t[0] for t in totals.values()))
 
 
+def merge_positions(store: Path, feed: str, line: str, cells: dict) -> tuple[int, int]:
+    """positions.csv: dir,branch,seg,fixes,shared. 'shared' counts fixes whose exact
+    coordinates another vehicle also reported, which happens with track-circuit
+    positioning and not with GPS. Returns line totals (fixes, shared)."""
+    p = store / feed / line / "positions.csv"
+    totals: dict[tuple, list[int]] = {}
+    if p.exists():
+        with p.open() as f:
+            for r in csv.DictReader(f):
+                totals[(r["dir"], int(r["branch"]), int(r["seg"]))] = [int(r["fixes"]), int(r["shared"])]
+    for k, (n, sh) in cells.items():
+        t = totals.setdefault(k, [0, 0])
+        t[0] += n
+        t[1] += sh
+    p.parent.mkdir(parents=True, exist_ok=True)
+    with p.open("w", newline="") as f:
+        w = csv.writer(f)
+        w.writerow(["dir", "branch", "seg", "fixes", "shared"])
+        for k in sorted(totals):
+            w.writerow([*k, *totals[k]])
+    return sum(t[0] for t in totals.values()), sum(t[1] for t in totals.values())
+
+
 INTERCITY = {"BMT", "CCN", "HUN", "SCO", "SHL"}
 TRAIN_FEEDS = {"sydneytrains", "nswtrains"}
 
@@ -108,7 +131,7 @@ def train_network(feed: str, line: str, meta: dict | None) -> str | None:
 
 
 def update_index(store: Path, touched: dict[tuple[str, str], int], geometries: dict,
-                 metas: dict | None = None):
+                 metas: dict | None = None, shares: dict | None = None):
     p = store / "index.json"
     idx = json.loads(p.read_text()) if p.exists() else {"feeds": {}}
     now = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
@@ -123,6 +146,9 @@ def update_index(store: Path, touched: dict[tuple[str, str], int], geometries: d
         net = train_network(feed, line, (metas or {}).get((feed, line)))
         if net:
             entry["network"] = net
+        fx, sh = (shares or {}).get((feed, line), (0, 0))
+        if fx:
+            entry["shared_positions"] = round(sh / fx, 3)
         entry["samples"] = total
         entry["updated"] = now
         if g is not None:

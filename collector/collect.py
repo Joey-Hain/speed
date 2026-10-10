@@ -26,7 +26,7 @@ from .api import Api, ApiError, QuotaExceeded
 from .feeds import BY_KEY, FEEDS, Feed
 from .gtfs_static import load_static
 from .speed import MAX_KMH, MOVE_EPS_M, Accumulator, SpeedEstimator
-from .store import merge_line, update_index, write_status
+from .store import merge_line, merge_positions, update_index, write_status
 
 _TO_METRIC = Transformer.from_crs("EPSG:4326", geo.METRIC_CRS, always_xy=True)
 REFRESH_STATIC = False  # --refresh-static: re-download static GTFS this run
@@ -48,6 +48,13 @@ class FeedRunner:
         self.fail_streak = 0
         self.unmatched_routes: Counter = Counter()
         self.nt_examples: list[dict] = []
+        # positioning diagnostics: GPS fixes never land on exactly the same
+        # coordinates as another vehicle's; track-circuit positions do (the
+        # circuit's reference point), so shared coordinates mark TC sections
+        self.coord_owner: dict[tuple, set] = {}
+        self.prev_coord: dict[str, tuple] = {}
+        self.speed_samples: list[float] = []
+        self.raw_samples: list[str] = []
         self.stats = Counter()
         self.errors: deque[str] = deque(maxlen=20)
 
@@ -137,6 +144,30 @@ class FeedRunner:
                 continue
 
             has_speed = v.position.HasField("speed")
+            key = (round(v.position.latitude, 6), round(v.position.longitude, 6))
+            owners = self.coord_owner.setdefault(key, set())
+            shared = bool(owners - {vid})
+            if len(owners) < 8:
+                owners.add(vid)
+            still = self.prev_coord.get(vid) == key and not repeat
+            self.prev_coord[vid] = key
+            self.stats["fixes_on_line"] += 1
+            if shared:
+                self.stats["fixes_shared_position"] += 1
+            if has_speed:
+                kmh_r = v.position.speed * 3.6
+                if len(self.speed_samples) < 20000 and not repeat:
+                    self.speed_samples.append(kmh_r)
+                if still:
+                    self.stats["still_with_speed_field"] += 1
+                    if kmh_r > 5:
+                        self.stats["still_but_speed_over_5"] += 1
+            if len(self.raw_samples) < 3 and not repeat:
+                from google.protobuf import text_format
+                self.raw_samples.append(text_format.MessageToString(ent, as_one_line=True)[:1500])
+            for b, sb in pos.items():
+                seg = min(int(sb // f.segment_m), g.n_seg(d, b) - 1)
+                self.acc.add_position(f.key, line, d, b, seg, shared)
             if has_speed:
                 self.stats["with_speed"] += 1
                 if v.position.speed > 0:
@@ -208,6 +239,16 @@ class FeedRunner:
             s["unmatched_examples"] = [r for r, _ in self.unmatched_routes.most_common(8)]
         if self.errors:
             s["errors"] = list(self.errors)[-5:]
+        if s.get("fixes_on_line"):
+            s["shared_position_share"] = round(s.get("fixes_shared_position", 0) / s["fixes_on_line"], 3)
+        if self.speed_samples:
+            v = sorted(self.speed_samples)
+            q = lambda p: round(v[min(len(v) - 1, int(p * len(v)))], 1)
+            s["reported_kmh"] = {"n": len(v), "zero_share": round(sum(1 for x in v if x < 0.5) / len(v), 3),
+                                 "p10": q(0.1), "p50": q(0.5), "p90": q(0.9), "max": round(v[-1], 1),
+                                 "distinct": len(set(round(x, 1) for x in v))}
+        if self.raw_samples:
+            s["raw_samples"] = self.raw_samples
         return s
 
 
@@ -266,13 +307,18 @@ def run(feeds: list[Feed], minutes: float, store: Path, cache: Path,
     touched = {}
     geoms = {}
     metas = {}
+    for feed, line in acc.positions:
+        acc.data.setdefault((feed, line), {})
+    shares = {}
     for (feed, line), cells in acc.data.items():
         touched[(feed, line)] = merge_line(store, feed, line, cells)
+        if (feed, line) in acc.positions:
+            shares[(feed, line)] = merge_positions(store, feed, line, acc.positions[(feed, line)])
         runner = next(r for r in runners if r.feed.key == feed)
         geoms[(feed, line)] = runner.geoms.get(line)
         if runner.static is not None:
             metas[(feed, line)] = runner.static.line_meta(line)
-    update_index(store, touched, geoms, metas)
+    update_index(store, touched, geoms, metas, shares)
     status = {
         "minutes": minutes,
         "requests": api.requests,
