@@ -97,6 +97,10 @@ a { color: var(--muted); }
 
 .chart { position: relative; width: 100%; min-height: 300px; }
 .chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+.chart-scroll { overflow-x: auto; overflow-y: hidden; overscroll-behavior-x: contain; }
+.chart-scroll svg { max-width: none; }
+.chart .y-axis { position: absolute; left: 0; top: 0; width: auto; pointer-events: none; }
+.chart .y-axis-bg { fill: var(--bg, #fff); }
 .chart .axis text, .chart .station text { fill: var(--muted); font-size: 11px; }
 .chart .grid line { stroke: var(--rule); }
 .chart .station line { stroke: var(--station); stroke-dasharray: 2 3; }

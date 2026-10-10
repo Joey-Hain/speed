@@ -32,7 +32,7 @@
   const $ = (id) => document.getElementById(id);
   const el = {
     mode: $("mode"), feed: $("feed"), line: $("line"), lines: $("lines"), dir: $("dir"),
-    branch: $("branch"), day: $("day"), band: $("band"), stat: $("stat"), stops: $("stops"),
+    branch: $("branch"), day: $("day"), band: $("band"), stat: $("stat"), stops: $("stops"), zoom: $("zoom"),
     svc: $("svc"), svcWrap: $("svc-wrap"),
     chart: $("chart"), legend: $("legend"), updated: $("updated"), note: $("note"),
   };
@@ -228,10 +228,15 @@
     const host = el.chart;
     host.style.setProperty("--line", colour);
     host.innerHTML = "";
-    const W = Math.max(320, host.clientWidth), H = W < 600 ? 300 : 380;
+    const fitW = Math.max(320, host.clientWidth), H = fitW < 600 ? 300 : 380;
     const hasStations = (branch.stations || []).length > 0;
-    const M = { t: hasStations ? 64 : 22, r: 12, b: 36, l: 44 };
     const L_km = branch.length_m / 1000;
+    // "Scroll along route": draw at a fixed scale (at least 12 px per km, or
+    // 3 px per segment) and let the chart scroll sideways; short routes still fit
+    const scroll = el.zoom.checked;
+    const M = { t: hasStations ? 64 : 22, r: scroll ? 70 : 12, b: 36, l: 44 };
+    const pxPerKm = Math.max(12, 3000 / state.geom.segment_m);
+    const W = scroll ? Math.max(fitW, Math.ceil(M.l + M.r + L_km * pxPerKm)) : fitW;
     const segKm = state.geom.segment_m / 1000;
     const nSeg = Math.ceil(L_km / segKm);
     const x = (km) => M.l + (km / L_km) * (W - M.l - M.r);
@@ -249,10 +254,21 @@
 
     const grid = add(svg, "g", { class: "grid" });
     const axis = add(svg, "g", { class: "axis" });
+    // when scrolling, the speed axis sits in its own strip that stays put
+    let yAxisSvg = null, yAxis = axis;
+    if (W > fitW) {
+      yAxisSvg = document.createElementNS(NS, "svg");
+      yAxisSvg.setAttribute("class", "y-axis");
+      yAxisSvg.setAttribute("viewBox", `0 0 ${M.l} ${H}`);
+      yAxisSvg.setAttribute("width", M.l);
+      yAxisSvg.setAttribute("height", H);
+      add(yAxisSvg, "rect", { x: 0, y: 0, width: M.l, height: H, class: "y-axis-bg" });
+      yAxis = add(yAxisSvg, "g", { class: "axis" });
+    }
     const yStep = vmax <= 50 ? 10 : vmax <= 150 ? 20 : 40;
     for (let v = 0; v <= vmax; v += yStep) {
       add(grid, "line", { x1: M.l, x2: W - M.r, y1: y(v), y2: y(v) });
-      add(axis, "text", { x: M.l - 6, y: y(v) + 4, "text-anchor": "end" }, v);
+      add(yAxis, "text", { x: M.l - 6, y: y(v) + 4, "text-anchor": "end" }, v);
     }
     const xTarget = Math.max(5, Math.floor((W - M.l - M.r) / 70));
     const xStep = [0.5, 1, 2, 5, 10, 20, 50, 100, 200].find((s) => L_km / s <= xTarget) || 500;
@@ -260,7 +276,7 @@
       add(axis, "text", { x: x(k), y: H - M.b + 18, "text-anchor": "middle" }, +k.toFixed(1));
     }
     add(axis, "text", { x: W - M.r, y: H - 4, "text-anchor": "end", class: "label" }, "km");
-    add(axis, "text", { x: 2, y: hasStations ? M.t - 10 : 10, "text-anchor": "start", class: "label" }, "km/h");
+    add(yAxis, "text", { x: 2, y: hasStations ? M.t - 10 : 10, "text-anchor": "start", class: "label" }, "km/h");
 
     const stG = add(svg, "g", { class: "station" });
     let lastX = -1e9;
@@ -336,7 +352,26 @@
     const tip = document.createElement("div");
     tip.className = "tip";
     tip.hidden = true;
-    host.appendChild(svg);
+    if (W > fitW) {
+      svg.setAttribute("width", W);
+      svg.setAttribute("height", H);
+      svg.style.width = W + "px";
+      const wrap = document.createElement("div");
+      wrap.className = "chart-scroll";
+      wrap.appendChild(svg);
+      host.appendChild(wrap);
+      host.appendChild(yAxisSvg);
+      // keep the same stretch of line in view when redrawing (e.g. changing statistic)
+      const key = [state.feed, state.line, el.dir.value, el.branch.value].join("|");
+      if (state.scrollKey === key) wrap.scrollLeft = state.scrollFrac * (W - wrap.clientWidth);
+      wrap.addEventListener("scroll", () => {
+        state.scrollKey = key;
+        state.scrollFrac = wrap.scrollLeft / Math.max(1, W - wrap.clientWidth);
+        tip.hidden = true;
+      });
+    } else {
+      host.appendChild(svg);
+    }
     host.appendChild(tip);
 
     const near = (km) => {
@@ -573,6 +608,7 @@
     if (el.stat.value !== "p85") p.set("stat", el.stat.value);
     if (el.svc.value !== "any") p.set("svc", el.svc.value);
     if (el.stops.checked) p.set("stops", "1");
+    if (el.zoom.checked) p.set("zoom", "1");
     history.replaceState(null, "", "?" + p.toString());
   }
 
@@ -599,6 +635,7 @@
     fillLines();
     for (const k of ["day", "band", "stat", "svc"]) if (params.get(k)) el[k].value = params.get(k);
     el.stops.checked = params.get("stops") === "1";
+    el.zoom.checked = params.get("zoom") === "1";
 
     el.mode.addEventListener("change", () => { fillFeeds(); fillLines(); selectLine(firstLine()); });
     el.feed.addEventListener("change", () => { fillLines(); selectLine(firstLine()); });
@@ -608,7 +645,7 @@
       if (e) selectLine(e);
     });
     el.dir.addEventListener("change", () => { fillBranches(); render(); });
-    for (const e of [el.branch, el.day, el.band, el.stat, el.stops, el.svc]) e.addEventListener("change", render);
+    for (const e of [el.branch, el.day, el.band, el.stat, el.stops, el.svc, el.zoom]) e.addEventListener("change", render);
     let rt;
     addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(render, 150); });
 
