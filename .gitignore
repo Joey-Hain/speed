@@ -1,0 +1,8 @@
+.env
+gtfs_cache/
+store/
+tests/_out/
+site/data/
+__pycache__/
+*.pyc
+shapes_bundle.zip

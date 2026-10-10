@@ -1,0 +1,154 @@
+/* Same look as train.joeyhain.org / joeyhain.org: Helvetica, quiet greys, 6px corners */
+
+:root {
+  --max-width: 1100px;
+  --text: #111;
+  --muted: #555;
+  --rule: #eee;
+  --border: #ccc;
+  --station: #d6d6d6;
+  --nodata: #aaa;
+  --tile-filter: grayscale(1) contrast(0.85) brightness(1.06);
+}
+
+html, body { margin: 0; padding: 0; }
+
+body {
+  font-family: Helvetica, Arial, sans-serif;
+  color: var(--text);
+  line-height: 1.6;
+  background: #fff;
+}
+
+.page {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+h1 { margin: 0 0 1rem; }
+a { color: var(--muted); }
+
+/* Options */
+
+.speed-tools {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.75rem 1rem;
+  align-items: end;
+  margin-bottom: 1.75rem;
+}
+.speed-tools label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+  min-width: 0;
+}
+.speed-tools .wide { grid-column: span 2; }
+.speed-tools select,
+.speed-tools input:not([type="checkbox"]) {
+  font: inherit;
+  font-size: 0.95rem;
+  height: 2.4rem;
+  line-height: 1.2;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--text);
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+.speed-tools select:disabled { color: var(--muted); background: #fafafa; }
+.speed-tools select:focus,
+.speed-tools input:not([type="checkbox"]):focus { outline: 2px solid var(--text); outline-offset: -1px; border-color: var(--text); }
+
+.speed-tools .check {
+  flex-direction: row;
+  align-items: center;
+  gap: 0.5rem;
+  height: 2.4rem;
+  font-size: 0.95rem;
+  color: var(--text);
+  cursor: pointer;
+  user-select: none;
+}
+.speed-tools .check input { width: 1.05rem; height: 1.05rem; margin: 0; accent-color: var(--text); cursor: pointer; }
+
+/* Chart */
+
+.chart { position: relative; width: 100%; min-height: 300px; }
+.chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+.chart .axis text, .chart .station text { fill: var(--muted); font-size: 11px; }
+.chart .grid line { stroke: var(--rule); }
+.chart .station line { stroke: var(--station); stroke-dasharray: 2 3; }
+.chart { --line: var(--text); }
+.chart .stat { fill: none; stroke: var(--line); stroke-width: 2; stroke-linejoin: round; }
+.chart .stat-thin { fill: none; stroke: var(--line); stroke-width: 1.5; stroke-dasharray: 3 3; opacity: 0.55; }
+.chart .iqr { fill: color-mix(in srgb, var(--line) 16%, transparent); stroke: none; }
+.chart .cross line { stroke: var(--muted); stroke-width: 1; }
+.chart .cross rect { fill: color-mix(in srgb, var(--line) 14%, transparent); }
+.chart .label { fill: var(--muted); font-size: 11px; }
+.chart .title { fill: var(--text); font-size: 13px; font-weight: bold; }
+.tip {
+  position: absolute;
+  pointer-events: none;
+  z-index: 5;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.35rem 0.6rem;
+  font-size: 0.8rem;
+  line-height: 1.45;
+  white-space: nowrap;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+.tip .muted { color: var(--muted); }
+.empty-chart {
+  display: grid;
+  place-items: center;
+  min-height: 260px;
+  color: var(--muted);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+}
+
+/* Map */
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1.75rem 0 0.5rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.legend .bar { width: 160px; height: 8px; border-radius: 4px; }
+.legend .nodata { display: inline-block; width: 22px; border-top: 2px dashed var(--nodata); margin-left: 0.6rem; }
+
+.map {
+  height: 520px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  background: #f4f4f4;
+}
+.leaflet-tile-pane { filter: var(--tile-filter); }
+.leaflet-container { font: inherit; }
+.leaflet-tooltip { font-size: 0.8rem; }
+
+footer { margin-top: 1rem; font-size: 0.8rem; color: var(--muted); }
+
+@media (max-width: 700px) {
+  .page { padding: 1.25rem; }
+  .speed-tools { grid-template-columns: 1fr 1fr; }
+  .speed-tools .wide { grid-column: 1 / -1; }
+  .map { height: 380px; }
+  .legend { justify-content: flex-start; }
+  .legend .bar { width: 110px; }
+}

@@ -1,0 +1,8 @@
+requests
+python-dotenv
+gtfs-realtime-bindings
+protobuf
+pandas
+numpy
+shapely>=2.0
+pyproj

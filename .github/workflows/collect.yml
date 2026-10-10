@@ -1,0 +1,93 @@
+name: Collect speeds
+
+# Starts hourly and polls for ~50 minutes, so collection is close to continuous.
+# GitHub can start scheduled runs late (or drop one when busy); the concurrency
+# group queues overlapping runs instead of running two collectors at once.
+on:
+  schedule:
+    - cron: "7 * * * *"
+  workflow_dispatch:
+    inputs:
+      minutes:
+        description: "How long to poll"
+        default: "50"
+      feeds:
+        description: "Comma-separated feed keys (blank = all)"
+        default: ""
+      rebuild:
+        description: "feed:line to rebuild geometry for, e.g. sydneytrains:T1 (drops its totals)"
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: collect
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Day stamp for the static GTFS cache
+        id: day
+        run: echo "day=$(date -u +%Y-%m-%d)" >> "$GITHUB_OUTPUT"
+
+      - name: Static GTFS cache
+        uses: actions/cache@v4
+        with:
+          path: gtfs_cache
+          key: gtfs-${{ steps.day.outputs.day }}
+          restore-keys: gtfs-
+
+      - name: Fetch current data
+        env:
+          TOKEN: ${{ github.token }}
+        run: |
+          if git clone -q --depth 1 --branch data \
+              "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git" store; then
+            rm -rf store/.git
+          else
+            echo "No data branch yet, starting fresh"
+            mkdir -p store
+          fi
+
+      - name: Collect
+        env:
+          TFNSW_API_KEY: ${{ secrets.TFNSW_API_KEY }}
+          MINUTES: ${{ github.event.inputs.minutes || '50' }}
+          FEEDS: ${{ github.event.inputs.feeds }}
+          REBUILD: ${{ github.event.inputs.rebuild }}
+        run: |
+          args=(--minutes "$MINUTES" --store store --cache gtfs_cache)
+          [ -n "$FEEDS" ] && args+=(--feeds "$FEEDS")
+          [ -n "$REBUILD" ] && args+=(--rebuild "$REBUILD")
+          python -m collector.collect "${args[@]}" | tee summary.txt
+          { echo '```'; cat summary.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+      # The data branch is kept as a single commit that is replaced every run.
+      # The totals are cumulative, so history isn't needed, and the repo stays
+      # small however long this runs.
+      - name: Publish data branch
+        if: success() || failure()
+        env:
+          TOKEN: ${{ github.token }}
+        run: |
+          [ -f store/index.json ] || { echo "nothing to publish"; exit 0; }
+          cd store
+          git init -q -b data
+          git add -A
+          git -c user.name="github-actions[bot]" \
+              -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+              commit -q -m "Data update $(date -u +%Y-%m-%dT%H:%MZ)"
+          git push -q -f "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git" data

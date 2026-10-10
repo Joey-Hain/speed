@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Speed</title>
+  <meta name="robots" content="noai, noimageai">
+  <link rel="icon" type="image/jpeg" href="/favicon.jpg">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+  <main class="page">
+    <h1>Speed</h1>
+
+    <section class="speed-tools" aria-label="Options">
+      <label>Mode
+        <select id="mode"></select>
+      </label>
+      <label>Network
+        <select id="feed"></select>
+      </label>
+      <label>Line
+        <input id="line" list="lines" autocomplete="off" placeholder="T1, M1, 333">
+        <datalist id="lines"></datalist>
+      </label>
+      <label>Direction
+        <select id="dir"></select>
+      </label>
+      <label class="wide">Branch
+        <select id="branch"></select>
+      </label>
+      <label>Days
+        <select id="day">
+          <option value="all">All days</option>
+          <option value="wd">Weekdays</option>
+          <option value="we">Weekends</option>
+        </select>
+      </label>
+      <label>Time
+        <select id="band">
+          <option value="all">All day</option>
+          <option value="am">AM peak 06-10</option>
+          <option value="mid">Middle 10-15</option>
+          <option value="pm">PM peak 15-19</option>
+          <option value="eve">Evening 19-24</option>
+          <option value="night">Night 00-06</option>
+        </select>
+      </label>
+      <label>Statistic
+        <select id="stat">
+          <option value="p85">85th percentile</option>
+          <option value="p95">95th percentile</option>
+          <option value="p50">Median</option>
+          <option value="mean">Mean</option>
+        </select>
+      </label>
+      <label class="check">
+        <input type="checkbox" id="stops">
+        <span>Include stops</span>
+      </label>
+    </section>
+
+    <div id="chart" class="chart" role="img" aria-label="Speed against distance along the line"></div>
+
+    <div class="legend" id="legend" aria-label="Speed colour scale"></div>
+    <div id="map" class="map"></div>
+
+    <footer>Data: <a href="https://opendata.transport.nsw.gov.au/">Transport for NSW Open Data</a>, CC BY 4.0<span id="updated"></span></footer>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script src="/config.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>
