@@ -67,12 +67,14 @@ class StaticGtfs:
     def line_meta(self, line: str) -> dict:
         r = self.routes[self.routes.line == line]
         if r.empty:
-            return {"name": line, "colour": "", "route_ids": []}
+            return {"name": line, "colour": "", "route_ids": [], "route_type": "", "desc": ""}
         first = r.iloc[0]
         return {
             "name": first.route_long_name or first.route_short_name or line,
             "colour": first.route_color,
             "route_ids": list(r.index),
+            "route_type": first.get("route_type", ""),
+            "desc": first.route_desc,
         }
 
     def shapes(self) -> dict[str, np.ndarray]:

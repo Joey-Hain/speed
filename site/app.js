@@ -367,36 +367,79 @@
   }
 
   // ------------------------------------------------------------------ selection
-  function feedsForMode(mode) {
-    return Object.entries(state.index.feeds)
-      .filter(([, f]) => f.mode === mode && Object.keys(f.lines).length)
-      .sort((a, b) => a[1].name.localeCompare(b[1].name));
+  // Lines are grouped for the Network menu. Most modes group by feed; trains
+  // are regrouped into Sydney Trains / Intercity / Regional across both train
+  // feeds, and NSW TrainLink coaches move under buses.
+  const INTERCITY = new Set(["BMT", "CCN", "HUN", "SCO", "SHL"]);
+  const TRAIN_GROUPS = { sydney: "Sydney Trains", intercity: "Intercity trains", regional: "Regional trains" };
+  const TRAIN_FEEDS = new Set(["sydneytrains", "nswtrains"]);
+
+  function classify(feedKey, f, line, l) {
+    if (TRAIN_FEEDS.has(feedKey)) {
+      const net = l.network || (INTERCITY.has(line) ? "intercity" : /^T\d/.test(line) ? "sydney" : "regional");
+      if (net === "coach") return ["bus", "train-coach", "NSW TrainLink coaches"];
+      return ["train", "train-" + net, TRAIN_GROUPS[net] || TRAIN_GROUPS.regional];
+    }
+    return [f.mode, feedKey, f.name];
+  }
+
+  function buildCatalog() {
+    const cat = [];
+    for (const [feedKey, f] of Object.entries(state.index.feeds)) {
+      for (const [line, l] of Object.entries(f.lines || {})) {
+        const [mode, group, groupLabel] = classify(feedKey, f, line, l);
+        cat.push({ mode, group, groupLabel, feed: feedKey, line, name: l.name || "", samples: l.samples || 0 });
+      }
+    }
+    // the same line code can come from two feeds (HUN, SHL): label those apart
+    const seen = new Map();
+    for (const e of cat) {
+      const k = e.group + "|" + e.line;
+      seen.set(k, (seen.get(k) || 0) + 1);
+    }
+    for (const e of cat) {
+      const dup = seen.get(e.group + "|" + e.line) > 1;
+      e.key = dup ? `${e.line} (${state.index.feeds[e.feed].name})` : e.line;
+    }
+    state.catalog = cat;
+  }
+
+  function groupsForMode(mode) {
+    const groups = new Map();
+    for (const e of state.catalog) if (e.mode === mode && !groups.has(e.group)) groups.set(e.group, e.groupLabel);
+    const order = ["train-sydney", "train-intercity", "train-regional"];
+    return [...groups.entries()].sort((a, b) => {
+      const ia = order.indexOf(a[0]), ib = order.indexOf(b[0]);
+      if (ia >= 0 || ib >= 0) return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib);
+      return a[1].localeCompare(b[1]);
+    });
   }
   function fillModes() {
-    el.mode.innerHTML = MODE_ORDER.filter((m) => feedsForMode(m).length)
+    el.mode.innerHTML = MODE_ORDER.filter((m) => groupsForMode(m).length)
       .map((m) => `<option value="${m}">${MODE_LABEL[m]}</option>`).join("");
   }
   function fillFeeds() {
-    el.feed.innerHTML = feedsForMode(el.mode.value)
-      .map(([k, f]) => `<option value="${k}">${escapeHtml(f.name)}</option>`).join("");
+    el.feed.innerHTML = groupsForMode(el.mode.value)
+      .map(([k, label]) => `<option value="${k}">${escapeHtml(label)}</option>`).join("");
   }
-  function linesOfFeed() {
-    const f = state.index.feeds[el.feed.value];
-    return f ? Object.entries(f.lines).sort((a, b) => a[0].localeCompare(b[0], "en", { numeric: true })) : [];
+  function entriesOfGroup() {
+    return state.catalog.filter((e) => e.group === el.feed.value)
+      .sort((a, b) => a.key.localeCompare(b.key, "en", { numeric: true }));
   }
   function fillLines() {
-    el.lines.innerHTML = linesOfFeed()
-      .map(([k, l]) => `<option value="${escapeHtml(k)}">${escapeHtml(l.name || "")}</option>`).join("");
+    el.lines.innerHTML = entriesOfGroup()
+      .map((e) => `<option value="${escapeHtml(e.key)}">${escapeHtml(e.name)}</option>`).join("");
   }
   function firstLine() {
-    const ls = linesOfFeed().sort((a, b) => (b[1].samples || 0) - (a[1].samples || 0));
-    return ls.length ? ls[0][0] : null;
+    const ls = entriesOfGroup().sort((a, b) => b.samples - a.samples);
+    return ls.length ? ls[0] : null;
   }
+  const entryByKey = (key) => entriesOfGroup().find((e) => e.key === key);
 
-  async function selectLine(key) {
-    const feed = el.feed.value;
-    if (!state.index.feeds[feed]?.lines[key]) return;
-    el.line.value = key;
+  async function selectLine(entry) {
+    if (!entry) return;
+    const { feed, line: key } = entry;
+    el.line.value = entry.key;
     state.feed = feed; state.line = key;
     const ck = feed + "/" + key;
     try {
@@ -452,29 +495,29 @@
         timeZone: "Australia/Sydney", hour12: false, day: "numeric", month: "short",
         year: "numeric", hour: "2-digit", minute: "2-digit" });
     }
+    buildCatalog();
     fillModes();
-    const f0 = params.get("f");
-    if (f0 && state.index.feeds[f0]) el.mode.value = state.index.feeds[f0].mode;
+    const start = state.catalog.find((e) => e.feed === params.get("f") && e.line === params.get("l"));
+    if (start) el.mode.value = start.mode;
     fillFeeds();
-    if (f0 && state.index.feeds[f0]) el.feed.value = f0;
+    if (start) el.feed.value = start.group;
     fillLines();
     for (const k of ["day", "band", "stat"]) if (params.get(k)) el[k].value = params.get(k);
     el.stops.checked = params.get("stops") === "1";
 
     el.mode.addEventListener("change", () => { fillFeeds(); fillLines(); selectLine(firstLine()); });
     el.feed.addEventListener("change", () => { fillLines(); selectLine(firstLine()); });
-    el.line.addEventListener("change", () => selectLine(el.line.value.trim()));
+    el.line.addEventListener("change", () => selectLine(entryByKey(el.line.value.trim())));
     el.line.addEventListener("input", () => {
-      const v = el.line.value.trim();
-      if (state.index.feeds[el.feed.value]?.lines[v]) selectLine(v);
+      const e = entryByKey(el.line.value.trim());
+      if (e) selectLine(e);
     });
     el.dir.addEventListener("change", () => { fillBranches(); render(); });
     for (const e of [el.branch, el.day, el.band, el.stat, el.stops]) e.addEventListener("change", render);
     let rt;
     addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(render, 150); });
 
-    const l0 = params.get("l");
-    selectLine(l0 && state.index.feeds[el.feed.value]?.lines[l0] ? l0 : firstLine());
+    selectLine(start || firstLine());
   }
 
   boot();

@@ -82,7 +82,33 @@ def merge_line(store: Path, feed: str, line: str, cells: dict) -> int:
     return int(sum(t[0] for t in totals.values()))
 
 
-def update_index(store: Path, touched: dict[tuple[str, str], int], geometries: dict):
+INTERCITY = {"BMT", "CCN", "HUN", "SCO", "SHL"}
+TRAIN_FEEDS = {"sydneytrains", "nswtrains"}
+
+
+def train_network(feed: str, line: str, meta: dict | None) -> str | None:
+    """sydney / intercity / regional / coach for train feeds, from GTFS route_desc
+    ("Sydney Trains Network", "Intercity Trains Network", "Regional Trains and
+    Coaches Network") and route_type, falling back to line codes."""
+    if feed not in TRAIN_FEEDS:
+        return None
+    meta = meta or {}
+    desc = (meta.get("desc") or "").lower()
+    try:
+        rt = int(meta.get("route_type") or 0)
+    except ValueError:
+        rt = 0
+    if rt == 3 or 200 <= rt < 300 or 700 <= rt < 800:
+        return "coach"
+    if "intercity" in desc or line in INTERCITY:
+        return "intercity"
+    if "sydney trains" in desc or (line[:1] == "T" and line[1:2].isdigit()):
+        return "sydney"
+    return "regional"
+
+
+def update_index(store: Path, touched: dict[tuple[str, str], int], geometries: dict,
+                 metas: dict | None = None):
     p = store / "index.json"
     idx = json.loads(p.read_text()) if p.exists() else {"feeds": {}}
     now = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
@@ -94,6 +120,9 @@ def update_index(store: Path, touched: dict[tuple[str, str], int], geometries: d
             fe["name"], fe["mode"] = f.name, f.mode
         g = geometries.get((feed, line))
         entry = fe["lines"].setdefault(line, {})
+        net = train_network(feed, line, (metas or {}).get((feed, line)))
+        if net:
+            entry["network"] = net
         entry["samples"] = total
         entry["updated"] = now
         if g is not None:

@@ -265,11 +265,14 @@ def run(feeds: list[Feed], minutes: float, store: Path, cache: Path,
     # ---- merge
     touched = {}
     geoms = {}
+    metas = {}
     for (feed, line), cells in acc.data.items():
         touched[(feed, line)] = merge_line(store, feed, line, cells)
         runner = next(r for r in runners if r.feed.key == feed)
         geoms[(feed, line)] = runner.geoms.get(line)
-    update_index(store, touched, geoms)
+        if runner.static is not None:
+            metas[(feed, line)] = runner.static.line_meta(line)
+    update_index(store, touched, geoms, metas)
     status = {
         "minutes": minutes,
         "requests": api.requests,
