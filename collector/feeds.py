@@ -55,6 +55,11 @@ def _rb(region: str, label: str) -> Feed:
 
 
 FEEDS: list[Feed] = [
+    # TrainLink first: its run numbers are used to drop the Sydney Trains copies
+    Feed("nswtrains", "NSW TrainLink", "train",
+         "/v1/gtfs/vehiclepos/nswtrains", ("/v1/gtfs/schedule/nswtrains",),
+         speed="auto", interval=30, segment_m=1000, tolerance_m=300),
+
     # ---- track-circuit based: speed has to be estimated
     Feed("sydneytrains", "Sydney Trains", "train",
          "/v2/gtfs/vehiclepos/sydneytrains",
@@ -72,9 +77,6 @@ FEEDS: list[Feed] = [
     Feed("metro", "Sydney Metro", "metro",
          "/v2/gtfs/vehiclepos/metro", ("/v2/gtfs/schedule/metro",),
          speed="auto", interval=15, segment_m=100, tolerance_m=100),
-    Feed("nswtrains", "NSW TrainLink", "train",
-         "/v1/gtfs/vehiclepos/nswtrains", ("/v1/gtfs/schedule/nswtrains",),
-         speed="auto", interval=60, segment_m=1000, tolerance_m=300),
     Feed("lightrail-cbdandsoutheast", "CBD and South East Light Rail (L2, L3)", "lightrail",
          "/v1/gtfs/vehiclepos/lightrail/cbdandsoutheast",
          ("/v1/gtfs/schedule/lightrail/cbdandsoutheast",),

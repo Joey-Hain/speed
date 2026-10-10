@@ -55,6 +55,7 @@ class FeedRunner:
         self.prev_coord: dict[str, tuple] = {}
         self.speed_samples: list[float] = []
         self.speed_ok: set[str] = set()
+        self.gps_runs: dict[str, int] = {}
         self.excluded: dict[str, bool] = {}
         self.raw_samples: list[str] = []
         self.stats = Counter()
@@ -119,6 +120,15 @@ class FeedRunner:
                             "trip": tid, "route": rid, "label": v.vehicle.label,
                             "id": v.vehicle.id, "start": v.trip.start_time,
                             "sched": v.trip.schedule_relationship})
+                continue
+            # the same train in both feeds shares its run number, the first part of
+            # the trip_id (KN49.1414... in Sydney Trains, KN49.101026... in
+            # TrainLink); TrainLink's GPS copy wins over the track-circuit one
+            run_no = tid.split(".", 1)[0]
+            if f.key == "nswtrains" and run_no:
+                self.gps_runs[run_no] = header_ts
+            elif f.key == "sydneytrains" and run_no and header_ts - self.gps_runs.get(run_no, -10**9) <= 900:
+                self.stats["skipped_gps_duplicate"] += 1
                 continue
             if self.is_excluded(line):
                 self.stats["skipped_duplicate_regional"] += 1
@@ -285,6 +295,9 @@ def run(feeds: list[Feed], minutes: float, store: Path, cache: Path,
     store.mkdir(parents=True, exist_ok=True)
     acc = Accumulator()
     runners = [FeedRunner(f, api, store, cache, acc, rebuild) for f in feeds]
+    gps_runs: dict[str, int] = {}  # run number -> last time NSW TrainLink reported it
+    for r in runners:
+        r.gps_runs = gps_runs
     deadline = time.time() + minutes * 60
     stop = {"flag": False}
     signal.signal(signal.SIGTERM, lambda *_: stop.update(flag=True))
