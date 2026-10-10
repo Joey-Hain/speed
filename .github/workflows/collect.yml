@@ -17,6 +17,9 @@ on:
       rebuild:
         description: "feed:line to rebuild geometry for, e.g. sydneytrains:T1 (drops its totals)"
         default: ""
+      refresh:
+        description: "Re-download static GTFS (yes/no)"
+        default: "no"
 
 permissions:
   contents: write
@@ -68,10 +71,12 @@ jobs:
           MINUTES: ${{ github.event.inputs.minutes || '50' }}
           FEEDS: ${{ github.event.inputs.feeds }}
           REBUILD: ${{ github.event.inputs.rebuild }}
+          REFRESH: ${{ github.event.inputs.refresh }}
         run: |
           args=(--minutes "$MINUTES" --store store --cache gtfs_cache)
           [ -n "$FEEDS" ] && args+=(--feeds "$FEEDS")
           [ -n "$REBUILD" ] && args+=(--rebuild "$REBUILD")
+          [ "$REFRESH" = "yes" ] && args+=(--refresh-static)
           python -m collector.collect "${args[@]}" | tee summary.txt
           { echo '```'; cat summary.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
 

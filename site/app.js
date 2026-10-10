@@ -324,11 +324,9 @@
     const cells = agg.get(bi) || new Map();
 
     // one scale for chart and map
-    // scale runs from 0 to the fastest well-sampled segment + 10 km/h
+    // scale runs from 0 to the fastest segment shown + 10 km/h, so nothing clips
     const all = [...agg.values()].flatMap((m) => [...m.values()]);
-    const solid = all.filter((c) => enough(c, stat));
-    const basis = solid.length ? solid : all;
-    const vmax = Math.max(20, Math.ceil(Math.max(0, ...basis.map((c) => value(c, stat))) + 10));
+    const vmax = Math.max(20, Math.ceil(Math.max(0, ...all.map((c) => value(c, stat))) + 10));
     const lc = lineColour(g);
     const ramp = rampFor(lc);
     const colour = colourScale(vmax, ramp);

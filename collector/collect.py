@@ -29,6 +29,7 @@ from .speed import MAX_KMH, MOVE_EPS_M, Accumulator, SpeedEstimator
 from .store import merge_line, update_index, write_status
 
 _TO_METRIC = Transformer.from_crs("EPSG:4326", geo.METRIC_CRS, always_xy=True)
+REFRESH_STATIC = False  # --refresh-static: re-download static GTFS this run
 MIN_REPORTED_KMH = 1.0  # below this a fix counts as stopped (only in the with-stops totals)
 
 
@@ -54,7 +55,8 @@ class FeedRunner:
     def ensure_static(self) -> bool:
         if self.static is None and not self.disabled:
             try:
-                self.static = load_static(self.feed, self.api, self.cache)
+                self.static = load_static(self.feed, self.api, self.cache,
+                                          max_age_days=0 if REFRESH_STATIC else 3)
             except ApiError as e:
                 self.disabled = True
                 self.errors.append(f"static: {e}")
@@ -195,6 +197,9 @@ class FeedRunner:
         s["speed_mode"] = self.speed_mode
         s["static_source"] = self.static.source_path if self.static else None
         s["lines_seen"] = sum(1 for g in self.geoms.values() if g is not None)
+        missing = sorted(k for k, g in self.geoms.items() if g is None)
+        if missing:
+            s["lines_without_geometry"] = missing[:20]
         if self.static is not None and getattr(self.static, "notes", None):
             s["static_notes"] = self.static.notes
         if self.nt_examples:
@@ -277,7 +282,10 @@ def main():
     p.add_argument("--rebuild", action="append", default=[],
                    help="feed:line whose geometry should be rebuilt (drops its totals)")
     p.add_argument("--once", action="store_true", help="poll each feed once, for testing")
+    p.add_argument("--refresh-static", action="store_true", help="re-download static GTFS now")
     args = p.parse_args()
+    global REFRESH_STATIC
+    REFRESH_STATIC = args.refresh_static
 
     feeds = FEEDS if not args.feeds else [BY_KEY[k.strip()] for k in args.feeds.split(",")]
     status = run(feeds, args.minutes, Path(args.store), Path(args.cache),
