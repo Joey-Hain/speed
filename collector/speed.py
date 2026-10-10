@@ -41,6 +41,8 @@ MOVE_EPS_M = 20     # smaller jumps are treated as standing still
 MIN_SPAN_S = 45     # shortest running span a speed is measured over
 A_MAX = 1.5         # m/s^2: no train, tram or bus pulls away faster than this
 DEPART_SLACK = 1.25 # allowance for position/timing error on the departure hop
+DEPART_MAX_M = 2000 # the first position after leaving a stop is within a poll or a track
+                    # circuit of it; a longer hop means the stop was placed wrongly
 MAX_KMH = {"train": 170, "metro": 120, "lightrail": 90, "bus": 110, "ferry": 80}
 
 BANDS = [  # (name, start hour inclusive, end hour exclusive), local time
@@ -184,7 +186,7 @@ class SpeedEstimator:
             if st.anchor is not None and 0 < dt_all <= MAX_GAP_S:
                 for b in pos:
                     d = pos[b] - st.pos[b] if b in st.pos else 0
-                    if d < MOVE_EPS_M:
+                    if d < MOVE_EPS_M or d > DEPART_MAX_M:
                         continue
                     # starting from rest, the average over d can't exceed
                     # sqrt(A_MAX * d / 2); faster means the start position was wrong
