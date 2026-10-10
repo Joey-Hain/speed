@@ -60,10 +60,11 @@ FEEDS: list[Feed] = [
          "/v2/gtfs/vehiclepos/sydneytrains",
          ("/v2/gtfs/schedule/sydneytrains", "/v1/gtfs/schedule/sydneytrains"),
          speed="estimated", interval=15, segment_m=250, tolerance_m=200),
+    # L1 positions look signalling-based but the feed does carry a real speed
     Feed("lightrail-innerwest", "Inner West Light Rail (L1)", "lightrail",
          "/v2/gtfs/vehiclepos/lightrail/innerwest",
          ("/v2/gtfs/schedule/lightrail/innerwest", "/v1/gtfs/schedule/lightrail/innerwest"),
-         speed="estimated", interval=15, segment_m=100, tolerance_m=80),
+         speed="auto", interval=15, segment_m=100, tolerance_m=80),
 
     # ---- GPS based
     # Metro: polled often and cut into 100 m segments, because the main use is
@@ -73,7 +74,7 @@ FEEDS: list[Feed] = [
          speed="auto", interval=15, segment_m=100, tolerance_m=100),
     Feed("nswtrains", "NSW TrainLink", "train",
          "/v1/gtfs/vehiclepos/nswtrains", ("/v1/gtfs/schedule/nswtrains",),
-         speed="auto", interval=60, segment_m=1000, tolerance_m=300),
+         speed="estimated",  # speed field is always 0 interval=60, segment_m=1000, tolerance_m=300),
     Feed("lightrail-cbdandsoutheast", "CBD and South East Light Rail (L2, L3)", "lightrail",
          "/v1/gtfs/vehiclepos/lightrail/cbdandsoutheast",
          ("/v1/gtfs/schedule/lightrail/cbdandsoutheast",),
@@ -85,7 +86,7 @@ FEEDS: list[Feed] = [
     Feed("lightrail-newcastle", "Newcastle Light Rail", "lightrail",
          "/v1/gtfs/vehiclepos/lightrail/newcastle",
          ("/v1/gtfs/schedule/lightrail/newcastle",),
-         speed="auto", interval=30, segment_m=100, tolerance_m=60),
+         speed="estimated",  # speed field is always 0 interval=30, segment_m=100, tolerance_m=60),
     Feed("buses", "Sydney buses", "bus",
          "/v1/gtfs/vehiclepos/buses", ("/v1/gtfs/schedule/buses",),
          speed="auto", interval=60, segment_m=200, tolerance_m=60),

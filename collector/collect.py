@@ -98,8 +98,10 @@ class FeedRunner:
                 line = st.route_line.get(st.trip_info[tid][0])
             if not line:
                 self.stats["unmatched"] += 1
-                if rid or tid:
+                if (rid or tid) and not tid.startswith("NonTimetabled"):
                     self.unmatched_routes[rid or f"trip:{tid}"] += 1
+                elif tid.startswith("NonTimetabled"):
+                    self.stats["non_timetabled"] += 1
                 continue
             g = self.geometry(line)
             if g is None:
@@ -177,7 +179,7 @@ class FeedRunner:
 
     def check_auto(self):
         """An 'auto' feed whose speed field is always zero gets estimated instead."""
-        if (self.speed_mode == "auto" and self.stats["with_speed"] >= 300
+        if (self.speed_mode == "auto" and self.stats["with_speed"] >= 100
                 and self.stats["speed_nonzero"] < 0.02 * self.stats["with_speed"]):
             self.speed_mode = "estimated"
             self.errors.append("speed field present but always zero; switched to estimated")
