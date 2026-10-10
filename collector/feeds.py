@@ -74,7 +74,7 @@ FEEDS: list[Feed] = [
          speed="auto", interval=15, segment_m=100, tolerance_m=100),
     Feed("nswtrains", "NSW TrainLink", "train",
          "/v1/gtfs/vehiclepos/nswtrains", ("/v1/gtfs/schedule/nswtrains",),
-         speed="estimated", interval=60, segment_m=1000, tolerance_m=300),  # speed field is always 0
+         speed="auto", interval=60, segment_m=1000, tolerance_m=300),
     Feed("lightrail-cbdandsoutheast", "CBD and South East Light Rail (L2, L3)", "lightrail",
          "/v1/gtfs/vehiclepos/lightrail/cbdandsoutheast",
          ("/v1/gtfs/schedule/lightrail/cbdandsoutheast",),

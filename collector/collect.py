@@ -26,7 +26,8 @@ from .api import Api, ApiError, QuotaExceeded
 from .feeds import BY_KEY, FEEDS, Feed
 from .gtfs_static import load_static
 from .speed import MAX_KMH, MOVE_EPS_M, Accumulator, SpeedEstimator
-from .store import merge_line, merge_positions, prune_expired, update_index, write_status
+from .store import (merge_line, merge_positions, prune_expired, prune_obsolete,
+                    train_network, update_index, write_status)
 
 _TO_METRIC = Transformer.from_crs("EPSG:4326", geo.METRIC_CRS, always_xy=True)
 REFRESH_STATIC = False  # --refresh-static: re-download static GTFS this run
@@ -53,6 +54,8 @@ class FeedRunner:
         self.coord_owner: dict[tuple, set] = {}
         self.prev_coord: dict[str, tuple] = {}
         self.speed_samples: list[float] = []
+        self.speed_ok: set[str] = set()
+        self.excluded: dict[str, bool] = {}
         self.raw_samples: list[str] = []
         self.stats = Counter()
         self.errors: deque[str] = deque(maxlen=20)
@@ -117,6 +120,9 @@ class FeedRunner:
                             "id": v.vehicle.id, "start": v.trip.start_time,
                             "sched": v.trip.schedule_relationship})
                 continue
+            if self.is_excluded(line):
+                self.stats["skipped_duplicate_regional"] += 1
+                continue
             g = self.geometry(line)
             if g is None:
                 self.stats["no_geometry"] += 1
@@ -176,8 +182,12 @@ class FeedRunner:
                 self.stats["with_speed"] += 1
                 if v.position.speed > 0:
                     self.stats["speed_nonzero"] += 1
+            # per vehicle: trust its speed field once it has shown a real (non-zero)
+            # value; a vehicle that only ever sends 0 is estimated from movement
+            if has_speed and v.position.speed > 0.5:
+                self.speed_ok.add(vid)
             use_reported = self.speed_mode == "reported" or (
-                self.speed_mode == "auto" and has_speed)
+                self.speed_mode == "auto" and has_speed and vid in self.speed_ok)
 
             vmax = MAX_KMH.get(f.mode, 150)
             if use_reported:
@@ -221,11 +231,23 @@ class FeedRunner:
         return guess
 
     def check_auto(self):
-        """An 'auto' feed whose speed field is always zero gets estimated instead."""
-        if (self.speed_mode == "auto" and self.stats["with_speed"] >= 100
-                and self.stats["speed_nonzero"] < 0.02 * self.stats["with_speed"]):
-            self.speed_mode = "estimated"
-            self.errors.append("speed field present but always zero; switched to estimated")
+        """Per-vehicle now (see speed_ok); kept so status shows what happened."""
+        if self.speed_mode == "auto":
+            self.stats["vehicles_with_real_speed"] = len(self.speed_ok)
+
+    def is_excluded(self, line: str) -> bool:
+        """Regional trains in the Sydney Trains feed are track-circuit copies of
+        trains NSW TrainLink reports by GPS; only the TrainLink ones are used."""
+        if line not in self.excluded:
+            ex = False
+            if self.feed.key == "sydneytrains":
+                ex = train_network("sydneytrains", line, self.static.line_meta(line)) == "regional"
+            self.excluded[line] = ex
+        return self.excluded[line]
+
+    def valid_lines(self) -> set[str]:
+        lines = set(self.static.route_line.values())
+        return {l for l in lines if not self.is_excluded(l)}
 
     def summary(self) -> dict:
         s = dict(self.stats)
@@ -326,11 +348,13 @@ def run(feeds: list[Feed], minutes: float, store: Path, cache: Path,
     for key, total in prune_expired(store, set(touched)).items():
         touched[key] = total
     update_index(store, touched, geoms, metas, shares)
+    removed = prune_obsolete(store, {r.feed.key: r.valid_lines() for r in runners if r.static is not None})
     status = {
         "minutes": minutes,
         "requests": api.requests,
         "samples": acc.samples,
         "fatal": fatal,
+        "removed_lines": removed,
         "feeds": {r.feed.key: r.summary() for r in runners},
     }
     write_status(store, status)

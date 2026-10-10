@@ -209,6 +209,29 @@ def update_index(store: Path, touched: dict[tuple[str, str], int], geometries: d
     p.write_text(json.dumps(idx, indent=1, sort_keys=True))
 
 
+def prune_obsolete(store: Path, valid: dict[str, set[str]]) -> list[str]:
+    """Remove lines that no longer exist under their key (renamed, regrouped or
+    excluded), for feeds whose static GTFS was loaded this run."""
+    import shutil
+    p = store / "index.json"
+    if not p.exists():
+        return []
+    idx = json.loads(p.read_text())
+    removed = []
+    for feed, lines in valid.items():
+        fe = idx.get("feeds", {}).get(feed)
+        if not fe:
+            continue
+        for line in list(fe.get("lines", {})):
+            if line not in lines:
+                del fe["lines"][line]
+                shutil.rmtree(store / feed / line, ignore_errors=True)
+                removed.append(f"{feed}:{line}")
+    if removed:
+        p.write_text(json.dumps(idx, indent=1, sort_keys=True))
+    return removed
+
+
 def write_status(store: Path, status: dict):
     status["finished"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
     (store / "status.json").write_text(json.dumps(status, indent=1, sort_keys=True))

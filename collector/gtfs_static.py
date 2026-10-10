@@ -20,6 +20,14 @@ def line_key(short_name: str, long_name: str, route_id: str) -> str:
     return re.sub(r"[^A-Za-z0-9_-]+", "_", raw).strip("_") or "unknown"
 
 
+def _is_rail(route_type) -> bool:
+    try:
+        rt = int(route_type)
+    except (TypeError, ValueError):
+        return False
+    return rt == 2 or 100 <= rt < 200
+
+
 class StaticGtfs:
     """Lookup tables for a feed's static GTFS. Shapes and stop_times load lazily."""
 
@@ -37,6 +45,13 @@ class StaticGtfs:
         routes = routes.fillna("")
         routes["line"] = [line_key(s, l, r) for s, l, r in
                           zip(routes.route_short_name, routes.route_long_name, routes.route_id)]
+        if feed.key == "nswtrains" and "route_type" in routes:
+            # TrainLink trains use their run number as route_short_name (31, 32 ...);
+            # group them by corridor (route_long_name, "North Coast NSW") so each
+            # line gathers every run. Coaches keep their route numbers.
+            rail = routes.route_type.map(_is_rail) & routes.route_short_name.str.fullmatch(r"\d+")
+            routes.loc[rail, "line"] = [line_key("", l, r) for l, r in
+                                        zip(routes.route_long_name[rail], routes.index[rail])]
         self.routes = routes.set_index("route_id")
         self.route_line: dict[str, str] = self.routes["line"].to_dict()
 

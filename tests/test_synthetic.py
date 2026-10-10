@@ -62,7 +62,8 @@ def write_static(path: Path, short: str, lat, lon, stations_idx):
     with zipfile.ZipFile(path, "w") as z:
         z.writestr("routes.txt", pd.DataFrame(dict(
             route_id=["R1"], route_short_name=[short], route_long_name=[f"{short} test line"],
-            route_type=[2], route_color=["F99D1C"])).to_csv(index=False))
+            route_type=[2], route_color=["F99D1C"],
+            route_desc=["Sydney Trains Network"])).to_csv(index=False))
         z.writestr("trips.txt", pd.DataFrame(dict(
             route_id="R1", service_id="x", trip_id=["T_UP", "T_DN"],
             direction_id=["0", "1"], shape_id=["UP", "DN"],
