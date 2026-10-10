@@ -383,10 +383,25 @@
     const ramp = rampFor(lc);
     const colour = colourScale(vmax, ramp);
 
-    const { tc, seen } = tcSegments(dir, bi, Math.ceil(branch.length_m / g.segment_m));
-    const tcShare = seen ? tc.size / seen : 0;
-    const partial = tcShare > 0.02 && tcShare < 0.97;
-    if (tcShare >= 0.97) {
+    // Sydney Trains lines carry the track-circuit area in their geometry (from
+    // the timetable's track-circuit points); otherwise go by what was seen
+    const nSeg = Math.ceil(branch.length_m / g.segment_m);
+    let tc, whole, partial;
+    if (branch.tc) {
+      tc = new Set();
+      for (let i = 0; i < branch.tc.length; i++) if (branch.tc[i] === "1") tc.add(i);
+      const share = tc.size / nSeg;
+      whole = share >= 0.97;
+      partial = !whole && share > 0.02;
+    } else {
+      const seen = tcSegments(dir, bi, nSeg);
+      tc = seen.tc;
+      const gps = seen.seen - tc.size;
+      // "entire route" only when track circuits were actually seen along it
+      whole = gps < 0.03 * nSeg && tc.size >= 0.9 * nSeg;
+      partial = !whole && tc.size > 0.02 * nSeg;
+    }
+    if (whole) {
       el.note.textContent = "Tracked by Sydney Trains track circuits: speeds are estimated from movement between track sections, not measured on the train.";
       el.note.hidden = false;
     } else if (partial) {

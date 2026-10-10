@@ -34,8 +34,9 @@ _FWD = Transformer.from_crs("EPSG:4326", METRIC_CRS, always_xy=True)
 MAX_BRANCHES = 6
 HINT_BACK_M = 1500    # projection window around a vehicle's previous position
 HINT_AHEAD_M = 8000
-STATIONS_VERSION = 3  # 2: served stops only (no pass-through stations or track-circuit points)
+STATIONS_VERSION = 4  # 2: served stops only (no pass-through stations or track-circuit points)
                       # 3: every station the line serves along the branch, not one trip's
+                      # 4: per-segment track-circuit area ("tc") on Sydney Trains lines
 STATION_MODES = {"train", "metro", "lightrail", "ferry"}
 
 
@@ -180,6 +181,8 @@ def build_line(static: StaticGtfs, line: str) -> dict | None:
     if feed.mode in STATION_MODES:
         dir_trips = {d: list(dt.trip_id) for d, dt in trips.groupby("direction_id")}
         _add_stations(static, directions, station_trips, tol, dir_trips)
+    if feed.key == "sydneytrains":
+        _add_tc_area(static, directions, tol)
 
     for d in directions.values():
         if not d["headsign"]:
@@ -236,6 +239,47 @@ def _add_stations(static, directions, station_trips, tol, dir_trips=None):
         b["stations"] = sorted(found.values(), key=lambda x: x["s"])
 
 
+TC_GAP_M = 8000  # Loc points further apart than this mean the signalled area ends between them
+TC_PAD_M = 500
+
+
+def _add_tc_area(static, directions, tol):
+    """Mark the segments inside Sydney Trains' track-circuit area: stretches
+    between track-circuit location points ("... Loc" stops in the static
+    timetable). Outside it (Lithgow to Bathurst, say) trains are only seen by
+    GPS through NSW TrainLink. Stored per branch as "tc", one 0/1 per segment."""
+    stops = static.stops()
+    loc = stops[stops.index.to_series().str.endswith(" Loc") | stops.station.astype(str).str.endswith(" Loc")]
+    loc = loc.dropna(subset=["lat", "lon"])
+    loc = loc[(loc.lat != 0) & (loc.lon != 0)]
+    if loc.empty:
+        return
+    pts = shapely.points(to_metric(loc[["lon", "lat"]].to_numpy(dtype=float)))
+    seg_m = static.feed.segment_m
+    for v in directions.values():
+        for b in v["branches"]:
+            line = LineString(to_metric(np.asarray(b["lonlat"])))
+            near = shapely.distance(line, pts) <= tol
+            n_seg = int(np.ceil(line.length / seg_m)) or 1
+            mark = np.zeros(n_seg, dtype=bool)
+            if near.any():
+                s_along = np.sort(shapely.line_locate_point(line, pts[near]))
+                # join neighbouring Loc points into runs, pad the ends a little
+                starts, prev = [s_along[0]], s_along[0]
+                runs = []
+                for x in s_along[1:]:
+                    if x - prev > TC_GAP_M:
+                        runs.append((starts[-1], prev))
+                        starts.append(x)
+                    prev = x
+                runs.append((starts[-1], prev))
+                for a, z in runs:
+                    lo = max(0, int((a - TC_PAD_M) // seg_m))
+                    hi = min(n_seg - 1, int((z + TC_PAD_M) // seg_m))
+                    mark[lo:hi + 1] = True
+            b["tc"] = "".join("1" if m else "0" for m in mark)
+
+
 def refresh_stations(static: StaticGtfs, data: dict):
     """Recompute a frozen geometry's stations in place. Stations don't affect
     segment numbering, so the line's collected totals stay valid."""
@@ -253,6 +297,8 @@ def refresh_stations(static: StaticGtfs, data: dict):
     if station_trips:
         dir_trips = {d: list(dt.trip_id) for d, dt in trips.groupby("direction_id")}
         _add_stations(static, data["directions"], station_trips, max(static.feed.tolerance_m, 50), dir_trips)
+    if static.feed.key == "sydneytrains":
+        _add_tc_area(static, data["directions"], max(static.feed.tolerance_m, 50))
     data["stations_version"] = STATIONS_VERSION
 
 
