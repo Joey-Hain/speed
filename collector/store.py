@@ -17,6 +17,8 @@ speeds.csv columns:
             always cover roughly the last 30 days.
   day       wd = weekday, we = weekend (local time)
   band      night 00-06, am 06-10, mid 10-15, pm 15-19, eve 19-24
+  svc       all = trip stops at every station on its stretch of the branch,
+            exp = trip skips at least one (trains only; others are all "all")
   n, sum, sumsq, hist
             running speed: stopped time left out (GPS fixes under 1 km/h,
             or the dwell before a track-section move)
@@ -40,7 +42,7 @@ from zoneinfo import ZoneInfo
 
 from .feeds import BY_KEY
 
-COLS = ["dir", "branch", "seg", "week", "day", "band",
+COLS = ["dir", "branch", "seg", "week", "day", "band", "svc",
         "n", "sum", "sumsq", "hist", "n_all", "sum_all", "sumsq_all", "hist_all"]
 RETENTION_DAYS = 30
 TZ = ZoneInfo("Australia/Sydney")
@@ -83,7 +85,8 @@ def merge_line(store: Path, feed: str, line: str, cells: dict) -> int:
                 week = r.get("week") or _this_week()  # rows from before weekly buckets
                 if week < keep_from:
                     continue
-                k = (r["dir"], int(r["branch"]), int(r["seg"]), week, r["day"], r["band"])
+                k = (r["dir"], int(r["branch"]), int(r["seg"]), week, r["day"], r["band"],
+                     r.get("svc") or "all")
                 totals[k] = [int(r["n"]), float(r["sum"]), float(r["sumsq"]),
                              _hist_parse(r.get("hist", "")),
                              int(r.get("n_all") or 0), float(r.get("sum_all") or 0),
@@ -237,6 +240,9 @@ MIGRATIONS = {
     # City Circle loop let fixes jump between passes (660 km/h on T8); clear the
     # totals collected before the fix. Geometry is kept, so segments still line up.
     "clear-city-circle-2026-10-10": [("sydneytrains", "T2"), ("sydneytrains", "T3"), ("sydneytrains", "T8")],
+    # restart Sydney Trains totals with the 140 km/h network cap, express/all-
+    # stations tagging and TrainLink's intercity GPS merged in
+    "reset-sydneytrains-2026-10-10b": [("sydneytrains", "*")],
 }
 
 
@@ -248,8 +254,10 @@ def apply_migrations(store: Path) -> list[str]:
         if name in done:
             continue
         for feed, line in lines:
-            for f in ("speeds.csv", "positions.csv"):
-                (store / feed / line / f).unlink(missing_ok=True)
+            dirs = [d for d in (store / feed).glob("*") if d.is_dir()] if line == "*" else [store / feed / line]
+            for d in dirs:
+                for f in ("speeds.csv", "positions.csv"):
+                    (d / f).unlink(missing_ok=True)
         done.add(name)
         applied.append(name)
     if applied:

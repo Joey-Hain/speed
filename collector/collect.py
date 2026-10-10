@@ -56,6 +56,9 @@ class FeedRunner:
         self.speed_samples: list[float] = []
         self.speed_ok: set[str] = set()
         self.last_pos: dict[str, tuple] = {}
+        self.alias: "FeedRunner | None" = None   # store these lines on another feed's lines
+        self._alias_lines: set[str] | None = None
+        self.svc_cache: dict[tuple, str] = {}
         self.gps_runs: dict[str, int] = {}
         self.excluded: dict[str, bool] = {}
         self.raw_samples: list[str] = []
@@ -134,7 +137,16 @@ class FeedRunner:
             if self.is_excluded(line):
                 self.stats["skipped_duplicate_regional"] += 1
                 continue
-            g = self.geometry(line)
+            # TrainLink's lettered intercity lines (HUN, SCO, SHL) are stored on the
+            # Sydney Trains line of the same name, so each line shows once: GPS
+            # where TrainLink has the train, track circuits elsewhere
+            aliased = self.alias_has(line)
+            if aliased:
+                g = self.alias.geometry(line)
+                sk, sf = self.alias.feed.key, self.alias.feed
+            else:
+                g = self.geometry(line)
+                sk, sf = f.key, f
             if g is None:
                 self.stats["no_geometry"] += 1
                 continue
@@ -145,7 +157,13 @@ class FeedRunner:
             self.last_ts[vid] = ts
             x, y = _TO_METRIC.transform(v.position.longitude, v.position.latitude)
 
-            if v.trip.HasField("direction_id"):
+            if aliased:
+                # direction_id may not mean the same thing in the other feed's
+                # timetable, so work it out from movement along that line
+                d = self.infer_direction(vid, g, x, y)
+                if d is None:
+                    continue
+            elif v.trip.HasField("direction_id"):
                 d = str(v.trip.direction_id)
             elif tid in st.trip_info:
                 d = st.trip_info[tid][1]
@@ -156,7 +174,7 @@ class FeedRunner:
 
             prev = self.last_pos.get(vid)
             hints = prev[2] if prev and prev[0] == tid and prev[1] == d else None
-            pos = dict(g.project(d, x, y, f.tolerance_m, hints))
+            pos = dict(g.project(d, x, y, max(f.tolerance_m, sf.tolerance_m), hints))
             if pos:
                 self.last_pos[vid] = (tid, d, pos)
             if not pos:
@@ -191,8 +209,9 @@ class FeedRunner:
             if tc:
                 self.stats["fixes_track_circuit"] += 1
             for b, sb in pos.items():
-                seg = min(int(sb // f.segment_m), g.n_seg(d, b) - 1)
-                self.acc.add_position(f.key, line, d, b, seg, tc)
+                seg = min(int(sb // sf.segment_m), g.n_seg(d, b) - 1)
+                self.acc.add_position(sk, line, d, b, seg, tc)
+            svc = self.service(tid, g, d, min(pos)) if f.mode == "train" else "all"
             if has_speed:
                 self.stats["with_speed"] += 1
                 if v.position.speed > 0:
@@ -204,7 +223,7 @@ class FeedRunner:
             use_reported = self.speed_mode == "reported" or (
                 self.speed_mode == "auto" and has_speed and vid in self.speed_ok)
 
-            vmax = MAX_KMH.get(f.mode, 150)
+            vmax = f.max_kmh or MAX_KMH.get(f.mode, 150)
             if use_reported:
                 if repeat:
                     continue
@@ -212,8 +231,8 @@ class FeedRunner:
                 if kmh <= vmax:
                     moving = kmh if kmh >= MIN_REPORTED_KMH else None
                     for b, s in pos.items():
-                        seg = min(int(s // f.segment_m), g.n_seg(d, b) - 1)
-                        self.acc.add(f.key, line, d, b, seg, ts, moving, kmh, g.hist_kmh)
+                        seg = min(int(s // sf.segment_m), g.n_seg(d, b) - 1)
+                        self.acc.add(sk, line, d, b, seg, ts, moving, kmh, g.hist_kmh, svc)
                     self.stats["samples_reported"] += 1
             else:
                 for b, a, z, mps, mps_all in self.est.update(vid, tid, d, pos, ts, header_ts):
@@ -228,8 +247,8 @@ class FeedRunner:
                     if kmh is None and kmh_all is None:
                         continue
                     last = g.n_seg(d, b) - 1
-                    for seg in range(int(a // f.segment_m), min(int(z // f.segment_m), last) + 1):
-                        self.acc.add(f.key, line, d, b, seg, ts, kmh, kmh_all, g.hist_kmh)
+                    for seg in range(int(a // sf.segment_m), min(int(z // sf.segment_m), last) + 1):
+                        self.acc.add(sk, line, d, b, seg, ts, kmh, kmh_all, g.hist_kmh, svc)
                     self.stats["samples_estimated"] += 1
 
         self.check_auto()
@@ -265,9 +284,34 @@ class FeedRunner:
             self.excluded[line] = ex
         return self.excluded[line]
 
+    def alias_has(self, line: str) -> bool:
+        if self.alias is None or line.isdigit() or not self.alias.ensure_static():
+            return False
+        if self._alias_lines is None:
+            self._alias_lines = set(self.alias.static.route_line.values())
+        return line in self._alias_lines
+
+    def service(self, tid: str, g, d: str, branch: int) -> str:
+        """'exp' if the trip skips a station between its first and last stop on
+        this branch, else 'all'."""
+        key = (tid, d, branch)
+        if key not in self.svc_cache:
+            svc = "all"
+            served = self.static.served_station_names(tid) if tid else None
+            stations = g.data["directions"][d]["branches"][branch].get("stations", [])
+            if served and len(stations) >= 3:
+                names = [x["name"] for x in sorted(stations, key=lambda x: x["s"])]
+                hit = [i for i, n in enumerate(names) if n in served]
+                if len(hit) >= 2:
+                    skipped = sum(1 for n in names[hit[0]:hit[-1] + 1] if n not in served)
+                    svc = "exp" if skipped else "all"
+            self.svc_cache[key] = svc
+            self.stats["trips_express" if svc == "exp" else "trips_all_stations"] += 1
+        return self.svc_cache[key]
+
     def valid_lines(self) -> set[str]:
         lines = set(self.static.route_line.values())
-        return {l for l in lines if not self.is_excluded(l)}
+        return {l for l in lines if not self.is_excluded(l) and not self.alias_has(l)}
 
     def summary(self) -> dict:
         s = dict(self.stats)
@@ -309,6 +353,9 @@ def run(feeds: list[Feed], minutes: float, store: Path, cache: Path,
     gps_runs: dict[str, int] = {}  # run number -> last time NSW TrainLink reported it
     for r in runners:
         r.gps_runs = gps_runs
+    by_key = {r.feed.key: r for r in runners}
+    if "nswtrains" in by_key and "sydneytrains" in by_key:
+        by_key["nswtrains"].alias = by_key["sydneytrains"]
     deadline = time.time() + minutes * 60
     stop = {"flag": False}
     signal.signal(signal.SIGTERM, lambda *_: stop.update(flag=True))

@@ -33,6 +33,7 @@
   const el = {
     mode: $("mode"), feed: $("feed"), line: $("line"), lines: $("lines"), dir: $("dir"),
     branch: $("branch"), day: $("day"), band: $("band"), stat: $("stat"), stops: $("stops"),
+    svc: $("svc"), svcWrap: $("svc-wrap"),
     chart: $("chart"), legend: $("legend"), updated: $("updated"), note: $("note"),
   };
   const state = { index: null, feed: null, line: null, geom: null, rows: null, cache: new Map() };
@@ -124,12 +125,13 @@
   }
 
   // ------------------------------------------------------------------ statistics
-  function aggregate(dir, day, band, stops) {
+  function aggregate(dir, day, band, stops, svc = "any") {
     const out = new Map(); // branch -> Map(seg -> cell)
     for (const r of state.rows) {
       if (r.dir !== dir) continue;
       if (day !== "all" && r.day !== day) continue;
       if (band !== "all" && r.band !== band) continue;
+      if (svc !== "any" && (r.svc || "all") !== svc) continue;
       const useAll = stops && r.hasAll;
       const n = useAll ? r.n_all : r.n;
       if (!n) continue;
@@ -355,7 +357,7 @@
     const d = g.directions[dir];
     const bi = +el.branch.value || 0;
     const branch = d.branches[bi];
-    const agg = aggregate(dir, el.day.value, el.band.value, el.stops.checked);
+    const agg = aggregate(dir, el.day.value, el.band.value, el.stops.checked, el.svc.value);
     const cells = agg.get(bi) || new Map();
 
     // one scale for chart and map
@@ -505,6 +507,9 @@
     if (state.feed !== feed || state.line !== key) return;
     const { geom, rows, pos } = state.cache.get(ck);
     state.geom = geom; state.rows = rows; state.pos = pos;
+    const hasExp = rows.some((r) => r.svc === "exp");
+    el.svcWrap.hidden = !hasExp;
+    if (!hasExp) el.svc.value = "any";
     el.dir.innerHTML = Object.entries(geom.directions)
       .map(([d, v]) => `<option value="${d}">to ${escapeHtml(v.headsign || "direction " + d)}</option>`).join("");
     const want = params.get("d");
@@ -527,6 +532,7 @@
     if (el.day.value !== "all") p.set("day", el.day.value);
     if (el.band.value !== "all") p.set("band", el.band.value);
     if (el.stat.value !== "p85") p.set("stat", el.stat.value);
+    if (el.svc.value !== "any") p.set("svc", el.svc.value);
     if (el.stops.checked) p.set("stops", "1");
     history.replaceState(null, "", "?" + p.toString());
   }
@@ -552,7 +558,7 @@
     fillFeeds();
     if (start) el.feed.value = start.group;
     fillLines();
-    for (const k of ["day", "band", "stat"]) if (params.get(k)) el[k].value = params.get(k);
+    for (const k of ["day", "band", "stat", "svc"]) if (params.get(k)) el[k].value = params.get(k);
     el.stops.checked = params.get("stops") === "1";
 
     el.mode.addEventListener("change", () => { fillFeeds(); fillLines(); selectLine(firstLine()); });
@@ -563,7 +569,7 @@
       if (e) selectLine(e);
     });
     el.dir.addEventListener("change", () => { fillBranches(); render(); });
-    for (const e of [el.branch, el.day, el.band, el.stat, el.stops]) e.addEventListener("change", render);
+    for (const e of [el.branch, el.day, el.band, el.stat, el.stops, el.svc]) e.addEventListener("change", render);
     let rt;
     addEventListener("resize", () => { clearTimeout(rt); rt = setTimeout(render, 150); });
 

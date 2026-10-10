@@ -84,7 +84,7 @@ class Cell:
 
 
 class Accumulator:
-    """(feed, line) -> {(dir, branch, seg, week, day, band): Cell}"""
+    """(feed, line) -> {(dir, branch, seg, week, day, band, svc): Cell}"""
 
     def __init__(self):
         self.data: dict[tuple[str, str], dict[tuple, Cell]] = {}
@@ -98,12 +98,12 @@ class Accumulator:
         c[1] += int(tc)
 
     def add(self, feed: str, line: str, d: str, branch: int, seg: int, ts: int,
-            kmh_run: float | None, kmh_all: float | None, width: int = 5):
+            kmh_run: float | None, kmh_all: float | None, width: int = 5, svc: str = "all"):
         """kmh_run: running speed (None if stopped); kmh_all: speed with stops included.
         width: histogram bin width in km/h (from the line's geometry)."""
         week, day, band = band_of(ts)
         cell = self.data.setdefault((feed, line), {}).setdefault(
-            (d, branch, seg, week, day, band), Cell())
+            (d, branch, seg, week, day, band, svc), Cell())
         if kmh_run is not None:
             cell.add(kmh_run, True, width)
             self.samples += 1

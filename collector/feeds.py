@@ -34,6 +34,7 @@ class Feed:
     tolerance_m: int = 120
     speed_scale: float = 1.0  # multiply reported speed by this to get m/s
     hist_kmh: int = 0         # histogram bin width; 0 = 1 km/h for rail modes, 5 otherwise
+    max_kmh: int = 0          # faster samples are rejected; 0 = the mode's default
 
     @property
     def hist_width(self) -> int:
@@ -58,13 +59,14 @@ FEEDS: list[Feed] = [
     # TrainLink first: its run numbers are used to drop the Sydney Trains copies
     Feed("nswtrains", "NSW TrainLink", "train",
          "/v1/gtfs/vehiclepos/nswtrains", ("/v1/gtfs/schedule/nswtrains",),
-         speed="auto", interval=30, segment_m=1000, tolerance_m=300),
+         speed="auto", interval=30, segment_m=1000, tolerance_m=300, max_kmh=165),
 
     # ---- track-circuit based: speed has to be estimated
     Feed("sydneytrains", "Sydney Trains", "train",
          "/v2/gtfs/vehiclepos/sydneytrains",
          ("/v1/gtfs/schedule/sydneytrains",),  # there is no v2 schedule (404)
-         speed="estimated", interval=15, segment_m=250, tolerance_m=200),
+         speed="estimated", interval=15, segment_m=250, tolerance_m=200,
+         max_kmh=140),  # nothing in the Sydney Trains network runs faster
     # L1 positions look signalling-based but the feed does carry a real speed
     Feed("lightrail-innerwest", "Inner West Light Rail (L1)", "lightrail",
          "/v2/gtfs/vehiclepos/lightrail/innerwest",
