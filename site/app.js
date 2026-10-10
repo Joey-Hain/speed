@@ -82,33 +82,27 @@
     }
     return out;
   }
-  // segments of a branch whose positions are mostly track-circuit based.
-  // GPS trains report every ~30 s, so at speed most short segments get only a
-  // fix or two: every fix counts, and gaps between two segments of the same
-  // kind take that kind, so a GPS stretch isn't drowned out by busier
-  // track-circuit ones.
-  function tcSegments(dir, bi, nSeg) {
+  // Track-circuit segments of a branch, from the fixed list in config.js
+  function trackCircuitArea(branch, nSeg) {
     const tc = new Set();
-    if (!state.pos) return { tc, seen: 0 };
-    const cls = new Int8Array(nSeg).fill(-1);
-    for (const [k, [n, t]] of state.pos) {
-      const [d, b, sgm] = k.split("|");
-      if (d !== dir || +b !== bi || n < 1 || +sgm >= nSeg) continue;
-      cls[+sgm] = t / n >= 0.5 ? 1 : 0;
+    const none = { tc, whole: false, partial: false };
+    if (state.feed !== "sydneytrains") return none;
+    const rule = (CFG.trackCircuit || {})[state.line];
+    if (rule === "none") return none;
+    if (!rule) {
+      for (let i = 0; i < nSeg; i++) tc.add(i);
+      return { tc, whole: true, partial: false };
     }
-    let prev = -1;
-    for (let i = 0; i < nSeg; i++) {
-      if (cls[i] < 0) continue;
-      if (prev >= 0 && i - prev > 1 && cls[prev] === cls[i]) cls.fill(cls[i], prev + 1, i);
-      prev = i;
-    }
-    let seen = 0;
-    for (let i = 0; i < nSeg; i++) {
-      if (cls[i] < 0) continue;
-      seen++;
-      if (cls[i] === 1) tc.add(i);
-    }
-    return { tc, seen };
+    const st = (branch.stations || []).find((x) => x.name === rule);
+    if (!st) return none;
+    // which end is Sydney: the one nearer Central
+    const a = branch.lonlat[0], z = branch.lonlat[branch.lonlat.length - 1];
+    const d2 = (p) => (p[0] - 151.2065) ** 2 + (p[1] + 33.8832) ** 2;
+    const sydneyAtStart = d2(a) <= d2(z);
+    const cut = Math.floor(st.s / state.geom.segment_m);
+    for (let i = 0; i < nSeg; i++) if (sydneyAtStart ? i < cut : i >= cut) tc.add(i);
+    const share = tc.size / nSeg;
+    return { tc, whole: share >= 0.99, partial: share > 0 && share < 0.99 };
   }
 
   // great-circle metres
@@ -275,8 +269,12 @@
     const x0 = (s) => x(s * segKm), x1 = (s) => x(Math.min((s + 1) * segKm, L_km));
     // shade track-circuit sections when only part of the line is tracked that way
     if (tcSegs && tcSegs.size) {
-      for (const sgm of tcSegs) {
-        add(plot, "rect", { class: "tc", x: x0(sgm), y: M.t, width: Math.max(1, x1(sgm) - x0(sgm)), height: H - M.t - M.b });
+      const list = [...tcSegs].sort((a, b) => a - b);
+      for (let i = 0; i < list.length;) {  // one rect per run, so no seams
+        let j = i;
+        while (j + 1 < list.length && list[j + 1] === list[j] + 1) j++;
+        add(plot, "rect", { class: "tc", x: x0(list[i]), y: M.t, width: Math.max(1, x1(list[j]) - x0(list[i])), height: H - M.t - M.b });
+        i = j + 1;
       }
     }
     const segs = [...cells.keys()].sort((a, b) => a - b);
@@ -383,24 +381,8 @@
     const ramp = rampFor(lc);
     const colour = colourScale(vmax, ramp);
 
-    // Sydney Trains lines carry the track-circuit area in their geometry (from
-    // the timetable's track-circuit points); otherwise go by what was seen
     const nSeg = Math.ceil(branch.length_m / g.segment_m);
-    let tc, whole, partial;
-    if (branch.tc) {
-      tc = new Set();
-      for (let i = 0; i < branch.tc.length; i++) if (branch.tc[i] === "1") tc.add(i);
-      const share = tc.size / nSeg;
-      whole = share >= 0.97;
-      partial = !whole && share > 0.02;
-    } else {
-      const seen = tcSegments(dir, bi, nSeg);
-      tc = seen.tc;
-      const gps = seen.seen - tc.size;
-      // "entire route" only when track circuits were actually seen along it
-      whole = gps < 0.03 * nSeg && tc.size >= 0.9 * nSeg;
-      partial = !whole && tc.size > 0.02 * nSeg;
-    }
+    const { tc, whole, partial } = trackCircuitArea(branch, nSeg);
     if (whole) {
       el.note.textContent = "Tracked by Sydney Trains track circuits: speeds are estimated from movement between track sections, not measured on the train.";
       el.note.hidden = false;

@@ -238,9 +238,6 @@ def update_index(store: Path, touched: dict[tuple[str, str], int], geometries: d
             entry["name"] = g.data.get("name", line)
             entry["colour"] = g.data.get("colour", "")
             entry["directions"] = {d: v.get("headsign", "") for d, v in g.data["directions"].items()}
-            marks = "".join(b.get("tc", "") for v in g.data["directions"].values() for b in v["branches"])
-            if marks:
-                entry["tc_area"] = round(marks.count("1") / len(marks), 3)
     idx["updated"] = now
     p.write_text(json.dumps(idx, indent=1, sort_keys=True))
 
