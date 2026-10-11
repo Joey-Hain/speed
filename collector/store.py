@@ -285,6 +285,10 @@ MIGRATIONS = {
     # the hop since the previous fix
     "backwards-glitch-l1-hop-2026-10-11": [("sydneytrains", "*", ("speeds.csv",)),
                                            ("lightrail-innerwest", "L1", ("speeds.csv",))],
+    # feed lag made trains passing through a track section look stopped, which
+    # turned running spans into with-stops 'departures' (and 120+ km/h after
+    # a misplaced circuit near Central)
+    "dwell-feed-time-2026-10-11": [("sydneytrains", "*", ("speeds.csv",))],
 }
 
 

@@ -27,6 +27,11 @@ from .feeds import BY_KEY, FEEDS, Feed
 from .gtfs_static import load_static
 from .speed import MAX_KMH, MIN_SPAN_S, MOVE_EPS_M, Accumulator, SpeedEstimator
 
+# track circuits whose published coordinates are in the wrong place (found by
+# tools/trace.py); their fixes are skipped
+BAD_POSITIONS = {
+    "NewSouthernRailway.SR1.3BER",  # airport line: placed ~600 m behind the circuit before it
+}
 BEACON_MAX_GAP_S = 1800  # beacons further apart in time than this aren't paired
 BEACON_STATION_M = 300   # a stop this close to either beacon counts as inside the hop
 from .delta import write_delta
@@ -216,6 +221,9 @@ class FeedRunner:
             # still comes from the signalling, so a train that showed a Loc
             # in the last 10 minutes counts as track-circuit there too.
             # (Outside the signalled area, e.g. the Hunter, there are no Locs.)
+            if v.stop_id in BAD_POSITIONS:
+                self.stats["fixes_bad_position"] += 1
+                continue
             # MetroNet.<n> stop_ids are old train-radio beacons (at stations, e.g.
             # north of Wyee and between Bell and Lithgow): the position is the
             # last beacon passed, held until the next one. Not track circuits.

@@ -102,6 +102,18 @@ def backwards_check():
         out += est.update("v", "t", "0", {0: float(s)}, t, t)
     fast = [(a, z, m, ma) for _, a, z, m, ma in out if max(m or 0, ma or 0) * 3.6 > 100]
     assert not fast, f"backwards glitch produced {fast}"
+    # same place, train skips straight from Central to the misplaced circuit, with
+    # the feed running ~10-30 s behind the vehicle timestamps (as it does). The
+    # old dwell check compared feed time with the circuit entry time, so 6279
+    # looked like a stop and 6279 -> 7455 became a 128 km/h departure
+    est = SpeedEstimator(90)
+    seq = [(5982, 870, 941), (5982, 870, 961), (5982, 870, 1001), (6279, 1043, 1051), (6279, 1043, 1066),
+           (6279, 1043, 1086), (7455, 1076, 1096), (8000, 1100, 1111), (8600, 1125, 1131), (9200, 1150, 1161)]
+    out2 = []
+    for s_, t, obs in seq:
+        out2 += est.update("v", "t", "0", {0: float(s_)}, t, obs)
+    fast = [(a, z, m, ma) for _, a, z, m, ma in out2 if max(m or 0, ma or 0) * 3.6 > 100]
+    assert not fast, f"feed lag made a false stop: {fast}"
     print("backwards glitch: ok", [(round(a), round(z), m and round(m * 3.6), ma and round(ma * 3.6)) for _, a, z, m, ma in out])
 
 

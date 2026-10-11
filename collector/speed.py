@@ -126,6 +126,7 @@ class VehicleState:
     t_first: int                      # first seen at current position
     t_seen: int                       # last seen at current position
     back: int = 0                     # consecutive fixes that went backwards
+    obs_first: int = 0                # feed time when the current position first appeared
 
 
 class SpeedEstimator:
@@ -153,12 +154,12 @@ class SpeedEstimator:
         st = self.vehicles.get(vid)
         if st is None or st.trip != trip or st.direction != direction:
             t = max(ts, obs)
-            self.vehicles[vid] = VehicleState(trip, direction, dict(pos), None, ts, dict(pos), ts, t)
+            self.vehicles[vid] = VehicleState(trip, direction, dict(pos), None, ts, dict(pos), ts, t, obs_first=obs)
             return []
         common = [b for b in pos if b in st.pos]
         if not common:
             t = max(ts, obs)
-            self.vehicles[vid] = VehicleState(trip, direction, dict(pos), None, ts, dict(pos), ts, t)
+            self.vehicles[vid] = VehicleState(trip, direction, dict(pos), None, ts, dict(pos), ts, t, obs_first=obs)
             return []
         main = min(common)
         ds = pos[main] - st.pos[main]
@@ -166,7 +167,11 @@ class SpeedEstimator:
 
         if abs(ds) < MOVE_EPS_M:  # standing (or no new position)
             st.t_seen = max(st.t_seen, obs, ts)
-            if st.t_seen - st.t_first >= DWELL_S and st.t_anchor is not None:
+            # standing time in feed time since this position first appeared:
+            # the vehicle timestamp is when it entered the track section, and the
+            # feed runs 20-40 s behind it, so comparing feed time with the
+            # vehicle timestamp made a train passing through look stopped
+            if obs - (st.obs_first or st.t_first) >= DWELL_S and st.t_anchor is not None:
                 # it has stopped: close the running span at the arrival time
                 out = self._span(st, st.pos, st.t_first)
                 st.anchor, st.t_anchor, st.t_anchor_all = dict(st.pos), None, st.t_first
@@ -181,7 +186,7 @@ class SpeedEstimator:
                 st.back += 1
                 if st.back >= 3:
                     t = max(ts, obs)
-                    self.vehicles[vid] = VehicleState(trip, direction, None, None, ts, dict(pos), ts, t)
+                    self.vehicles[vid] = VehicleState(trip, direction, None, None, ts, dict(pos), ts, t, obs_first=obs)
             return []
         st.back = 0
 
@@ -203,9 +208,9 @@ class SpeedEstimator:
                         continue
                     out.append((b, st.pos[b], pos[b], None, d / dt_all))
             st.anchor, st.t_anchor, st.t_anchor_all = dict(pos), ts, ts
-            st.pos, st.t_first, st.t_seen = dict(pos), ts, max(ts, obs)
+            st.pos, st.t_first, st.t_seen, st.obs_first = dict(pos), ts, max(ts, obs), obs
             return out
-        st.pos, st.t_first, st.t_seen = dict(pos), ts, max(ts, obs)
+        st.pos, st.t_first, st.t_seen, st.obs_first = dict(pos), ts, max(ts, obs), obs
         if ts - st.t_anchor >= self.min_span:
             out = self._span(st, pos, ts)
             st.anchor, st.t_anchor, st.t_anchor_all = dict(pos), ts, ts
