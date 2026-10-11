@@ -54,9 +54,25 @@ from collector import collect as col  # noqa: E402
 from collector.api import Api  # noqa: E402
 from collector.delta import combine_delta, pack  # noqa: E402
 from collector.feeds import BY_KEY, FEEDS  # noqa: E402
+from collector.version import VERSION  # noqa: E402
 
 LOCAL = ROOT / ".local"
 DATA_ZIP = "https://codeload.github.com/Joey-Hain/speed/zip/refs/heads/data"
+VERSION_URL = "https://raw.githubusercontent.com/Joey-Hain/speed/main/collector/version.py"
+
+
+def check_up_to_date():
+    """Refuse to run an out-of-date copy: its numbers would be dropped on upload."""
+    try:
+        txt = requests.get(VERSION_URL, timeout=30).text
+        latest = int(txt.split("VERSION =")[1].split()[0])
+    except Exception as e:
+        print(f"couldn't check for a newer collector ({e}); carrying on")
+        return
+    if latest > VERSION:
+        sys.exit(f"This copy of the collector is out of date (version {VERSION}, GitHub has {latest}).\n"
+                 f"Download a fresh copy of the repo and run that instead; uploads from old copies are\n"
+                 f"partly or wholly dropped.")
 
 
 def fetch_geometry(store: Path, url: str):
@@ -96,6 +112,7 @@ def main():
 
     if not os.getenv("TFNSW_API_KEY", "").strip():
         sys.exit(f"TFNSW_API_KEY not set; put it in {ROOT / '.env'}")
+    check_up_to_date()
     feeds = FEEDS if not a.feeds else [BY_KEY[k.strip()] for k in a.feeds.split(",")]
     store, cache = LOCAL / "store", LOCAL / "gtfs_cache"
     cycle_delta, combined = LOCAL / "cycle", LOCAL / "combined"

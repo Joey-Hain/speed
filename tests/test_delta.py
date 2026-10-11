@@ -55,9 +55,9 @@ def git(cwd, *a):
 def main():
     shutil.rmtree(OUT, ignore_errors=True)
     # deltas from before a fix are refused for its lines; check that, then turn it off
-    assert _delta._too_old("sydneytrains|T1", "2026-10-10T19:00:00Z")
-    assert not _delta._too_old("buses|333", "2020-01-01T00:00:00Z")
-    _delta.MIN_STARTED.clear()
+    assert _delta._too_old("sydneytrains|T1", 0)
+    assert not _delta._too_old("sydneytrains|T1", 3)
+    assert not _delta._too_old("buses|333", 0)
     cache = OUT / "cache"
     api = fixtures(cache)
     A, B = OUT / "A", OUT / "B"

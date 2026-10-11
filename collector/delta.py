@@ -23,6 +23,7 @@ import zipfile
 from pathlib import Path
 
 from . import store as st
+from .version import VERSION
 
 
 def write_delta(delta: Path, acc, runners, geometry_store: Path, status: dict,
@@ -54,7 +55,7 @@ def write_delta(delta: Path, acc, runners, geometry_store: Path, status: dict,
                 metas.setdefault(f"{r.alias.feed.key}|{line}", r.alias.static.line_meta(line))
     valid = {r.feed.key: sorted(r.valid_lines()) for r in runners if r.static is not None}
     (delta / "meta.json").write_text(json.dumps(
-        {"source": source, "status": status, "metas": metas, "valid": valid, "lines": lines,
+        {"source": source, "version": VERSION, "status": status, "metas": metas, "valid": valid, "lines": lines,
          "rebuilt": sorted(k.replace(":", "|", 1) for k in (rebuilt or ()))}, default=str))
 
 
@@ -72,19 +73,19 @@ def _compatible(a: dict, b: dict) -> bool:
     return True
 
 
-# Deltas collected before a fix are dropped for the lines it affects, so an
-# old local copy of the collector (or a run already under way) can't bring
-# the bad numbers back. feed or "feed|line" -> earliest accepted start (UTC).
-MIN_STARTED = {
-    "sydneytrains": "2026-10-10T20:25:00Z",           # backwards position glitches
-    "lightrail-innerwest|L1": "2026-10-10T20:25:00Z",  # speed ceiling from movement
+# Deltas from an older collector are dropped for the lines a later fix
+# affects, so an old local copy can't bring the bad numbers back.
+# feed or "feed|line" -> lowest collector version accepted (see version.py).
+MIN_VERSION = {
+    "sydneytrains": 3,
+    "lightrail-innerwest|L1": 3,
 }
 
 
-def _too_old(key: str, started: str | None) -> bool:
+def _too_old(key: str, version: int) -> bool:
     feed = key.split("|", 1)[0]
-    need = MIN_STARTED.get(key) or MIN_STARTED.get(feed)
-    return bool(need) and (started or "") < need
+    need = MIN_VERSION.get(key) or MIN_VERSION.get(feed) or 0
+    return version < need
 
 
 def merge_delta(delta: Path, store: Path) -> dict:
@@ -96,7 +97,7 @@ def merge_delta(delta: Path, store: Path) -> dict:
     rebuilt = set(meta.get("rebuilt", []))
     too_old = []
     for key in meta["lines"]:
-        if _too_old(key, status.get("started")):
+        if _too_old(key, int(meta.get("version") or 0)):
             too_old.append(key)
             continue
         feed, line = key.split("|", 1)
@@ -177,6 +178,7 @@ def combine_delta(src: Path, dst: Path):
     dm.update(status=status, lines=sorted(lines), valid=sm["valid"] or dm["valid"],
               rebuilt=sorted(set(dm.get("rebuilt", [])) | set(sm.get("rebuilt", []))))
     dm["metas"].update(sm["metas"])
+    dm["version"] = min(int(dm.get("version") or 0), int(sm.get("version") or 0))
     (dst / "meta.json").write_text(json.dumps(dm, default=str))
 
 
