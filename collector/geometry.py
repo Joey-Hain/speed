@@ -49,7 +49,7 @@ STATION_MODES = {"train", "metro", "lightrail", "ferry"}
 # from Central like railway kilometrage.
 UPDOWN_MODES = {"train"}
 UPDOWN_ACTIVE = True
-GEOMETRY_VERSION = 4   # 2: up/down layout for trains; 3: branches weighted by days run; 4: BRANCH_RULES
+GEOMETRY_VERSION = 5   # 2: up/down layout; 3: weighted by days run; 4: BRANCH_RULES; 5: shapes cut to served stops
 CENTRAL_LONLAT = (151.2065, -33.8832)
 CENTRAL_NEAR_M = 400   # a shape passing this close to Central is split there
 MIN_NEW_TRACK_M = 1000  # a candidate branch must add this much track not already covered
@@ -402,6 +402,37 @@ def _updown_stations(static, trips, lines: list, tol: float) -> list[list[dict]]
     return out
 
 
+def _trim_to_stops(lonlat: np.ndarray, stops, first, last, near_m: float = 400, pad_m: float = 200):
+    """The part of a shape from its trip's first stop to its last (plus a little).
+    The first stop is matched to the earliest pass of the shape near it and the
+    last to the latest, so loops through the same station trim correctly."""
+    if first is None or last is None or first not in stops.index or last not in stops.index:
+        return lonlat
+    xy = to_metric(lonlat)
+    cum = np.concatenate([[0], np.cumsum(np.hypot(*np.diff(xy, axis=0).T))])
+    def pass_s(stop, earliest):
+        r = stops.loc[stop]
+        if getattr(r, "ndim", 1) > 1:  # duplicate stop ids: take the first
+            r = r.iloc[0]
+        if not np.isfinite(float(r["lon"])) or not np.isfinite(float(r["lat"])):
+            return None
+        sx, sy = to_metric(np.array([[float(r["lon"]), float(r["lat"])]]))[0]
+        d = np.hypot(xy[:, 0] - sx, xy[:, 1] - sy)
+        idx = np.where(d <= near_m)[0]
+        if not len(idx):
+            return None
+        return cum[idx[0] if earliest else idx[-1]]
+    try:
+        a, b = pass_s(first, True), pass_s(last, False)
+    except (KeyError, TypeError, ValueError):
+        return lonlat
+    if a is None or b is None or b - a < MIN_NEW_TRACK_M:
+        return lonlat
+    i = max(0, int(np.searchsorted(cum, a - pad_m)) - 1)
+    j = min(len(lonlat), int(np.searchsorted(cum, b + pad_m)) + 1)
+    return lonlat[i:j] if j - i >= 2 else lonlat
+
+
 def _station_points(static, name: str):
     st = static.stops()
     hit = st[st.station == name].dropna(subset=["lat", "lon"])
@@ -464,11 +495,23 @@ def build_updown(static: StaticGtfs, line: str) -> dict | None:
     counts = Counter({k: v for k, v in counts.items() if v > 0})
     total = sum(counts.values())
 
+    # a trip's shape can run well past its first and last stop (every T7
+    # shuttle uses a shape that carries on to Blacktown), so cut each shape
+    # to the stretch its trips actually serve
+    stop_lists = static.all_stop_lists()
+    stops = static.stops()
+    groups = Counter()
+    for t, sid, w in zip(trips.trip_id, trips.shape_id, weights):
+        if w <= 0:
+            continue
+        sl = [x for x in stop_lists.get(t, ()) if x in stops.index]
+        groups[(sid, sl[0] if sl else None, sl[-1] if sl else None)] += w
     cands = []  # (trip-days, length, shape_id, lonlat, metric line)
-    for sid, c in counts.items():
+    for (sid, first, last), c in groups.items():
         if sid not in shapes or len(shapes[sid]) < 2:
             continue
-        for piece in _pieces(np.asarray(shapes[sid], dtype=float)):
+        lonlat = _trim_to_stops(np.asarray(shapes[sid], dtype=float), stops, first, last)
+        for piece in _pieces(lonlat):
             ll = np.asarray(LineString(piece).simplify(0.00002).coords)
             ml = LineString(to_metric(ll))
             if ml.length >= MIN_NEW_TRACK_M:
