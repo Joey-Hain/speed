@@ -49,12 +49,24 @@ STATION_MODES = {"train", "metro", "lightrail", "ferry"}
 # from Central like railway kilometrage.
 UPDOWN_MODES = {"train"}
 UPDOWN_ACTIVE = True
-GEOMETRY_VERSION = 3   # 2: up/down layout for trains; 3: branches weighted by days run
+GEOMETRY_VERSION = 4   # 2: up/down layout for trains; 3: branches weighted by days run; 4: BRANCH_RULES
 CENTRAL_LONLAT = (151.2065, -33.8832)
 CENTRAL_NEAR_M = 400   # a shape passing this close to Central is split there
 MIN_NEW_TRACK_M = 1000  # a candidate branch must add this much track not already covered
 MIN_BRANCH_SHARE = 0.1   # ...and be run by at least this share of the line's trips
 INTERIOR_SPLIT_M = 5000  # see _pieces
+
+# Hand corrections for routes the timetable runs regularly but which aren't
+# wanted as branches (from Joey, 2026-10-14). Keyed by "feed:line".
+#   exclude_via: drop candidate branches passing these stations
+#   truncate:    (via, at) - a branch passing `via` ends at station `at`
+BRANCH_RULES = {
+    "sydneytrains:T8": {"exclude_via": ["Sydenham"]},      # via Sydenham ends with the 15/11 timetable
+    "sydneytrains:T7": {"exclude_via": ["Blacktown"]},     # Blacktown trains are special workings
+    "sydneytrains:T5": {"exclude_via": ["Penrith"]},
+    "sydneytrains:T9": {"truncate": [("Strathfield", "Hornsby")]},  # via Strathfield only to Hornsby
+}
+RULE_NEAR_M = 300
 REGULAR_SHARE = 0.3    # a station where this share of passing trips stop is a regular stop;
                        # skipping one makes a trip an express
 SHOW_SHARE = 0.1       # stations served by fewer passing trips aren't listed
@@ -387,6 +399,38 @@ def _updown_stations(static, trips, lines: list, tol: float) -> list[list[dict]]
     return out
 
 
+def _station_points(static, name: str):
+    st = static.stops()
+    hit = st[st.station == name].dropna(subset=["lat", "lon"])
+    if hit.empty:
+        return None
+    return shapely.points(to_metric(hit[["lon", "lat"]].to_numpy(dtype=float)))
+
+
+def _apply_rules(static, cands, rules):
+    out = []
+    excl = [p for p in (_station_points(static, n) for n in rules.get("exclude_via", [])) if p is not None]
+    cuts = [(_station_points(static, v), _station_points(static, a)) for v, a in rules.get("truncate", [])]
+    for c, length, sid, ll, ml in cands:
+        if any(shapely.distance(ml, pts).min() <= RULE_NEAR_M for pts in excl):
+            continue
+        for via, at in cuts:
+            if via is None or at is None or shapely.distance(ml, via).min() > RULE_NEAR_M:
+                continue
+            if shapely.distance(ml, at).min() <= RULE_NEAR_M:
+                end = float(shapely.line_locate_point(ml, at).max()) + 200
+                if end < ml.length:
+                    xy = to_metric(ll)
+                    cum = np.concatenate([[0], np.cumsum(np.hypot(*np.diff(xy, axis=0).T))])
+                    k = max(2, int(np.searchsorted(cum, end)) + 1)
+                    ll = ll[:k]
+                    ml = LineString(to_metric(ll))
+                    length = ml.length
+        if length >= MIN_NEW_TRACK_M:
+            out.append((c, length, sid, ll, ml))
+    return out
+
+
 def build_updown(static: StaticGtfs, line: str) -> dict | None:
     feed = static.feed
     trips = static.trips[(static.trips.line == line) & (static.trips.shape_id != "")]
@@ -419,6 +463,9 @@ def build_updown(static: StaticGtfs, line: str) -> dict | None:
             ml = LineString(to_metric(ll))
             if ml.length >= MIN_NEW_TRACK_M:
                 cands.append((c, ml.length, sid, ll, ml))
+    rules = BRANCH_RULES.get(f"{feed.key}:{line}", {})
+    if rules:
+        cands = _apply_rules(static, cands, rules)
     if not cands:
         return None
     # how many trips run (most of) each piece, whatever their exact shape
