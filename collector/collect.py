@@ -74,6 +74,7 @@ class FeedRunner:
         self.alias: "FeedRunner | None" = None   # store these lines on another feed's lines
         self._alias_lines: set[str] | None = None
         self.svc_cache: dict[tuple, str] = {}
+        self.stops_cache: dict[tuple, list[float]] = {}
         self.gps_runs: dict[str, int] = {}
         self.excluded: dict[str, bool] = {}
         self.raw_samples: list[str] = []
@@ -304,7 +305,8 @@ class FeedRunner:
                         self.acc.add(sk, line, d, b, seg, ts, moving, kmh, g.hist_kmh, svc)
                     self.stats["samples_reported"] += 1
             else:
-                spans = self.est.update(vid, tid, d, pos, ts, header_ts)
+                stops = self.stop_positions(tid, g, d, pos) if f.mode == "train" else None
+                spans = self.est.update(vid, tid, d, pos, ts, header_ts, stops)
             if spans:
                 for b, a, z, mps, mps_all in spans:
                     kmh = mps * 3.6 if mps is not None else None
@@ -356,6 +358,21 @@ class FeedRunner:
             for seg in range(int(s0 // sf.segment_m), min(int(s1 // sf.segment_m), last_seg) + 1):
                 self.acc.add(sk, line, d, b, seg, t, None if stops else kmh, kmh, g.hist_kmh, svc)
             self.stats["samples_beacon"] += 1
+
+    def stop_positions(self, tid, g, d, pos) -> dict[int, list[float]] | None:
+        """Where on each branch this trip stops (from the timetable), or None."""
+        served = self.static.served_station_names(tid) if tid else None
+        if not served:
+            return None
+        out = {}
+        for b in pos:
+            key = (tid, d, b)
+            if key not in self.stops_cache:
+                stations = g.data["directions"][d]["branches"][b].get("stations", [])
+                self.stops_cache[key] = [x["s"] for x in stations if x["name"] in served]
+            if self.stops_cache[key]:
+                out[b] = self.stops_cache[key]
+        return out or None
 
     def updown_direction(self, vid, tid, g, x, y, tol):
         """'down' if the vehicle is moving away from Central along its branch,

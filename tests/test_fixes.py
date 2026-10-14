@@ -117,12 +117,32 @@ def backwards_check():
     print("backwards glitch: ok", [(round(a), round(z), m and round(m * 3.6), ma and round(ma * 3.6)) for _, a, z, m, ma in out])
 
 
+def long_circuit_check():
+    # T4 Loftus to Engadine, from the trace: a 1.5 km circuit takes 87 s to run
+    # through at 60 km/h and the feed shows it for 74 s. Without timetable stops
+    # that looks like a stop; with Engadine (37644) as the only nearby stop it
+    # mustn't, so the stretch gets running speed
+    seq = [(33192, 1200, 1210), (33192, 1200, 1230), (33192, 1200, 1250), (33192, 1200, 1270),
+           (34962, 1363, 1377), (34962, 1363, 1397), (34962, 1363, 1407), (34962, 1363, 1427),
+           (34962, 1363, 1437), (36428, 1450, 1457), (36428, 1450, 1467), (36428, 1450, 1487),
+           (36428, 1450, 1497), (37619, 1505, 1517), (37619, 1505, 1537), (37619, 1505, 1557),
+           (37619, 1505, 1577), (38200, 1600, 1610)]
+    est = SpeedEstimator(90)
+    out = []
+    for s_, t, obs in seq:
+        out += est.update("v", "t", "0", {0: float(s_)}, t, obs, {0: [33192.0, 37644.0]})
+    running = [(round(a), round(z), round(m * 3.6)) for _, a, z, m, ma in out if m is not None]
+    assert any(a <= 34962 and z >= 37000 for a, z, _ in running), out
+    print("long circuit: ok", running)
+
+
 def main():
     shutil.rmtree(OUT, ignore_errors=True)
     loop_check()
     ceiling_check()
     span_check()
     backwards_check()
+    long_circuit_check()
     print("OK")
 
 

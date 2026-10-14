@@ -53,7 +53,8 @@ GEOMETRY_VERSION = 2   # 2: up/down layout for trains
 CENTRAL_LONLAT = (151.2065, -33.8832)
 CENTRAL_NEAR_M = 400   # a shape passing this close to Central is split there
 MIN_NEW_TRACK_M = 1000  # a candidate branch must add this much track not already covered
-MIN_BRANCH_SHARE = 0.02  # ...and carry at least this share of the line's trips
+MIN_BRANCH_SHARE = 0.06  # ...and be run by at least this share of the line's trips
+INTERIOR_SPLIT_M = 5000  # see _pieces
 REGULAR_SHARE = 0.3    # a station where this share of passing trips stop is a regular stop;
                        # skipping one makes a trip an express
 SHOW_SHARE = 0.1       # stations served by fewer passing trips aren't listed
@@ -302,7 +303,12 @@ def _pieces(lonlat: np.ndarray) -> list[np.ndarray]:
             else:
                 i += 1
     else:
-        cuts.append(int(np.argmin(dist)))
+        # a line that doesn't reach Central: split at its point nearest Central
+        # only if that's well inside the line (T5 near Harris Park), not just
+        # past an end (HUN starts at Newcastle Interchange)
+        k = int(np.argmin(dist))
+        if dist[k] < min(dist[0], dist[-1]) - INTERIOR_SPLIT_M:
+            cuts.append(k)
     bounds = sorted({0, n - 1, *cuts})
     out = []
     for a, b in zip(bounds[:-1], bounds[1:]):
@@ -403,7 +409,16 @@ def build_updown(static: StaticGtfs, line: str) -> dict | None:
                 cands.append((c, ml.length, sid, ll, ml))
     if not cands:
         return None
-    # pieces that carry a fair share of trips, longest first, so a short working
+    # how many trips run (most of) each piece, whatever their exact shape
+    shape_lines = {sid: LineString(to_metric(np.asarray(shapes[sid], dtype=float)))
+                   for sid in counts if sid in shapes and len(shapes[sid]) >= 2}
+    runs = []
+    for c, length, sid, ll, ml in cands:
+        pts = shapely.points([ml.interpolate(i / 19, normalized=True).coords[0] for i in range(20)])
+        runs.append(sum(counts[s2] for s2, other in shape_lines.items()
+                        if (shapely.distance(other, pts) <= tol).mean() >= 0.9))
+    cands = [(r, length, sid, ll, ml) for r, (c, length, sid, ll, ml) in zip(runs, cands)]
+    # pieces run by a fair share of trips, longest first, so a short working
     # is always met after the branch that contains it
     busy = [x for x in cands if x[0] >= max(2, MIN_BRANCH_SHARE * total)] or cands
     busy.sort(key=lambda x: -x[1])

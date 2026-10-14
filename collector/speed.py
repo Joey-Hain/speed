@@ -36,6 +36,8 @@ from zoneinfo import ZoneInfo
 TZ = ZoneInfo("Australia/Sydney")
 
 DWELL_S = 40        # stationary longer than this counts as a stop
+STOP_NEAR_M = 700   # ...if within this of a station the trip stops at (when known)
+HOLD_S = 180        # ...or anywhere, if this long (held at a signal)
 MAX_GAP_S = 600     # ignore blocks that took longer than this
 MOVE_EPS_M = 20     # smaller jumps are treated as standing still
 MIN_SPAN_S = 45     # shortest running span a speed is measured over
@@ -144,7 +146,7 @@ class SpeedEstimator:
         self.min_span = min_span
 
     def update(self, vid: str, trip: str, direction: str, pos: dict[int, float],
-               ts: int, obs: int):
+               ts: int, obs: int, stops: dict[int, list[float]] | None = None):
         """Feed one fix (ts = vehicle timestamp, obs = feed header time).
 
         Returns [(branch, s_from, s_to, mps_running, mps_with_stops)] for spans
@@ -171,7 +173,13 @@ class SpeedEstimator:
             # the vehicle timestamp is when it entered the track section, and the
             # feed runs 20-40 s behind it, so comparing feed time with the
             # vehicle timestamp made a train passing through look stopped
-            if obs - (st.obs_first or st.t_first) >= DWELL_S and st.t_anchor is not None:
+            standing = obs - (st.obs_first or st.t_first)
+            # where the timetable stops are known (trains), only count a stop
+            # near one of them, or after a long hold (a signal): track circuits
+            # can be 1.5 km long, and running through one takes longer than DWELL_S
+            at_stop = (stops is None or main not in stops
+                       or any(abs(st.pos[main] - x) <= STOP_NEAR_M for x in stops[main]))
+            if (standing >= DWELL_S and at_stop or standing >= HOLD_S) and st.t_anchor is not None:
                 # it has stopped: close the running span at the arrival time
                 out = self._span(st, st.pos, st.t_first)
                 st.anchor, st.t_anchor, st.t_anchor_all = dict(st.pos), None, st.t_first

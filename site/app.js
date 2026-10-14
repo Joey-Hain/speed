@@ -415,6 +415,8 @@
   function branchLabel(b, i) {
     const st = b.stations || [];
     const km = (b.length_m / 1000).toFixed(1) + " km";
+    if (state.geom && state.geom.layout === "updown")
+      return st.length >= 2 ? `${st[0].name} – ${st[st.length - 1].name} (${km})` : `Branch ${i + 1} (${km})`;
     const name = i === 0 ? "Main" : "Branch " + i;
     return st.length >= 2 ? `${name}: ${st[0].name} to ${st[st.length - 1].name} (${km})` : `${name} (${km})`;
   }
@@ -584,8 +586,11 @@
     const hasExp = rows.some((r) => r.svc === "exp");
     el.svcWrap.hidden = !hasExp;
     if (!hasExp) el.svc.value = "any";
+    // trains use an up/down layout (up = towards Central); other modes go by destination
+    const updown = geom.layout === "updown";
     el.dir.innerHTML = Object.entries(geom.directions)
-      .map(([d, v]) => `<option value="${d}">to ${escapeHtml(v.headsign || "direction " + d)}</option>`).join("");
+      .map(([d, v]) => `<option value="${d}">${updown ? escapeHtml(v.headsign || d)
+        : "to " + escapeHtml(v.headsign || "direction " + d)}</option>`).join("");
     const want = params.get("d");
     if (want && geom.directions[want]) { el.dir.value = want; params.delete("d"); }
     fillBranches();
