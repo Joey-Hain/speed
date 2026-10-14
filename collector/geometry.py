@@ -66,7 +66,7 @@ BRANCH_RULES = {
     # Blacktown and Central trains are special workings; the shuttle's down
     # end is Olympic Park (railway convention, though it's nearer Central)
     "sydneytrains:T7": {"exclude_via": ["Blacktown", "Redfern"], "start_at": "Lidcombe"},
-    "sydneytrains:T5": {"exclude_via": ["Penrith"]},
+    "sydneytrains:T5": {"exclude_via": ["Penrith", "Doonside"]},  # nothing west of Blacktown
     "sydneytrains:T9": {"truncate": [("Strathfield", "Hornsby")]},  # via Strathfield only to Hornsby
 }
 RULE_NEAR_M = 300
