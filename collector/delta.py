@@ -109,6 +109,12 @@ def merge_delta(delta: Path, store: Path) -> dict:
             sp.unlink(missing_ok=True)
         if sp.exists():
             sg = json.loads(sp.read_text())
+            if dg.get("geometry_version", 1) > sg.get("geometry_version", 1):
+                # line rebuilt in a newer layout: its old totals don't line up
+                for f in ("speeds.csv", "positions.csv"):
+                    (sp.parent / f).unlink(missing_ok=True)
+                sp.write_text(json.dumps(dg, separators=(",", ":")))
+                sg = dg
             if not _compatible(dg, sg):
                 skipped.append(key)  # built differently elsewhere; don't mix segments
                 continue

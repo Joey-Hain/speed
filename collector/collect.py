@@ -32,6 +32,7 @@ from .speed import MAX_KMH, MIN_SPAN_S, MOVE_EPS_M, Accumulator, SpeedEstimator
 BAD_POSITIONS = {
     "NewSouthernRailway.SR1.3BER",  # airport line: placed ~600 m behind the circuit before it
 }
+STALE_S = 1800  # fixes older than this (vehicle time vs feed time) are ignored
 BEACON_MAX_GAP_S = 1800  # beacons further apart in time than this aren't paired
 BEACON_STATION_M = 300   # a stop this close to either beacon counts as inside the hop
 from .delta import write_delta
@@ -53,6 +54,8 @@ class FeedRunner:
         self.est = SpeedEstimator(feed.min_span_s or MIN_SPAN_S)
         self.last_ts: dict[str, int] = {}
         self.dir_guess: dict[str, tuple[float, str]] = {}
+        self.ud_prev: dict[str, tuple] = {}  # vehicle -> (trip, {branch: s on the down branches})
+        self.ud_dir: dict[str, tuple] = {}   # vehicle -> (trip, "up" | "down")
         self.speed_mode = feed.speed
         self.disabled = False
         self.fail_streak = 0
@@ -164,12 +167,24 @@ class FeedRunner:
                 continue
 
             ts = int(v.timestamp or header_ts)
+            if header_ts - ts > STALE_S:
+                # a position this old isn't live (the Manly Fast Ferry feed has
+                # served the same three fixes from 1 July 2026 ever since)
+                self.stats["fixes_stale"] += 1
+                continue
             vid = v.vehicle.id or v.vehicle.label or tid or ent.id
             repeat = self.last_ts.get(vid) == ts  # unchanged fix repeated by the feed
             self.last_ts[vid] = ts
             x, y = _TO_METRIC.transform(v.position.longitude, v.position.latitude)
 
-            if aliased:
+            if g.updown:
+                # trains: up (towards Central) or down, from which way the
+                # vehicle is moving along the branches
+                d = self.updown_direction(vid, tid, g, x, y, max(f.tolerance_m, sf.tolerance_m))
+                if d is None:
+                    self.stats["direction_unknown"] += 1
+                    continue
+            elif aliased:
                 # direction_id may not mean the same thing in the other feed's
                 # timetable, so work it out from movement along that line
                 d = self.infer_direction(vid, g, x, y)
@@ -342,6 +357,28 @@ class FeedRunner:
                 self.acc.add(sk, line, d, b, seg, t, None if stops else kmh, kmh, g.hist_kmh, svc)
             self.stats["samples_beacon"] += 1
 
+    def updown_direction(self, vid, tid, g, x, y, tol):
+        """'down' if the vehicle is moving away from Central along its branch,
+        'up' if towards; None until it has moved."""
+        pos = dict(g.project("down", x, y, tol))
+        prev = self.ud_prev.get(vid)
+        if pos:
+            moved = None
+            if prev and prev[0] == tid:
+                for b, s_ in pos.items():
+                    if b in prev[1]:
+                        ds = s_ - prev[1][b]
+                        if abs(ds) >= MOVE_EPS_M and (moved is None or abs(ds) > abs(moved)):
+                            moved = ds
+                if moved is not None:
+                    self.ud_dir[vid] = (tid, "down" if moved > 0 else "up")
+            # keep the reference position until it has moved, so slow running
+            # still registers; restart it when the vehicle changes branch or trip
+            if moved is not None or not prev or prev[0] != tid or not (set(pos) & set(prev[1])):
+                self.ud_prev[vid] = (tid, pos)
+        cur = self.ud_dir.get(vid)
+        return cur[1] if cur and cur[0] == tid else None
+
     def infer_direction(self, vid, g, x, y):
         dirs = list(g.directions)
         if len(dirs) == 1:
@@ -392,7 +429,10 @@ class FeedRunner:
                 stations = g.data["directions"][d]["branches"][b].get("stations", [])
                 if not served or len(stations) < 3:
                     continue
-                names = [x["name"] for x in sorted(stations, key=lambda x: x["s"])]
+                # only regular stops count: a station few trains on the line
+                # stop at (Erskineville on T4) doesn't make every T4 an express
+                names = [x["name"] for x in sorted(stations, key=lambda x: x["s"])
+                         if x.get("share", 1.0) >= geo.REGULAR_SHARE]
                 hit = [i for i, n in enumerate(names) if n in served]
                 if len(hit) >= 2:
                     verdicts.append(any(n not in served for n in names[hit[0]:hit[-1] + 1]))

@@ -199,7 +199,7 @@ def main():
     overall = tr["sum"].sum() / tr["n"].sum()
     print(f"train: {len(tr)} cells, sample-weighted mean {overall:.1f} km/h (true cruise 80)")
     assert 70 < overall < 90, "block estimator should recover ~80 km/h"
-    assert set(tr["dir"].astype(str)) == {"0", "1"}
+    assert set(tr["dir"].astype(str)) in ({"0", "1"}, {"up", "down"}), set(tr["dir"])
     with_stops = tr["sum_all"].sum() / tr["n_all"].sum()
     print(f"train with stops: {with_stops:.1f} km/h (30 s dwells pull it down)")
     assert with_stops < overall, "dwell time should lower the with-stops average"

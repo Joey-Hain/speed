@@ -1,0 +1,54 @@
+name: Preview geometry
+
+# Builds line geometry from the live static timetables (nothing is written to
+# the data) and puts a summary and the geometry files on the "diag" branch
+# under preview/.
+on:
+  workflow_dispatch:
+    inputs:
+      feeds:
+        default: "sydneytrains,nswtrains"
+      lines:
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: diag
+  cancel-in-progress: false
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Static GTFS cache
+        uses: actions/cache/restore@v4
+        with:
+          path: gtfs_cache
+          key: gtfs-none
+          restore-keys: gtfs-
+      - name: Preview
+        env:
+          TFNSW_API_KEY: ${{ secrets.TFNSW_API_KEY }}
+        run: python tools/preview_geometry.py --feeds "${{ github.event.inputs.feeds }}" --lines "${{ github.event.inputs.lines }}" --out preview 2>&1 | tee preview.txt
+      - name: Publish output
+        if: always()
+        env:
+          TOKEN: ${{ github.token }}
+        run: |
+          mkdir pub && cd pub
+          git init -q -b diag
+          git fetch -q --depth 1 "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git" diag && git checkout -q FETCH_HEAD -- . || true
+          rm -rf preview && cp -r ../preview . 2>/dev/null || mkdir preview
+          cp ../preview.txt preview/summary.txt
+          git add -A
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit -q -m "preview geometry"
+          git push -q -f "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:diag
