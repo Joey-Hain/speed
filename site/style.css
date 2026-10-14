@@ -33,7 +33,7 @@ h1 { margin: 0 0 1rem; }
 a { color: var(--muted); }
 
 /* body text is justified everywhere */
-p { text-align: justify; text-justify: inter-word; hyphens: auto; }
+p { text-align: justify; text-justify: inter-word; }
 
 /* Options */
 
