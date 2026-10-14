@@ -77,7 +77,8 @@ def _compatible(a: dict, b: dict) -> bool:
 # affects, so an old local copy can't bring the bad numbers back.
 # feed or "feed|line" -> lowest collector version accepted (see version.py).
 MIN_VERSION = {
-    "sydneytrains": 4,
+    "sydneytrains": 5,
+    "nswtrains": 5,
     "lightrail-innerwest|L1": 3,
 }
 

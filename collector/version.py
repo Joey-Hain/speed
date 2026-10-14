@@ -8,6 +8,8 @@ collector also refuses to run when GitHub has a newer version.
   4  dwell timed in feed time (feed lag made passing trains look stopped),
      misplaced airport-line circuit skipped
   5  trains in an up/down layout from Central, express by regular stops,
+     stops only near timetabled stations, stale fixes ignored
+  5  trains in an up/down layout from Central, express by regular stops,
      stale fixes ignored
 """
-VERSION = 4
+VERSION = 5

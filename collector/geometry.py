@@ -48,12 +48,12 @@ STATION_MODES = {"train", "metro", "lightrail", "ferry"}
 # branch (Grafton inside Brisbane) don't become branches, and km are measured
 # from Central like railway kilometrage.
 UPDOWN_MODES = {"train"}
-UPDOWN_ACTIVE = False  # switched on once the preview (tools/preview_geometry.py) checks out
+UPDOWN_ACTIVE = True
 GEOMETRY_VERSION = 2   # 2: up/down layout for trains
 CENTRAL_LONLAT = (151.2065, -33.8832)
 CENTRAL_NEAR_M = 400   # a shape passing this close to Central is split there
 MIN_NEW_TRACK_M = 1000  # a candidate branch must add this much track not already covered
-MIN_BRANCH_SHARE = 0.06  # ...and be run by at least this share of the line's trips
+MIN_BRANCH_SHARE = 0.1   # ...and be run by at least this share of the line's trips
 INTERIOR_SPLIT_M = 5000  # see _pieces
 REGULAR_SHARE = 0.3    # a station where this share of passing trips stop is a regular stop;
                        # skipping one makes a trip an express
