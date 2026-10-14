@@ -60,9 +60,12 @@ INTERIOR_SPLIT_M = 5000  # see _pieces
 # wanted as branches (from Joey, 2026-10-14). Keyed by "feed:line".
 #   exclude_via: drop candidate branches passing these stations
 #   truncate:    (via, at) - a branch passing `via` ends at station `at`
+#   start_at:    branches start (km 0, the "up" end) at the end nearer this station
 BRANCH_RULES = {
     "sydneytrains:T8": {"exclude_via": ["Sydenham"]},      # via Sydenham ends with the 15/11 timetable
-    "sydneytrains:T7": {"exclude_via": ["Blacktown"]},     # Blacktown trains are special workings
+    # Blacktown and Central trains are special workings; the shuttle's down
+    # end is Olympic Park (railway convention, though it's nearer Central)
+    "sydneytrains:T7": {"exclude_via": ["Blacktown", "Redfern"], "start_at": "Lidcombe"},
     "sydneytrains:T5": {"exclude_via": ["Penrith"]},
     "sydneytrains:T9": {"truncate": [("Strathfield", "Hornsby")]},  # via Strathfield only to Hornsby
 }
@@ -426,6 +429,13 @@ def _apply_rules(static, cands, rules):
                     ll = ll[:k]
                     ml = LineString(to_metric(ll))
                     length = ml.length
+        if rules.get("start_at"):
+            at = _station_points(static, rules["start_at"])
+            if at is not None:
+                a0, a1 = shapely.Point(ml.coords[0]), shapely.Point(ml.coords[-1])
+                if shapely.distance(a1, at).min() < shapely.distance(a0, at).min():
+                    ll = ll[::-1]
+                    ml = LineString(to_metric(ll))
         if length >= MIN_NEW_TRACK_M:
             out.append((c, length, sid, ll, ml))
     return out
