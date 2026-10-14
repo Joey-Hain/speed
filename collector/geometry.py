@@ -349,11 +349,14 @@ def _updown_stations(static, trips, lines: list, tol: float) -> list[list[dict]]
     st = st[~st.station.astype(str).str.endswith(" Loc")].dropna(subset=["lat", "lon"])
     station_of = st["station"].to_dict()
     pts = shapely.points(to_metric(st[["lon", "lat"]].to_numpy(dtype=float)))
-    served = []
+    days = static.trip_days()
+    use_days = any(days.get(t, 0) for t in trips.trip_id)
+    served = []  # (stop names, weight = days it runs)
     for t in trips.trip_id:
+        w = days.get(t, 0) if use_days else 1
         names = {station_of[x] for x in stop_lists.get(t, ()) if x in station_of}
-        if len(names) >= 2:
-            served.append(names)
+        if w and len(names) >= 2:
+            served.append((names, w))
     out = []
     for ml in lines:
         s_along = shapely.line_locate_point(ml, pts)
@@ -364,16 +367,16 @@ def _updown_stations(static, trips, lines: list, tol: float) -> list[list[dict]]
                 best[name] = (float(si), float(oi), float(lat), float(lon))
         pos = {n: v[0] for n, v in best.items()}
         passing, stopping = Counter(), Counter()
-        for names in served:
+        for names, w in served:
             here = [pos[n] for n in names if n in pos]
             if len(here) < 2:
                 continue
             lo, hi = min(here), max(here)
             for n, sp in pos.items():
                 if lo <= sp <= hi:
-                    passing[n] += 1
+                    passing[n] += w
                     if n in names:
-                        stopping[n] += 1
+                        stopping[n] += w
         stations = []
         for n, (si, oi, lat, lon) in best.items():
             share = stopping[n] / passing[n] if passing[n] else 0.0
@@ -395,10 +398,19 @@ def build_updown(static: StaticGtfs, line: str) -> dict | None:
     shapes = static.shapes()
     meta = static.line_meta(line)
     tol = max(feed.tolerance_m, 50)
-    counts = Counter(trips.shape_id)
+    # weight trips by how many days they run in the coming four weeks, so
+    # special workings (event trains, trackwork patterns) can't make branches
+    days = static.trip_days()
+    weights = [days.get(t, 0) for t in trips.trip_id]
+    if sum(weights) == 0:  # no usable calendar: count every trip once
+        weights = [1] * len(trips)
+    counts = Counter()
+    for sid, w in zip(trips.shape_id, weights):
+        counts[sid] += w
+    counts = Counter({k: v for k, v in counts.items() if v > 0})
     total = sum(counts.values())
 
-    cands = []  # (trips, length, shape_id, lonlat, metric line)
+    cands = []  # (trip-days, length, shape_id, lonlat, metric line)
     for sid, c in counts.items():
         if sid not in shapes or len(shapes[sid]) < 2:
             continue

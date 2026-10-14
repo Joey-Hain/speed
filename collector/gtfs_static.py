@@ -56,8 +56,8 @@ class StaticGtfs:
         self.route_line: dict[str, str] = self.routes["line"].to_dict()
 
         trips = self._read("trips.txt", ["trip_id", "route_id", "direction_id",
-                                         "shape_id", "trip_headsign"])
-        for c in ("direction_id", "shape_id", "trip_headsign"):
+                                         "shape_id", "trip_headsign", "service_id"])
+        for c in ("direction_id", "shape_id", "trip_headsign", "service_id"):
             if c not in trips:
                 trips[c] = ""
         trips = trips.fillna("")
@@ -66,6 +66,39 @@ class StaticGtfs:
         self.trips = trips
         self.trip_info: dict[str, tuple[str, str]] = dict(
             zip(trips.trip_id, zip(trips.route_id, trips.direction_id)))
+
+    def trip_days(self, window_days: int = 28) -> dict[str, int]:
+        """trip_id -> how many days it runs in the next `window_days` (calendar.txt
+        plus calendar_dates.txt). Special workings (event trains, trackwork
+        patterns) run on a handful of days; regular services on most."""
+        if getattr(self, "_trip_days", None) is None:
+            from datetime import date, timedelta
+            today = date.today()
+            days = [today + timedelta(d) for d in range(window_days)]
+            keys = [d.strftime("%Y%m%d") for d in days]
+            wd = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+            active: dict[str, set] = {}
+            cal = self._read("calendar.txt")
+            for r in cal.itertuples(index=False):
+                r = r._asdict()
+                on = set()
+                for d, k in zip(days, keys):
+                    if r.get("start_date", "0") <= k <= r.get("end_date", "99999999") and r.get(wd[d.weekday()]) == "1":
+                        on.add(k)
+                active[r["service_id"]] = on
+            cd = self._read("calendar_dates.txt")
+            for r in cd.itertuples(index=False):
+                r = r._asdict()
+                if r["date"] not in keys:
+                    continue
+                on = active.setdefault(r["service_id"], set())
+                if r["exception_type"] == "1":
+                    on.add(r["date"])
+                elif r["exception_type"] == "2":
+                    on.discard(r["date"])
+            n = {sid: len(v) for sid, v in active.items()}
+            self._trip_days = {t: n.get(sid, 0) for t, sid in zip(self.trips.trip_id, self.trips.service_id)}
+        return self._trip_days
 
     # ------------------------------------------------------------------ io
     def _read(self, name: str, cols: list[str] | None = None, **kw) -> pd.DataFrame:
