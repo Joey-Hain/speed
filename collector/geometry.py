@@ -49,7 +49,7 @@ STATION_MODES = {"train", "metro", "lightrail", "ferry"}
 # from Central like railway kilometrage.
 UPDOWN_MODES = {"train"}
 UPDOWN_ACTIVE = True
-GEOMETRY_VERSION = 2   # 2: up/down layout for trains
+GEOMETRY_VERSION = 3   # 2: up/down layout for trains; 3: branches weighted by days run
 CENTRAL_LONLAT = (151.2065, -33.8832)
 CENTRAL_NEAR_M = 400   # a shape passing this close to Central is split there
 MIN_NEW_TRACK_M = 1000  # a candidate branch must add this much track not already covered
