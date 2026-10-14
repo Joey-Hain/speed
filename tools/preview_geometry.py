@@ -22,6 +22,14 @@ p.add_argument("--out", default="preview")
 p.add_argument("--cache", default="gtfs_cache")
 a = p.parse_args()
 api = Api()
+_rules = geo._apply_rules
+def _dbg(static, cands, rules):
+    out = _rules(static, cands, rules)
+    print(f"  rules {rules}: {len(cands)} candidate pieces -> {len(out)}")
+    for c, length, sid, ll, ml in cands[:12]:
+        print(f"    piece {sid} {length/1000:.1f} km from {ll[0]} to {ll[-1]}")
+    return out
+geo._apply_rules = _dbg
 out = Path(a.out)
 want = {x for x in a.lines.split(",") if x}
 for fk in a.feeds.split(","):
@@ -39,6 +47,7 @@ for fk in a.feeds.split(","):
             print(f"{fk} {line}: FAILED {type(e).__name__}: {e}")
             continue
         if g is None:
+            print(f"{fk} {line}: no geometry")
             continue
         (out / fk / line).mkdir(parents=True, exist_ok=True)
         (out / fk / line / "geometry.json").write_text(json.dumps(g, separators=(",", ":")))
