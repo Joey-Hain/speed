@@ -1,0 +1,12 @@
+realtime path: /v2/gtfs/vehiclepos/nswtrains
+Traceback (most recent call last):
+  File "/home/runner/work/speed/speed/tools/diagnose.py", line 37, in <module>
+    m.ParseFromString(api.get(a.rt or feed.rt))
+                      ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/speed/speed/collector/api.py", line 66, in get
+    self._check(r, path)
+  File "/home/runner/work/speed/speed/collector/api.py", line 58, in _check
+    raise ApiError(f"{path}: HTTP {r.status_code} {detail}".strip())
+collector.api.ApiError: /v2/gtfs/vehiclepos/nswtrains: HTTP 404 { "ErrorDetails":{ 
+"TransactionId":"000001a0fac7cbab-476a9ed", "ErrorDateTime":"2026-10-10T16:22:09.204+11:00", 
+"Message":"The requested resource could not be found.", "RequestedUrl":"/v2/gtfs/vehic

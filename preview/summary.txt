@@ -1,0 +1,449 @@
+
+## sydneytrains BMT  Central to Lithgow and Bathurst
+  trip-days: all 64%, exp 25%, unplaced 11%
+  b0 Central -> Bathurst  240.0 km, 1622 trip-days
+    stations: Central, Strathfield 0.94, Parramatta, Blacktown 0.94, Penrith, Emu Plains 0.94, Lapstone 0.80, Glenbrook 0.94, Blaxland 0.94, Warrimoo 0.80, Valley Heights 0.80, Springwood, Faulconbridge 0.78, Linden 0.78, Woodford 0.78, Hazelbrook 0.93, Lawson 0.78, Bullaburra 0.78, Wentworth Falls 0.93, Leura 0.93, Katoomba, Medlow Bath 0.93, Blackheath 0.93, Mount Victoria, Bell 0.92, Zig Zag 0.54, Lithgow, Rydal, Tarana, Bathurst
+    29.7% all  Central - Lithgow: all stops
+    16.4% all  Central - Mount Victoria: all stops
+    11.5% all  Lithgow - Bathurst: all stops
+    10.4% exp  Central - Lithgow: skips Zig Zag
+     6.7% exp  Central - Lithgow: skips Lapstone, Warrimoo, Valley Heights, Faulconbridge, Linden, Woodford, Lawson, Bullaburra, Zig Zag
+     6.1% all  Central - Katoomba: all stops
+     5.7% all  Central - Springwood: all stops
+     3.7% exp  Central - Bathurst: skips Strathfield, Blacktown, Emu Plains, Lapstone, Glenbrook, Blaxland, Warrimoo, Valley Heights, Faulconbridge, Linden, Woodford, Hazelbrook, Lawson, Bullaburra, Wentworth Falls, Leura, Medlow Bath, Blackheath, Bell, Zig Zag
+     3.6% exp  Central - Mount Victoria: skips Lapstone, Warrimoo, Valley Heights, Faulconbridge, Linden, Woodford, Lawson, Bullaburra
+     1.3% exp  Central - Katoomba: skips Lapstone, Warrimoo, Valley Heights, Faulconbridge, Linden, Woodford, Lawson, Bullaburra
+     1.2% all  Blacktown - Lithgow: all stops
+
+## sydneytrains CCN  Central to Newcastle Interchange via Strathfield
+  trip-days: exp 47%, all 39%, unplaced 14%
+  b0 Central -> Newcastle Interchange  165.7 km, 2923 trip-days
+    stations: Central, Strathfield, Epping, Hornsby, Berowra 0.50, Cowan 0.49, Hawkesbury River 0.49, Wondabyne 0.39, Woy Woy, Koolewong 0.52, Tascott 0.52, Point Clare 0.52, Gosford, Narara 0.58, Niagara Park 0.58, Lisarow 0.58, Ourimbah 0.58, Tuggerah, Wyong, Warnervale 0.68, Wyee 0.73, Morisset, Dora Creek 0.62, Awaba 0.62, Fassifern, Booragul 0.63, Teralba 0.63, Cockle Creek 0.63, Cardiff, Kotara 0.63, Adamstown 0.63, Broadmeadow, Hamilton, Newcastle Interchange
+    16.1% exp  Central - Newcastle Interchange: skips Berowra, Cowan, Hawkesbury River, Wondabyne, Koolewong, Tascott, Point Clare, Narara, Niagara Park, Lisarow, Ourimbah, Warnervale, Wyee, Dora Creek, Awaba, Booragul, Teralba, Cockle Creek, Kotara, Adamstown
+    16.0% all  Central - Newcastle Interchange: all stops
+    11.9% all  Central - Wyong: all stops
+     8.1% exp  Central - Newcastle Interchange: skips Berowra, Cowan, Hawkesbury River, Wondabyne, Koolewong, Tascott, Point Clare, Narara, Niagara Park, Lisarow, Ourimbah
+     7.9% all  Gosford - Newcastle Interchange: all stops
+     6.3% exp  Central - Newcastle Interchange: skips Wondabyne
+     3.9% all  Central - Strathfield: all stops
+     3.5% all  Gosford - Wyong: all stops
+     3.3% exp  Central - Newcastle Interchange: skips Berowra, Cowan, Hawkesbury River, Wondabyne, Koolewong, Tascott, Point Clare, Narara, Niagara Park, Lisarow, Ourimbah, Warnervale, Dora Creek, Awaba, Booragul, Teralba, Cockle Creek, Kotara, Adamstown
+     3.2% exp  Central - Newcastle Interchange: skips Berowra, Cowan, Hawkesbury River, Wondabyne, Koolewong, Tascott, Point Clare
+     3.1% exp  Central - Newcastle Interchange: skips Berowra, Cowan, Hawkesbury River, Wondabyne, Koolewong, Tascott, Point Clare, Narara, Niagara Park, Lisarow, Ourimbah, Dora Creek, Awaba, Booragul, Teralba, Cockle Creek, Kotara, Adamstown
+     2.6% exp  Central - Wyong: skips Strathfield, Epping, Koolewong, Tascott, Point Clare
+  b1 Central -> Newcastle Interchange  157.1 km, 2923 trip-days
+    stations: Central, Town Hall 0.79, Wynyard 0.79, Milsons Point 0.79, North Sydney 0.79, Waverton 0.79, Wollstonecraft 0.79, St Leonards 0.79, Artarmon 0.79, Chatswood 0.79, Gordon 0.79, Hornsby, Berowra, Cowan 0.69, Hawkesbury River 0.69, Wondabyne 0.69, Woy Woy, Koolewong 0.52, Tascott 0.52, Point Clare 0.52, Gosford, Narara 0.95, Niagara Park 0.79, Lisarow 0.79, Ourimbah 0.95, Tuggerah, Wyong, Warnervale, Wyee, Morisset, Dora Creek 0.90, Awaba 0.90, Fassifern, Booragul, Teralba, Cockle Creek, Cardiff, Kotara, Adamstown, Broadmeadow, Hamilton, Newcastle Interchange
+    16.7% exp  Central - Newcastle Interchange: skips Town Hall, Wynyard, Milsons Point, North Sydney, Waverton, Wollstonecraft, St Leonards, Artarmon, Chatswood, Gordon, Berowra, Cowan, Hawkesbury River, Wondabyne, Koolewong, Tascott, Point Clare, Narara, Niagara Park, Lisarow, Ourimbah, Warnervale, Wyee, Dora Creek, Awaba, Booragul, Teralba, Cockle Creek, Kotara, Adamstown
+    16.6% all* Central - Newcastle Interchange: skips Town Hall, Wynyard, Milsons Point, North Sydney, Waverton, Wollstonecraft, St Leonards, Artarmon, Chatswood, Gordon
+    12.4% all* Central - Wyong: skips Town Hall, Wynyard, Milsons Point, North Sydney, Waverton, Wollstonecraft, St Leonards, Artarmon, Chatswood, Gordon
+     8.5% exp  Central - Newcastle Interchange: skips Town Hall, Wynyard, Milsons Point, North Sydney, Waverton, Wollstonecraft, St Leonards, Artarmon, Chatswood, Gordon, Berowra, Cowan, Hawkesbury River, Wondabyne, Koolewong, Tascott, Point Clare, Narara, Niagara Park, Lisarow, Ourimbah
+     8.3% all  Gosford - Newcastle Interchange: all stops
+     6.6% exp  Central - Newcastle Interchange: skips Town Hall, Wynyard, Milsons Point, North Sydney, Waverton, Wollstonecraft, St Leonards, Artarmon, Chatswood, Gordon, Wondabyne
+     3.6% all  Gosford - Wyong: all stops
+     3.5% exp  Central - Newcastle Interchange: skips Town Hall, Wynyard, Milsons Point, North Sydney, Waverton, Wollstonecraft, St Leonards, Artarmon, Chatswood, Gordon, Berowra, Cowan, Hawkesbury River, Wondabyne, Koolewong, Tascott, Point Clare, Narara, Niagara Park, Lisarow, Ourimbah, Warnervale, Dora Creek, Awaba, Booragul, Teralba, Cockle Creek, Kotara, Adamstown
+     3.3% exp  Central - Newcastle Interchange: skips Town Hall, Wynyard, Milsons Point, North Sydney, Waverton, Wollstonecraft, St Leonards, Artarmon, Chatswood, Gordon, Berowra, Cowan, Hawkesbury River, Wondabyne, Koolewong, Tascott, Point Clare
+     3.2% exp  Central - Newcastle Interchange: skips Town Hall, Wynyard, Milsons Point, North Sydney, Waverton, Wollstonecraft, St Leonards, Artarmon, Chatswood, Gordon, Berowra, Cowan, Hawkesbury River, Wondabyne, Koolewong, Tascott, Point Clare, Narara, Niagara Park, Lisarow, Ourimbah, Dora Creek, Awaba, Booragul, Teralba, Cockle Creek, Kotara, Adamstown
+     2.7% exp  Central - Wyong: skips Koolewong, Tascott, Point Clare
+     2.7% all* Central - Gosford: skips Town Hall, Wynyard, Milsons Point, North Sydney, Waverton, Wollstonecraft, St Leonards, Artarmon, Chatswood, Gordon
+
+## sydneytrains HUN  Newcastle Interchange to Dungog
+  trip-days: all 50%, exp 41%, unplaced 9%
+  b0 Newcastle Interchange -> Dungog  83.3 km, 1923 trip-days
+    stations: Newcastle Interchange, Hamilton, Waratah, Warabrook, Sandgate 0.55, Hexham 0.55, Tarro 0.55, Beresfield, Thornton, Metford, Victoria Street, East Maitland 0.55, High Street 0.55, Maitland, Telarah, Mindaribba 0.92, Paterson, Martins Creek, Hilldale, Wallarobba, Wirragulla, Dungog
+    49.9% all  Newcastle Interchange - Telarah: all stops
+    20.9% exp  Newcastle Interchange - Telarah: skips Sandgate, Hexham, Tarro, East Maitland, High Street
+    14.1% exp  Newcastle Interchange - Maitland: skips Sandgate, Hexham, Tarro, East Maitland, High Street
+     9.5% exp  Newcastle Interchange - Dungog: skips Sandgate, Hexham, Tarro, East Maitland, High Street
+     4.8% all  Newcastle Interchange - Maitland: all stops
+  b1 Newcastle Interchange -> Scone  152.6 km, 448 trip-days
+    stations: Newcastle Interchange, Hamilton, Waratah, Warabrook, Sandgate 0.55, Hexham 0.55, Tarro 0.55, Beresfield, Thornton, Metford, Victoria Street, East Maitland 0.55, High Street 0.55, Maitland, Lochinvar, Greta, Branxton, Singleton, Muswellbrook, Aberdeen, Scone
+    53.5% all  Newcastle Interchange - Maitland: all stops
+    33.9% exp  Newcastle Interchange - Maitland: skips Sandgate, Hexham, Tarro, East Maitland, High Street
+     5.2% exp  Newcastle Interchange - Scone: skips Sandgate, Hexham, Tarro, East Maitland, High Street
+     4.7% exp  Newcastle Interchange - Singleton: skips Sandgate, Hexham, Tarro, East Maitland, High Street
+     1.5% exp  Newcastle Interchange - Muswellbrook: skips Sandgate, Hexham, Tarro, East Maitland, High Street
+     1.2% all  Newcastle Interchange - Scone: all stops
+
+## sydneytrains NRC  Sydney (Central) to Brisbane (Roma Street)
+  trip-days: all 60%, exp 40%
+  b0 Central -> Brisbane  984.4 km, 166 trip-days
+    stations: Central, Strathfield, Hornsby, Gosford, Wyong, Fassifern, Broadmeadow, Maitland, Dungog, Gloucester, Wingham, Taree, Kendall, Wauchope, Kempsey, Eungai 0.60, Macksville, Nambucca Heads 0.84, Urunga, Sawtell, Coffs Harbour, Grafton, Casino, Kyogle, Brisbane
+    33.7% all  Central - Grafton: all stops
+    16.9% exp  Central - Casino: skips Eungai
+    16.3% exp  Central - Brisbane: skips Eungai, Nambucca Heads
+    16.3% all  Central - Casino: all stops
+     9.6% all  Central - Brisbane: all stops
+     7.2% exp  Central - Brisbane: skips Eungai
+
+## sydneytrains NRW  Sydney (Central) to Moree
+  trip-days: all 95%, unplaced 5%
+  b0 Central -> Werris Creek  416.1 km, 151 trip-days
+    stations: Central, Strathfield, Hornsby, Gosford, Wyong, Fassifern, Broadmeadow, Maitland, Singleton, Muswellbrook, Aberdeen, Scone, Murrurundi, Willow Tree, Quirindi, Werris Creek
+    100.0% all  Central - Werris Creek: all stops
+  b1 Central -> Werris Creek  412.8 km, 151 trip-days
+    stations: Central, Strathfield, Hornsby, Gosford, Wyong, Fassifern, Broadmeadow, Maitland, Singleton, Muswellbrook, Aberdeen, Scone, Murrurundi, Willow Tree, Quirindi, Werris Creek
+    100.0% all  Central - Werris Creek: all stops
+  b2 Werris Creek -> Moree  258.2 km, 94 trip-days
+    stations: Werris Creek, Gunnedah, Boggabri, Narrabri, Bellata, Moree
+    100.0% all  Werris Creek - Moree: all stops
+  b3 Werris Creek -> Armidale  170.1 km, 57 trip-days
+    stations: Werris Creek, Tamworth, Kootingal, Walcha Road, Uralla, Armidale
+    100.0% all  Werris Creek - Armidale: all stops
+sydneytrains Non_Revenue: no geometry
+sydneytrains Out_Of_Service: no geometry
+
+## sydneytrains SCO  Bondi Junction and Central to Bomaderry 
+  trip-days: all 70%, exp 18%, unplaced 12%
+  b0 Central -> Bomaderry (Nowra)  153.4 km, 3746 trip-days
+    stations: Central, Redfern, Sydenham 0.11, Wolli Creek, Hurstville, Oatley 0.10, Sutherland, Loftus 0.13, Engadine 0.14, Heathcote 0.14, Waterfall 0.57, Helensburgh, Otford 0.52, Stanwell Park 0.52, Coalcliff 0.52, Scarborough 0.52, Wombarra 0.52, Coledale 0.52, Austinmer 0.55, Thirroul, Bulli 0.57, Woonona 0.56, Bellambi 0.56, Corrimal 0.57, Towradgi 0.56, Fairy Meadow 0.56, North Wollongong, Wollongong, Coniston, Unanderra, Dapto, Albion Park, Oak Flats, Shellharbour Junction, Minnamurra, Bombo, Kiama, Gerringong, Berry, Bomaderry (Nowra)
+    17.2% all  Kiama - Bomaderry (Nowra): all stops
+    17.0% exp  Central - Kiama: skips Waterfall, Otford, Stanwell Park, Coalcliff, Scarborough, Wombarra, Coledale, Austinmer, Bulli, Woonona, Bellambi, Corrimal, Towradgi, Fairy Meadow
+    15.5% all  Waterfall - Coniston: all stops
+    12.5% all  Thirroul - Coniston: all stops
+     7.4% all  Wollongong - Kiama: all stops
+     2.7% exp  Central - Kiama: skips Bulli, Woonona, Bellambi, Corrimal, Towradgi, Fairy Meadow
+     2.3% all  Central - Kiama: all stops
+     2.0% all* Central - Kiama: skips Otford, Stanwell Park, Coalcliff, Scarborough, Wombarra, Coledale, Austinmer, Bulli, Woonona, Bellambi, Corrimal, Towradgi, Fairy Meadow
+     1.9% exp  Central - Wollongong: skips Waterfall, Otford, Stanwell Park, Coalcliff, Scarborough, Wombarra, Coledale, Austinmer, Bulli, Woonona, Bellambi, Corrimal, Towradgi, Fairy Meadow
+     1.5% all  Central - Thirroul: all stops
+     1.5% all* Central - Kiama: skips Waterfall, Otford, Stanwell Park, Coalcliff, Scarborough, Wombarra, Coledale, Bulli, Woonona, Bellambi, Corrimal, Towradgi, Fairy Meadow
+     1.3% all  Wollongong - Coniston: all stops
+  b1 Central -> Port Kembla  90.7 km, 3746 trip-days
+    stations: Central, Redfern, Sydenham 0.11, Wolli Creek, Hurstville, Oatley 0.10, Sutherland, Loftus 0.13, Engadine 0.14, Heathcote 0.14, Waterfall 0.57, Helensburgh, Otford 0.52, Stanwell Park 0.52, Coalcliff 0.52, Scarborough 0.52, Wombarra 0.52, Coledale 0.52, Austinmer 0.55, Thirroul, Bulli 0.57, Woonona 0.56, Bellambi 0.56, Corrimal 0.57, Towradgi 0.56, Fairy Meadow 0.56, North Wollongong, Wollongong, Coniston, Lysaghts, Cringila, Port Kembla North, Port Kembla
+    22.1% exp  Central - Coniston: skips Waterfall, Otford, Stanwell Park, Coalcliff, Scarborough, Wombarra, Coledale, Austinmer, Bulli, Woonona, Bellambi, Corrimal, Towradgi, Fairy Meadow
+    18.9% all  Waterfall - Port Kembla: all stops
+    14.6% all  Thirroul - Port Kembla: all stops
+    10.3% all  Wollongong - Coniston: all stops
+     3.3% exp  Central - Coniston: skips Bulli, Woonona, Bellambi, Corrimal, Towradgi, Fairy Meadow
+     3.0% all  Central - Coniston: all stops
+     2.7% all* Central - Coniston: skips Otford, Stanwell Park, Coalcliff, Scarborough, Wombarra, Coledale, Austinmer, Bulli, Woonona, Bellambi, Corrimal, Towradgi, Fairy Meadow
+     2.3% exp  Central - Wollongong: skips Waterfall, Otford, Stanwell Park, Coalcliff, Scarborough, Wombarra, Coledale, Austinmer, Bulli, Woonona, Bellambi, Corrimal, Towradgi, Fairy Meadow
+     1.8% all  Central - Thirroul: all stops
+     1.8% all* Central - Coniston: skips Waterfall, Otford, Stanwell Park, Coalcliff, Scarborough, Wombarra, Coledale, Bulli, Woonona, Bellambi, Corrimal, Towradgi, Fairy Meadow
+     1.6% all  Wollongong - Port Kembla: all stops
+     1.3% all  Waterfall - Wollongong: all stops
+  b2 Central -> Bondi Junction  6.8 km, 3746 trip-days
+    stations: Central, Town Hall, Martin Place, Kings Cross, Edgecliff, Bondi Junction
+    100.0% all  Central - Bondi Junction: all stops
+
+## sydneytrains SHL  Central to Campbelltown and Goulburn via Granville
+  trip-days: all 77%, unplaced 20%, exp 3%
+  b0 Campbelltown -> Goulburn  170.5 km, 814 trip-days
+    stations: Campbelltown, Macarthur, Menangle Park 0.95, Menangle 0.95, Douglas Park 0.95, Picton, Tahmoor, Bargo 0.95, Yerrinbool 0.95, Mittagong, Bowral, Burradoo 0.95, Moss Vale, Exeter 0.95, Bundanoon, Penrose 0.95, Wingello 0.95, Tallong 0.95, Marulan 0.95, Goulburn
+    83.1% all  Campbelltown - Moss Vale: all stops
+     6.9% all  Campbelltown - Goulburn: all stops
+     5.9% all  Moss Vale - Goulburn: all stops
+     1.7% exp  Campbelltown - Goulburn: skips Menangle Park, Menangle, Douglas Park, Bargo, Yerrinbool, Burradoo
+     1.7% exp  Campbelltown - Moss Vale: skips Menangle Park, Menangle, Douglas Park, Bargo, Yerrinbool, Burradoo
+
+## sydneytrains STH  Sydney (Central) to Canberra
+  trip-days: all 60%, exp 35%, unplaced 5%
+  b0 Central -> Canberra  320.3 km, 311 trip-days
+    stations: Central, Campbelltown, Mittagong 0.59, Bowral 0.59, Moss Vale, Bundanoon 0.59, Goulburn, Tarago, Bungendore, Queanbeyan, Canberra
+    53.0% all  Central - Canberra: all stops
+    39.1% exp  Central - Goulburn: skips Mittagong, Bowral, Bundanoon
+     5.3% all  Goulburn - Canberra: all stops
+     2.5% all  Central - Goulburn: all stops
+  b1 Central -> Southern Cross  943.9 km, 142 trip-days
+    stations: Central, Campbelltown, Mittagong 0.59, Bowral 0.59, Moss Vale, Bundanoon 0.59, Goulburn, Gunning, Yass Junction, Harden, Cootamundra, Junee, Wagga Wagga, The Rock, Henty, Culcairn, Albury, Wangaratta, Benalla, Seymour, Broadmeadows, Southern Cross
+    55.3% all  Central - Goulburn: all stops
+    39.0% exp  Central - Southern Cross: skips Mittagong, Bowral, Bundanoon
+     5.0% all  Goulburn - Junee: all stops
+
+## sydneytrains T1  City to Hornsby and Berowra via Gordon
+  trip-days: all 57%, exp 41%, unplaced 2%
+  b0 Central -> Berowra  36.0 km, 11198 trip-days
+    stations: Central, Town Hall, Wynyard, Milsons Point, North Sydney, Waverton, Wollstonecraft, St Leonards, Artarmon, Chatswood, Roseville 0.95, Lindfield 0.95, Killara 0.94, Gordon, Pymble, Turramurra, Warrawee, Wahroonga, Waitara, Hornsby, Asquith, Mount Colah, Mount Kuring-gai, Berowra
+    31.6% all  Central - Hornsby: all stops
+    25.8% all  Central - Berowra: all stops
+    18.4% all  Central - North Sydney: all stops
+    10.7% all  Central - Lindfield: all stops
+     4.1% exp  Central - Berowra: skips Roseville, Lindfield, Killara
+     3.9% all  Wynyard - Gordon: all stops
+     2.3% all  Wynyard - Hornsby: all stops
+     1.5% exp  Central - Hornsby: skips Pymble, Warrawee, Wahroonga
+     1.3% all  Hornsby - Berowra: all stops
+  b1 Central -> Richmond  60.8 km, 10388 trip-days
+    stations: Central, Redfern, Strathfield, Lidcombe 0.82, Auburn 0.21, Clyde 0.18, Granville 0.35, Harris Park 0.17, Parramatta, Westmead 0.89, Wentworthville 0.41, Pendle Hill 0.41, Toongabbie 0.41, Seven Hills, Blacktown, Marayong, Quakers Hill, Schofields, Riverstone, Vineyard, Mulgrave, Windsor, Clarendon, East Richmond, Richmond
+    30.2% exp  Central - Blacktown: skips Granville, Wentworthville, Pendle Hill, Toongabbie
+    17.8% exp  Central - Blacktown: skips Wentworthville, Pendle Hill, Toongabbie
+    10.3% all  Central - Richmond: all stops
+     9.7% exp  Central - Blacktown: skips Lidcombe, Granville, Westmead, Wentworthville, Pendle Hill, Toongabbie
+     9.7% exp  Central - Richmond: skips Granville
+     6.3% all  Central - Blacktown: all stops
+     5.8% exp  Central - Schofields: skips Granville
+     4.2% exp  Central - Schofields: skips Lidcombe, Granville
+     2.5% exp  Central - Richmond: skips Lidcombe, Granville
+     1.7% exp  Central - Blacktown: skips Lidcombe, Granville, Westmead, Wentworthville, Pendle Hill, Toongabbie, Seven Hills
+  b2 Central -> Emu Plains  57.6 km, 10388 trip-days
+    stations: Central, Redfern, Strathfield, Lidcombe 0.82, Auburn 0.21, Clyde 0.18, Granville 0.35, Harris Park 0.17, Parramatta, Westmead 0.89, Wentworthville 0.41, Pendle Hill 0.41, Toongabbie 0.41, Seven Hills, Blacktown, Doonside, Rooty Hill, Mount Druitt, St Marys, Werrington, Kingswood, Penrith, Emu Plains
+    15.8% exp  Central - Blacktown: skips Granville
+    15.3% exp  Central - Penrith: skips Granville, Wentworthville, Pendle Hill, Toongabbie
+    15.0% exp  Central - Emu Plains: skips Granville, Wentworthville, Pendle Hill, Toongabbie
+    14.9% exp  Central - Penrith: skips Wentworthville, Pendle Hill, Toongabbie
+    10.3% all  Central - Blacktown: all stops
+     7.0% exp  Central - Penrith: skips Lidcombe, Granville, Westmead, Wentworthville, Pendle Hill, Toongabbie
+     6.7% exp  Central - Blacktown: skips Lidcombe, Granville
+     4.8% all  Central - Penrith: all stops
+     2.8% exp  Central - Emu Plains: skips Lidcombe, Granville, Westmead, Wentworthville, Pendle Hill, Toongabbie
+     2.7% exp  Central - Emu Plains: skips Wentworthville, Pendle Hill, Toongabbie
+     1.7% exp  Central - Blacktown: skips Lidcombe, Granville, Westmead, Wentworthville, Pendle Hill, Toongabbie, Seven Hills
+     1.4% all  Central - Emu Plains: all stops
+
+## sydneytrains T2  City Circle to Parramatta
+  trip-days: all 72%, exp 22%, unplaced 6%
+  b0 Central -> Parramatta  23.1 km, 9803 trip-days
+    stations: Central, Redfern, Macdonaldtown 0.47, Newtown 0.89, Stanmore 0.50, Petersham 0.50, Lewisham 0.50, Summer Hill 0.50, Ashfield, Croydon 0.51, Burwood, Strathfield, Homebush 0.50, Flemington, Lidcombe, Auburn, Clyde 0.79, Granville, Harris Park, Parramatta
+    26.0% all* Central - Granville: skips Macdonaldtown, Stanmore, Petersham, Lewisham, Summer Hill, Croydon, Homebush
+    25.7% all  Central - Parramatta: all stops
+    14.0% all  Central - Redfern: all stops
+    12.6% all  Central - Homebush: all stops
+     7.1% exp  Central - Granville: skips Macdonaldtown, Newtown, Stanmore, Petersham, Lewisham, Summer Hill, Croydon, Homebush, Clyde
+     3.3% all* Central - Granville: skips Macdonaldtown, Lewisham, Summer Hill, Croydon, Homebush, Clyde
+     3.3% exp  Central - Granville: skips Macdonaldtown, Stanmore, Petersham, Homebush
+     2.4% exp  Central - Granville: skips Macdonaldtown, Stanmore, Petersham, Lewisham, Summer Hill, Croydon, Clyde
+     2.1% exp  Lidcombe - Granville: skips Clyde
+     1.8% exp  Central - Lidcombe: skips Macdonaldtown, Newtown, Stanmore, Petersham, Lewisham, Summer Hill, Croydon, Homebush
+  b1 Central -> Museum  5.9 km, 9803 trip-days
+    stations: Central, Town Hall, Wynyard, Circular Quay, St James, Museum
+    100.0% all  Central - Museum: all stops
+  b2 Central -> Leppington  51.0 km, 4195 trip-days
+    stations: Central, Redfern, Macdonaldtown 0.47, Newtown 0.91, Stanmore 0.51, Petersham 0.51, Lewisham 0.52, Summer Hill 0.52, Ashfield, Croydon 0.52, Burwood, Strathfield, Homebush 0.51, Flemington, Lidcombe, Auburn, Clyde 0.79, Granville, Merrylands, Guildford, Yennora, Fairfield, Canley Vale, Cabramatta, Warwick Farm, Liverpool, Casula, Glenfield, Edmondson Park, Leppington
+    25.9% all* Central - Leppington: skips Macdonaldtown, Stanmore, Petersham, Lewisham, Summer Hill, Croydon, Homebush
+    25.7% all  Central - Granville: all stops
+    14.0% all  Central - Redfern: all stops
+    12.6% all  Central - Homebush: all stops
+     7.0% exp  Central - Leppington: skips Macdonaldtown, Newtown, Stanmore, Petersham, Lewisham, Summer Hill, Croydon, Homebush, Clyde
+     3.3% all* Central - Leppington: skips Macdonaldtown, Lewisham, Summer Hill, Croydon, Homebush, Clyde
+     3.3% exp  Central - Leppington: skips Macdonaldtown, Stanmore, Petersham, Homebush
+     2.2% exp  Central - Leppington: skips Macdonaldtown, Stanmore, Petersham, Lewisham, Summer Hill, Croydon, Clyde
+     2.1% exp  Lidcombe - Leppington: skips Clyde
+     1.7% exp  Central - Leppington: skips Macdonaldtown, Newtown, Stanmore, Petersham, Lewisham, Summer Hill, Croydon, Homebush, Auburn, Clyde, Granville, Merrylands, Guildford, Yennora, Fairfield, Canley Vale
+
+## sydneytrains T3  City Circle to Liverpool via Regents Park
+  trip-days: all 76%, exp 23%, unplaced 1%
+  b0 Central -> Liverpool  32.1 km, 2195 trip-days
+    stations: Central, Redfern, Macdonaldtown 0.42, Newtown, Stanmore 0.42, Petersham 0.42, Lewisham 0.42, Summer Hill 0.42, Ashfield, Croydon 0.28, Burwood, Strathfield, Homebush, Flemington 0.28, Lidcombe, Berala, Regents Park, Sefton, Chester Hill, Leightonfield, Villawood, Carramar, Cabramatta, Warwick Farm, Liverpool
+    51.7% exp  Central - Liverpool: skips Macdonaldtown, Stanmore, Petersham, Lewisham, Summer Hill
+    38.5% all  Central - Liverpool: all stops
+     7.2% all  Sefton - Liverpool: all stops
+     2.6% all  Lidcombe - Liverpool: all stops
+  b1 Central -> Museum  5.9 km, 2195 trip-days
+    stations: Central, Town Hall, Wynyard, Circular Quay, St James, Museum
+    100.0% all  Central - Museum: all stops
+
+## sydneytrains T4  Bondi Junction to Waterfall via City
+  trip-days: all 95%, unplaced 5%, exp 0%
+  b0 Central -> Waterfall  38.8 km, 8229 trip-days
+    stations: Central, Redfern, Sydenham 0.78, Tempe 0.38, Wolli Creek, Arncliffe 0.39, Banksia 0.38, Rockdale 0.74, Kogarah 0.74, Carlton 0.49, Allawah 0.49, Hurstville, Penshurst 0.73, Mortdale 0.78, Oatley 0.58, Como 0.38, Jannali 0.71, Sutherland, Loftus, Engadine, Heathcote, Waterfall
+    19.7% all  Central - Hurstville: all stops
+    10.2% all* Central - Waterfall: skips Oatley, Como, Jannali
+     8.8% all* Central - Sutherland: skips Tempe, Arncliffe, Banksia
+     7.4% all* Central - Sutherland: skips Tempe, Arncliffe, Banksia, Carlton, Allawah, Penshurst, Mortdale, Como
+     5.1% all* Central - Sutherland: skips Sydenham, Tempe, Arncliffe, Banksia, Rockdale, Kogarah, Carlton, Allawah
+     4.8% all* Central - Sutherland: skips Tempe, Arncliffe, Banksia, Carlton, Allawah
+     4.4% all* Central - Waterfall: skips Oatley, Como
+     4.4% all* Central - Sutherland: skips Sydenham, Tempe, Arncliffe, Banksia, Rockdale, Kogarah, Carlton, Allawah, Penshurst, Mortdale, Como
+     4.2% all* Central - Sutherland: skips Tempe, Arncliffe, Banksia, Carlton, Allawah, Penshurst, Oatley, Como, Jannali
+     4.0% all* Central - Waterfall: skips Sydenham, Tempe, Arncliffe, Banksia, Rockdale, Kogarah, Carlton, Allawah, Oatley, Como, Jannali
+     2.7% all* Central - Hurstville: skips Tempe, Arncliffe, Banksia, Carlton, Allawah
+     2.6% all* Central - Sutherland: skips Sydenham, Tempe, Arncliffe, Banksia, Rockdale, Kogarah, Carlton, Allawah, Penshurst, Mortdale, Oatley, Como, Jannali
+  b1 Central -> Cronulla  34.9 km, 8229 trip-days
+    stations: Central, Redfern, Sydenham 0.78, Tempe 0.38, Wolli Creek, Arncliffe 0.39, Banksia 0.38, Rockdale 0.74, Kogarah 0.74, Carlton 0.49, Allawah 0.49, Hurstville, Penshurst 0.73, Mortdale 0.78, Oatley 0.58, Como 0.38, Jannali 0.71, Sutherland, Kirrawee, Gymea, Miranda, Caringbah, Woolooware, Cronulla
+    19.6% all  Central - Hurstville: all stops
+    10.1% all* Central - Sutherland: skips Oatley, Como, Jannali
+     8.8% all* Central - Cronulla: skips Tempe, Arncliffe, Banksia
+     7.4% all* Central - Cronulla: skips Tempe, Arncliffe, Banksia, Carlton, Allawah, Penshurst, Mortdale, Como
+     5.1% all* Central - Cronulla: skips Sydenham, Tempe, Arncliffe, Banksia, Rockdale, Kogarah, Carlton, Allawah
+     4.8% all* Central - Cronulla: skips Tempe, Arncliffe, Banksia, Carlton, Allawah
+     4.5% all* Central - Sutherland: skips Oatley, Como
+     4.4% all* Central - Cronulla: skips Sydenham, Tempe, Arncliffe, Banksia, Rockdale, Kogarah, Carlton, Allawah, Penshurst, Mortdale, Como
+     4.1% all* Central - Cronulla: skips Tempe, Arncliffe, Banksia, Carlton, Allawah, Penshurst, Oatley, Como, Jannali
+     4.0% all* Central - Sutherland: skips Sydenham, Tempe, Arncliffe, Banksia, Rockdale, Kogarah, Carlton, Allawah, Oatley, Como, Jannali
+     2.7% all* Central - Hurstville: skips Tempe, Arncliffe, Banksia, Carlton, Allawah
+     2.7% all  Central - Sutherland: all stops
+  b2 Central -> Bondi Junction  6.8 km, 8178 trip-days
+    stations: Central, Town Hall, Martin Place, Kings Cross, Edgecliff, Bondi Junction
+    99.7% all  Central - Bondi Junction: all stops
+
+## sydneytrains T5  Richmond to Leppington
+  trip-days: all 72%, unplaced 25%, exp 3%
+  b0 Merrylands -> Leppington  29.2 km, 2503 trip-days
+    stations: Merrylands, Guildford, Yennora, Fairfield, Canley Vale, Cabramatta, Warwick Farm, Liverpool, Casula, Glenfield, Edmondson Park, Leppington
+    80.8% all  Merrylands - Leppington: all stops
+    18.6% all  Merrylands - Liverpool: all stops
+  b1 Harris Park -> Blacktown  15.6 km, 2503 trip-days
+    stations: Harris Park, Parramatta, Westmead, Wentworthville 0.94, Pendle Hill 0.94, Toongabbie 0.94, Seven Hills, Blacktown
+    90.0% all  Harris Park - Blacktown: all stops
+     5.1% all  Parramatta - Blacktown: all stops
+     4.9% exp  Parramatta - Blacktown: skips Wentworthville, Pendle Hill, Toongabbie
+  b2 Harris Park -> Richmond  38.8 km, 1932 trip-days
+    stations: Harris Park, Parramatta, Westmead, Wentworthville 0.94, Pendle Hill 0.94, Toongabbie 0.94, Seven Hills, Blacktown, Marayong, Quakers Hill, Schofields, Riverstone, Vineyard, Mulgrave, Windsor, Clarendon, East Richmond, Richmond
+    38.7% all  Harris Park - Schofields: all stops
+    25.1% all  Harris Park - Blacktown: all stops
+    18.4% all  Harris Park - Richmond: all stops
+     5.7% all  Blacktown - Schofields: all stops
+     4.4% exp  Parramatta - Blacktown: skips Wentworthville, Pendle Hill, Toongabbie
+     2.9% all  Blacktown - Richmond: all stops
+     2.9% all  Parramatta - Richmond: all stops
+     1.8% all  Parramatta - Blacktown: all stops
+
+## sydneytrains T6  Lidcombe to Bankstown
+  trip-days: all 98%, unplaced 2%, exp 0%
+  b0 Lidcombe -> Bankstown  8.7 km, 3913 trip-days
+    stations: Lidcombe, Berala, Regents Park, Birrong, Yagoona, Bankstown
+    100.0% all  Lidcombe - Bankstown: all stops
+
+## sydneytrains T7  Central to Olympic Park
+  trip-days: all 96%, unplaced 4%
+  b0 Lidcombe -> Olympic Park  5.3 km, 6219 trip-days
+    stations: Lidcombe, Olympic Park
+    100.0% all  Lidcombe - Olympic Park: all stops
+
+## sydneytrains T8  City Circle to Macarthur via Airport
+  trip-days: all 67%, unplaced 18%, exp 15%
+  b0 Central -> Macarthur  50.1 km, 12072 trip-days
+    stations: Central, Green Square, Mascot, Domestic Airport, International Airport, Wolli Creek, Turrella 0.58, Bardwell Park 0.58, Bexley North 0.58, Kingsgrove 0.58, Beverly Hills 0.58, Narwee 0.58, Riverwood 0.60, Padstow 0.60, Revesby, Panania 0.93, East Hills 0.93, Holsworthy, Glenfield, Macquarie Fields, Ingleburn, Minto, Leumeah, Campbelltown, Macarthur
+    40.8% all  Central - Revesby: all stops
+    35.2% exp  Central - Macarthur: skips Turrella, Bardwell Park, Bexley North, Kingsgrove, Beverly Hills, Narwee, Riverwood, Padstow
+    12.9% all  Central - Macarthur: all stops
+     2.6% all* Central - Campbelltown: skips Green Square, Mascot, Domestic Airport, International Airport, Wolli Creek, Turrella, Bardwell Park, Bexley North, Kingsgrove, Beverly Hills, Narwee, Riverwood, Padstow
+     2.4% all  Revesby - Macarthur: all stops
+     1.9% all* Central - Macarthur: skips Turrella, Bardwell Park, Bexley North, Kingsgrove, Beverly Hills, Narwee, Revesby, Panania, East Hills
+     1.7% all* Central - Macarthur: skips Turrella, Bardwell Park, Bexley North, Kingsgrove, Beverly Hills, Narwee, Riverwood, Padstow, Panania, East Hills
+     1.4% exp  Central - Campbelltown: skips Green Square, Mascot, Domestic Airport, International Airport, Wolli Creek, Turrella, Bardwell Park, Bexley North, Kingsgrove, Beverly Hills, Narwee, Riverwood, Padstow, Panania, East Hills
+  b1 Central -> Museum  5.9 km, 12072 trip-days
+    stations: Central, Town Hall, Wynyard, Circular Quay, St James, Museum
+    100.0% all  Central - Museum: all stops
+
+## sydneytrains T9  North Shore to Hornsby and Berowra via City and Strathfield
+  trip-days: all 85%, exp 12%, unplaced 3%
+  b0 Central -> Berowra  36.0 km, 8177 trip-days
+    stations: Central, Town Hall, Wynyard, Milsons Point, North Sydney, Waverton, Wollstonecraft, St Leonards, Artarmon, Chatswood, Roseville, Lindfield, Killara, Gordon, Pymble, Turramurra, Warrawee, Wahroonga, Waitara, Hornsby, Asquith, Mount Colah, Mount Kuring-gai, Berowra
+    52.2% all* Central - Hornsby: skips Town Hall, Wynyard, Milsons Point, North Sydney, Waverton, Wollstonecraft, St Leonards, Artarmon, Chatswood, Roseville, Lindfield, Killara, Gordon, Pymble, Turramurra, Warrawee, Wahroonga, Waitara
+    36.0% all  Central - Gordon: all stops
+     3.4% all  Central - North Sydney: all stops
+     3.2% all  Central - Hornsby: all stops
+     2.9% all  Central - Berowra: all stops
+     2.2% all* Central - Berowra: skips Town Hall, Wynyard, Milsons Point, North Sydney, Waverton, Wollstonecraft, St Leonards, Artarmon, Chatswood, Roseville, Lindfield, Killara, Gordon, Pymble, Turramurra, Warrawee, Wahroonga, Waitara
+  b1 Central -> Hornsby  34.5 km, 8177 trip-days
+    stations: Central, Redfern 0.90, Burwood 0.91, Strathfield, North Strathfield 0.90, Concord West 0.90, Rhodes, Meadowbank 0.94, West Ryde, Denistone 0.90, Eastwood, Epping, Cheltenham, Beecroft, Pennant Hills, Thornleigh, Normanhurst, Hornsby
+    69.1% all  Central - Hornsby: all stops
+     8.5% all* Central - Hornsby: skips Redfern, Burwood, Strathfield, North Strathfield, Concord West, Rhodes, Meadowbank, West Ryde, Denistone, Eastwood, Epping, Cheltenham, Beecroft, Pennant Hills, Thornleigh, Normanhurst
+     6.7% exp  Central - Hornsby: skips Redfern, North Strathfield, Concord West, Denistone
+     6.4% exp  Central - Epping: skips Burwood
+     4.6% exp  Central - Epping: skips Redfern, North Strathfield, Concord West, Meadowbank, Denistone
+     2.8% all  Epping - Hornsby: all stops
+
+## sydneytrains WST  Sydney (Central) to Dubbo
+  trip-days: all 53%, unplaced 34%, exp 12%
+  b0 Central -> Dubbo  458.9 km, 76 trip-days
+    stations: Central, Strathfield, Parramatta 0.94, Blacktown 0.85, Penrith 0.94, Katoomba 0.94, Lithgow, Rydal 0.90, Tarana 0.90, Bathurst, Blayney, Millthorpe 0.90, Orange, Stuart Town, Wellington, Geurie, Dubbo
+    90.3% all  Central - Dubbo: all stops
+     9.7% exp  Central - Orange: skips Blacktown, Rydal, Tarana, Millthorpe
+  b1 Clyde -> Perth  3691.7 km, 17 trip-days
+    stations: Clyde, Granville 0.33, Parramatta 0.94, Blacktown 0.85, Penrith 0.94, Katoomba 0.94, Lithgow 0.94, Rydal 0.80, Tarana 0.80, Bathurst 0.89, Blayney 0.89, Millthorpe 0.80, Orange 0.90, Parkes 0.43, Condobolin 0.43, Euabalong West 0.43, Ivanhoe 0.43, Darnick 0.43, Menindee 0.43, Broken Hill 0.43, Perth
+    71.1% all  Parramatta - Orange: all stops
+     7.9% all  Orange - Broken Hill: all stops
+     7.9% exp  Parramatta - Orange: skips Blacktown, Rydal, Tarana, Millthorpe
+     5.3% exp  Clyde - Perth: skips Granville, Parramatta, Blacktown, Penrith, Katoomba, Lithgow, Rydal, Tarana, Bathurst, Blayney, Millthorpe, Orange, Parkes, Condobolin, Euabalong West, Ivanhoe, Darnick, Menindee, Broken Hill
+     5.3% exp  Lithgow - Perth: skips Rydal, Tarana, Bathurst, Blayney, Millthorpe, Orange, Parkes, Condobolin, Euabalong West, Ivanhoe, Darnick, Menindee, Broken Hill
+     2.6% all  Granville - Orange: all stops
+
+## nswtrains BMT  Blue Mountains Line
+  trip-days: all 81%, exp 19%
+  b0 Central -> Bathurst  239.6 km, 132 trip-days
+    stations: Central, Parramatta, Westmead 0.56, Penrith, Springwood, Katoomba, Mount Victoria, Lithgow, Rydal 0.81, Tarana 0.81, Bathurst
+    69.3% all  Lithgow - Bathurst: all stops
+    11.4% all  Central - Bathurst: all stops
+     9.5% exp  Lithgow - Bathurst: skips Rydal, Tarana
+     9.1% exp  Central - Bathurst: skips Westmead, Rydal, Tarana
+
+## nswtrains HUN  Hunter Line
+  trip-days: all 56%, exp 44%
+  b0 Newcastle Interchange -> Singleton  76.5 km, 254 trip-days
+    stations: Newcastle Interchange, Hamilton, Waratah, Warabrook, Sandgate 0.56, Hexham 0.56, Tarro 0.56, Beresfield, Thornton, Metford, Victoria Street, East Maitland 0.56, High Street 0.56, Maitland, Lochinvar, Greta, Branxton, Singleton
+    31.4% all  Newcastle Interchange - Maitland: all stops
+    23.2% all  Hamilton - Maitland: all stops
+    20.5% exp  Newcastle Interchange - Maitland: skips Sandgate, Hexham, Tarro, East Maitland, High Street
+    14.0% exp  Hamilton - Maitland: skips Sandgate, Hexham, Tarro, East Maitland, High Street
+     6.7% exp  Newcastle Interchange - Singleton: skips Sandgate, Hexham, Tarro, East Maitland, High Street
+     2.9% exp  Hamilton - Singleton: skips Sandgate, Hexham, Tarro, East Maitland, High Street
+  b1 Newcastle Interchange -> Dungog  82.7 km, 242 trip-days
+    stations: Newcastle Interchange, Hamilton, Waratah, Warabrook, Sandgate 0.56, Hexham 0.56, Tarro 0.56, Beresfield, Thornton, Metford, Victoria Street, East Maitland 0.56, High Street 0.56, Maitland, Telarah, Mindaribba, Paterson, Martins Creek, Hilldale, Wallarobba, Wirragulla, Dungog
+    29.0% all  Newcastle Interchange - Telarah: all stops
+    21.9% all  Hamilton - Telarah: all stops
+    12.7% exp  Newcastle Interchange - Telarah: skips Sandgate, Hexham, Tarro, East Maitland, High Street
+     8.6% exp  Hamilton - Telarah: skips Sandgate, Hexham, Tarro, East Maitland, High Street
+     8.4% exp  Newcastle Interchange - Maitland: skips Sandgate, Hexham, Tarro, East Maitland, High Street
+     5.6% exp  Newcastle Interchange - Dungog: skips Sandgate, Hexham, Tarro, East Maitland, High Street
+     4.3% exp  Hamilton - Dungog: skips Sandgate, Hexham, Tarro, East Maitland, High Street
+     4.0% exp  Hamilton - Maitland: skips Sandgate, Hexham, Tarro, East Maitland, High Street
+     3.0% all  Newcastle Interchange - Maitland: all stops
+     1.9% all  Hamilton - Maitland: all stops
+
+## nswtrains North_Coast_NSW  North Coast NSW
+  trip-days: all 67%, exp 33%
+  b0 Central -> Roma Street (Brisbane)  985.2 km, 152 trip-days
+    stations: Central, Strathfield, Hornsby, Gosford, Wyong, Fassifern, Broadmeadow, Maitland, Dungog, Gloucester, Wingham, Taree, Kendall, Wauchope, Kempsey, Eungai 0.67, Macksville, Nambucca Heads 0.84, Urunga, Sawtell, Coffs Harbour, Grafton, Casino, Kyogle, Roma Street (Brisbane)
+    34.2% all  Central - Grafton: all stops
+    17.8% all  Central - Casino: all stops
+    16.4% exp  Central - Casino: skips Eungai
+    15.1% exp  Central - Roma Street (Brisbane): skips Eungai, Nambucca Heads
+    15.1% all  Central - Roma Street (Brisbane): all stops
+     1.3% exp  Central - Casino: skips Eungai, Nambucca Heads
+
+## nswtrains North_West_NSW  North West NSW
+  trip-days: all 100%
+  b0 Central -> Armidale  578.4 km, 52 trip-days
+    stations: Central, Strathfield, Hornsby, Gosford, Wyong, Fassifern, Broadmeadow, Maitland, Singleton, Muswellbrook, Aberdeen, Scone, Murrurundi, Willow Tree, Quirindi, Werris Creek, Tamworth, Kootingal, Walcha Road, Uralla, Armidale
+    71.2% all  Central - Werris Creek: all stops
+    28.8% all  Central - Armidale: all stops
+  b1 Werris Creek -> Moree  255.0 km, 52 trip-days
+    stations: Werris Creek, Gunnedah, Boggabri, Narrabri, Bellata, Moree
+    100.0% all  Werris Creek - Moree: all stops
+
+## nswtrains SCO  South Coast Line
+  trip-days: all 100%
+  b0 Kiama -> Bomaderry  34.2 km, 702 trip-days
+    stations: Kiama, Gerringong, Berry, Bomaderry
+    96.6% all  Kiama - Bomaderry: all stops
+     1.7% all  Berry - Bomaderry: all stops
+     1.7% all  Kiama - Berry: all stops
+
+## nswtrains SHL  Southern Highlands Line
+  trip-days: all 97%, exp 3%
+  b0 Campbelltown -> Goulburn  170.2 km, 1095 trip-days
+    stations: Campbelltown, Macarthur, Menangle Park, Menangle, Douglas Park, Picton, Tahmoor, Bargo, Yerrinbool, Mittagong, Bowral, Burradoo, Moss Vale, Exeter, Bundanoon, Penrose, Wingello, Tallong, Marulan, Goulburn
+    83.5% all  Campbelltown - Moss Vale: all stops
+     6.7% all  Moss Vale - Goulburn: all stops
+     6.3% all  Campbelltown - Goulburn: all stops
+     1.7% exp  Campbelltown - Goulburn: skips Menangle Park, Menangle, Douglas Park, Bargo, Yerrinbool, Burradoo
+     1.7% exp  Campbelltown - Moss Vale: skips Menangle Park, Menangle, Douglas Park, Bargo, Yerrinbool, Burradoo
+  b1 Campbelltown -> Moss Vale  94.1 km, 1095 trip-days
+    stations: Campbelltown, Macarthur, Menangle Park, Menangle, Douglas Park, Picton, Tahmoor, Bargo, Yerrinbool, Mittagong, Bowral, Burradoo, Moss Vale
+    96.3% all  Campbelltown - Moss Vale: all stops
+     3.7% exp  Campbelltown - Moss Vale: skips Menangle Park, Menangle, Douglas Park, Bargo, Yerrinbool, Burradoo
+
+## nswtrains Southern_NSW  Southern NSW
+  trip-days: all 63%, exp 37%
+  b0 Central -> Canberra  320.7 km, 250 trip-days
+    stations: Central, Campbelltown, Mittagong 0.61, Bowral 0.61, Moss Vale, Bundanoon 0.61, Goulburn, Tarago, Bungendore, Queanbeyan, Canberra
+    61.3% all  Central - Canberra: all stops
+    38.7% exp  Central - Goulburn: skips Mittagong, Bowral, Bundanoon
+  b1 Central -> Southern Cross (Melbourne)  963.2 km, 98 trip-days
+    stations: Central, Campbelltown, Mittagong 0.61, Bowral 0.61, Moss Vale, Bundanoon 0.61, Goulburn, Gunning, Yass Junction, Harden, Cootamundra, Junee, Wagga Wagga, The Rock, Henty, Culcairn, Albury, Wangaratta, Benalla, Seymour, Broadmeadows, Southern Cross (Melbourne)
+    58.0% all  Central - Goulburn: all stops
+    36.6% exp  Central - Southern Cross (Melbourne): skips Mittagong, Bowral, Bundanoon
+     4.6% all  Goulburn - Junee: all stops
+
+## nswtrains Western_NSW  Western NSW
+  trip-days: all 90%, exp 10%
+  b0 Central -> Dubbo  461.8 km, 60 trip-days
+    stations: Central, Strathfield, Parramatta, Blacktown 0.90, Penrith, Katoomba, Lithgow, Rydal 0.90, Tarana 0.90, Bathurst, Blayney, Millthorpe 0.90, Orange, Stuart Town, Wellington, Geurie, Dubbo
+    90.0% all  Central - Dubbo: all stops
+    10.0% exp  Central - Orange: skips Blacktown, Rydal, Tarana, Millthorpe
+  b1 Central -> Broken Hill  1130.1 km, 6 trip-days
+    stations: Central, Strathfield, Parramatta, Blacktown 0.90, Penrith, Katoomba, Lithgow, Rydal 0.90, Tarana 0.90, Bathurst, Blayney, Millthorpe 0.90, Orange, Parkes, Condobolin, Euabalong West, Ivanhoe, Darnick, Menindee, Broken Hill
+    90.0% all  Central - Orange: all stops
+    10.0% exp  Central - Broken Hill: skips Blacktown, Rydal, Tarana, Millthorpe

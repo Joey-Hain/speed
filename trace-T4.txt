@@ -1,0 +1,762 @@
+
+== T4 dir 0 branch 0 seg 145 (36.25 km): running None with stops 20  vehicle 8045.1526.4647.4112.8914.1396.8578.8044
+   header 1791972957 ts 1791972872 (-85s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 36410} stop Sutherland.Miranda 2 Loc
+   header 1791972977 ts 1791972968 (-9s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 36939} stop Sutherland.SC29.9 Loc
+
+== T4 dir 0 branch 0 seg 147 (36.75 km): running 70 with stops 70  vehicle 8045.1526.4647.4112.8914.1396.8578.8044
+   header 1791972957 ts 1791972872 (-85s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 36410} stop Sutherland.Miranda 2 Loc
+   header 1791972977 ts 1791972968 (-9s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 36939} stop Sutherland.SC29.9 Loc
+   header 1791972987 ts 1791972968 (-19s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 36939} stop Sutherland.SC29.9 Loc
+   header 1791973007 ts 1791972968 (-39s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 37483} stop Sutherland.SC30.5 Loc
+   header 1791973017 ts 1791972968 (-49s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 37483} stop Sutherland.SC30.5 Loc
+   header 1791973037 ts 1791972968 (-69s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 37964} stop Sutherland.SC31.1 Loc
+   header 1791973047 ts 1791973042 (-5s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 38373} stop Sutherland.Caringbah 2 Loc
+   header 1791973067 ts 1791973042 (-25s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 38373} stop Sutherland.Caringbah 2 Loc
+   header 1791973077 ts 1791973042 (-35s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 38373} stop Sutherland.Caringbah 2 Loc
+   header 1791973097 ts 1791973042 (-55s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 38373} stop Sutherland.Caringbah 2 Loc
+
+== T4 dir 0 branch 0 seg 124 (31.00 km): running 69 with stops 69  vehicle 7522.8491.9071.6739.8511.2581.2627.8637
+   header 1791972957 ts 1791972918 (-39s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {0: 28686, 1: 28686} stop Hurstville.SM1130/1137LOC
+   header 1791972977 ts 1791972918 (-59s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {0: 29377, 1: 29377} stop Hurstville.SM1140/1143LOC
+   header 1791972987 ts 1791972975 (-12s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {0: 29666, 1: 29666} stop Sutherland.SUTJan2 Entry Loc
+   header 1791973007 ts 1791972991 (-16s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {0: 30254, 1: 30254} stop Sutherland.SM1152/SD7 Loc
+   header 1791973017 ts 1791972991 (-26s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {0: 30254, 1: 30254} stop Sutherland.SM1152/SD7 Loc
+   header 1791973037 ts 1791973017 (-20s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {0: 30857, 1: 30857} stop Sutherland.SM1158/SD11 Loc
+   header 1791973047 ts 1791973017 (-30s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {0: 30857, 1: 30857} stop Sutherland.SM1158/SD11 Loc
+   header 1791973067 ts 1791973050 (-17s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {0: 31222, 1: 31222} stop Sutherland.SD17/14 Loc
+   header 1791973077 ts 1791973050 (-27s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {0: 31222, 1: 31222} stop Sutherland.SD17/14 Loc
+   header 1791973097 ts 1791973074 (-23s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+
+== T4 dir 0 branch 1 seg 124 (31.00 km): running 69 with stops 69  vehicle 7522.8491.9071.6739.8511.2581.2627.8637
+   header 1791972957 ts 1791972918 (-39s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {0: 28686, 1: 28686} stop Hurstville.SM1130/1137LOC
+   header 1791972977 ts 1791972918 (-59s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {0: 29377, 1: 29377} stop Hurstville.SM1140/1143LOC
+   header 1791972987 ts 1791972975 (-12s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {0: 29666, 1: 29666} stop Sutherland.SUTJan2 Entry Loc
+   header 1791973007 ts 1791972991 (-16s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {0: 30254, 1: 30254} stop Sutherland.SM1152/SD7 Loc
+   header 1791973017 ts 1791972991 (-26s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {0: 30254, 1: 30254} stop Sutherland.SM1152/SD7 Loc
+   header 1791973037 ts 1791973017 (-20s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {0: 30857, 1: 30857} stop Sutherland.SM1158/SD11 Loc
+   header 1791973047 ts 1791973017 (-30s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {0: 30857, 1: 30857} stop Sutherland.SM1158/SD11 Loc
+   header 1791973067 ts 1791973050 (-17s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {0: 31222, 1: 31222} stop Sutherland.SD17/14 Loc
+   header 1791973077 ts 1791973050 (-27s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {0: 31222, 1: 31222} stop Sutherland.SD17/14 Loc
+   header 1791973097 ts 1791973074 (-23s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+
+== T4 dir 0 branch 0 seg 153 (38.25 km): running None with stops 27  vehicle 8045.1526.4647.4112.8914.1396.8578.8044
+   header 1791973007 ts 1791972968 (-39s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 37483} stop Sutherland.SC30.5 Loc
+   header 1791973017 ts 1791972968 (-49s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 37483} stop Sutherland.SC30.5 Loc
+   header 1791973037 ts 1791972968 (-69s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 37964} stop Sutherland.SC31.1 Loc
+   header 1791973047 ts 1791973042 (-5s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 38373} stop Sutherland.Caringbah 2 Loc
+   header 1791973067 ts 1791973042 (-25s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 38373} stop Sutherland.Caringbah 2 Loc
+   header 1791973077 ts 1791973042 (-35s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 38373} stop Sutherland.Caringbah 2 Loc
+   header 1791973097 ts 1791973042 (-55s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 38373} stop Sutherland.Caringbah 2 Loc
+   header 1791973107 ts 1791973042 (-65s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 38373} stop Sutherland.Caringbah 2 Loc
+   header 1791973127 ts 1791973042 (-85s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 38373} stop Sutherland.Caringbah 2 Loc
+   header 1791973137 ts 1791973124 (-13s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 38995} stop Sutherland.SC32.1 Loc
+
+== T4 dir 0 branch 0 seg 126 (31.50 km): running None with stops 12  vehicle 7522.8491.9071.6739.8511.2581.2627.8637
+   header 1791973067 ts 1791973050 (-17s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {0: 31222, 1: 31222} stop Sutherland.SD17/14 Loc
+   header 1791973077 ts 1791973050 (-27s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {0: 31222, 1: 31222} stop Sutherland.SD17/14 Loc
+   header 1791973097 ts 1791973074 (-23s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791973107 ts 1791973074 (-33s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791973127 ts 1791973074 (-53s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791973137 ts 1791973074 (-63s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791973157 ts 1791973074 (-83s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791973167 ts 1791973074 (-93s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791973187 ts 1791973074 (-113s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791973197 ts 1791973180 (-17s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {0: 31899, 1: 31912} stop Sutherland.SD49 Loc
+
+== T4 dir 0 branch 1 seg 126 (31.50 km): running None with stops 12  vehicle 7522.8491.9071.6739.8511.2581.2627.8637
+   header 1791973067 ts 1791973050 (-17s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {0: 31222, 1: 31222} stop Sutherland.SD17/14 Loc
+   header 1791973077 ts 1791973050 (-27s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {0: 31222, 1: 31222} stop Sutherland.SD17/14 Loc
+   header 1791973097 ts 1791973074 (-23s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791973107 ts 1791973074 (-33s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791973127 ts 1791973074 (-53s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791973137 ts 1791973074 (-63s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791973157 ts 1791973074 (-83s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791973167 ts 1791973074 (-93s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791973187 ts 1791973074 (-113s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791973197 ts 1791973180 (-17s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {0: 31899, 1: 31912} stop Sutherland.SD49 Loc
+
+== T4 dir 0 branch 0 seg 155 (38.75 km): running 64 with stops 64  vehicle 8045.1526.4647.4112.8914.1396.8578.8044
+   header 1791973127 ts 1791973042 (-85s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 38373} stop Sutherland.Caringbah 2 Loc
+   header 1791973137 ts 1791973124 (-13s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 38995} stop Sutherland.SC32.1 Loc
+   header 1791973157 ts 1791973124 (-33s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 38995} stop Sutherland.SC32.1 Loc
+   header 1791973167 ts 1791973124 (-43s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 39502} stop Sutherland.SC32.5 Loc
+   header 1791973187 ts 1791973124 (-63s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 39502} stop Sutherland.SC32.5 Loc
+   header 1791973197 ts 1791973124 (-73s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 39946} stop Sutherland.SC33.1 Loc
+   header 1791973217 ts 1791973210 (-7s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 40513} stop Sutherland.Woolooware 2 Loc
+   header 1791973227 ts 1791973210 (-17s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 40513} stop Sutherland.Woolooware 2 Loc
+   header 1791973247 ts 1791973210 (-37s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 40513} stop Sutherland.Woolooware 2 Loc
+   header 1791973257 ts 1791973210 (-47s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 40513} stop Sutherland.Woolooware 2 Loc
+
+== T4 dir 0 branch 1 seg 127 (31.75 km): running 44 with stops 44  vehicle 7522.8491.9071.6739.8511.2581.2627.8637
+   header 1791973167 ts 1791973074 (-93s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791973187 ts 1791973074 (-113s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791973197 ts 1791973180 (-17s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {0: 31899, 1: 31912} stop Sutherland.SD49 Loc
+   header 1791973217 ts 1791973180 (-37s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {0: 31899, 1: 31912} stop Sutherland.SD49 Loc
+   header 1791973227 ts 1791973180 (-47s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {0: 31899, 1: 31912} stop Sutherland.SD49 Loc
+   header 1791973247 ts 1791973240 (-7s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 32520} stop Sutherland.SD63 Loc
+   header 1791973257 ts 1791973240 (-17s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 32520} stop Sutherland.SD63 Loc
+   header 1791973277 ts 1791973260 (-17s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 32959} stop Sutherland.SD71 Loc
+   header 1791973287 ts 1791973260 (-27s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 32959} stop Sutherland.SD71 Loc
+   header 1791973307 ts 1791973287 (-20s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 33211} stop Sutherland.Loftus 2 Loc
+
+== T4 dir 0 branch 0 seg 162 (40.50 km): running None with stops 20  vehicle 8045.1526.4647.4112.8914.1396.8578.8044
+   header 1791973187 ts 1791973124 (-63s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 39502} stop Sutherland.SC32.5 Loc
+   header 1791973197 ts 1791973124 (-73s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 39946} stop Sutherland.SC33.1 Loc
+   header 1791973217 ts 1791973210 (-7s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 40513} stop Sutherland.Woolooware 2 Loc
+   header 1791973227 ts 1791973210 (-17s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 40513} stop Sutherland.Woolooware 2 Loc
+   header 1791973247 ts 1791973210 (-37s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 40513} stop Sutherland.Woolooware 2 Loc
+   header 1791973257 ts 1791973210 (-47s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 40513} stop Sutherland.Woolooware 2 Loc
+   header 1791973277 ts 1791973210 (-67s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 40513} stop Sutherland.Woolooware 2 Loc
+   header 1791973287 ts 1791973210 (-77s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 40513} stop Sutherland.Woolooware 2 Loc
+   header 1791973307 ts 1791973210 (-97s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 40513} stop Sutherland.Woolooware 2 Loc
+   header 1791973317 ts 1791973308 (-9s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 41063} stop Sutherland.CA5 Loc
+
+== T4 dir 0 branch 1 seg 132 (33.00 km): running None with stops 83  vehicle 7522.8491.9071.6739.8511.2581.2627.8637
+   header 1791973247 ts 1791973240 (-7s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 32520} stop Sutherland.SD63 Loc
+   header 1791973257 ts 1791973240 (-17s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 32520} stop Sutherland.SD63 Loc
+   header 1791973277 ts 1791973260 (-17s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 32959} stop Sutherland.SD71 Loc
+   header 1791973287 ts 1791973260 (-27s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 32959} stop Sutherland.SD71 Loc
+   header 1791973307 ts 1791973287 (-20s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 33211} stop Sutherland.Loftus 2 Loc
+   header 1791973317 ts 1791973287 (-30s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 33211} stop Sutherland.Loftus 2 Loc
+   header 1791973337 ts 1791973287 (-50s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 33211} stop Sutherland.Loftus 2 Loc
+   header 1791973347 ts 1791973287 (-60s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 33211} stop Sutherland.Loftus 2 Loc
+   header 1791973367 ts 1791973287 (-80s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 33211} stop Sutherland.Loftus 2 Loc
+   header 1791973377 ts 1791973363 (-14s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 34962} stop Sutherland.SW17.5 Loc
+
+== T4 dir 0 branch 0 seg 124 (31.00 km): running 54 with stops 54  vehicle 7246.5072.1675.6327.4419.1314.3641.6538
+   header 1791973247 ts 1791973239 (-8s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 30254, 1: 30254} stop Sutherland.SM1152/SD7 Loc
+   header 1791973257 ts 1791973239 (-18s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 30254, 1: 30254} stop Sutherland.SM1152/SD7 Loc
+   header 1791973277 ts 1791973239 (-38s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 30254, 1: 30254} stop Sutherland.SM1152/SD7 Loc
+   header 1791973287 ts 1791973276 (-11s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 30857, 1: 30857} stop Sutherland.SM1158/SD11 Loc
+   header 1791973307 ts 1791973276 (-31s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 30857, 1: 30857} stop Sutherland.SM1158/SD11 Loc
+   header 1791973317 ts 1791973306 (-11s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 31222, 1: 31222} stop Sutherland.SD17/14 Loc
+   header 1791973337 ts 1791973325 (-12s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791973347 ts 1791973325 (-22s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791973367 ts 1791973325 (-42s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791973377 ts 1791973325 (-52s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+
+== T4 dir 0 branch 1 seg 124 (31.00 km): running 54 with stops 54  vehicle 7246.5072.1675.6327.4419.1314.3641.6538
+   header 1791973247 ts 1791973239 (-8s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 30254, 1: 30254} stop Sutherland.SM1152/SD7 Loc
+   header 1791973257 ts 1791973239 (-18s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 30254, 1: 30254} stop Sutherland.SM1152/SD7 Loc
+   header 1791973277 ts 1791973239 (-38s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 30254, 1: 30254} stop Sutherland.SM1152/SD7 Loc
+   header 1791973287 ts 1791973276 (-11s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 30857, 1: 30857} stop Sutherland.SM1158/SD11 Loc
+   header 1791973307 ts 1791973276 (-31s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 30857, 1: 30857} stop Sutherland.SM1158/SD11 Loc
+   header 1791973317 ts 1791973306 (-11s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 31222, 1: 31222} stop Sutherland.SD17/14 Loc
+   header 1791973337 ts 1791973325 (-12s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791973347 ts 1791973325 (-22s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791973367 ts 1791973325 (-42s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791973377 ts 1791973325 (-52s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+
+== T4 dir 0 branch 0 seg 164 (41.00 km): running 29 with stops 29  vehicle 8045.1526.4647.4112.8914.1396.8578.8044
+   header 1791973277 ts 1791973210 (-67s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 40513} stop Sutherland.Woolooware 2 Loc
+   header 1791973287 ts 1791973210 (-77s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 40513} stop Sutherland.Woolooware 2 Loc
+   header 1791973307 ts 1791973210 (-97s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 40513} stop Sutherland.Woolooware 2 Loc
+   header 1791973317 ts 1791973308 (-9s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 41063} stop Sutherland.CA5 Loc
+   header 1791973337 ts 1791973308 (-29s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 41063} stop Sutherland.CA5 Loc
+   header 1791973347 ts 1791973308 (-39s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 41063} stop Sutherland.CA5 Loc
+   header 1791973367 ts 1791973349 (-18s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 41393} stop Sutherland.CA9 Loc
+   header 1791973377 ts 1791973349 (-28s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 41393} stop Sutherland.CA9 Loc
+   header 1791973397 ts 1791973349 (-48s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 41393} stop Sutherland.CA9 Loc
+   header 1791973407 ts 1791973349 (-58s) trip 607H.947.166.16.T.8.91441338 dir 0 pos {0: 41393} stop Sutherland.CA9 Loc
+
+== T4 dir 0 branch 0 seg 126 (31.50 km): running None with stops 11  vehicle 7246.5072.1675.6327.4419.1314.3641.6538
+   header 1791973287 ts 1791973276 (-11s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 30857, 1: 30857} stop Sutherland.SM1158/SD11 Loc
+   header 1791973307 ts 1791973276 (-31s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 30857, 1: 30857} stop Sutherland.SM1158/SD11 Loc
+   header 1791973317 ts 1791973306 (-11s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 31222, 1: 31222} stop Sutherland.SD17/14 Loc
+   header 1791973337 ts 1791973325 (-12s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791973347 ts 1791973325 (-22s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791973367 ts 1791973325 (-42s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791973377 ts 1791973325 (-52s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791973397 ts 1791973325 (-72s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791973407 ts 1791973325 (-82s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791973427 ts 1791973421 (-6s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 31850, 1: 31847} stop Sutherland.SC25.1/SD40 Loc
+
+== T4 dir 0 branch 1 seg 126 (31.50 km): running None with stops 11  vehicle 7246.5072.1675.6327.4419.1314.3641.6538
+   header 1791973287 ts 1791973276 (-11s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 30857, 1: 30857} stop Sutherland.SM1158/SD11 Loc
+   header 1791973307 ts 1791973276 (-31s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 30857, 1: 30857} stop Sutherland.SM1158/SD11 Loc
+   header 1791973317 ts 1791973306 (-11s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 31222, 1: 31222} stop Sutherland.SD17/14 Loc
+   header 1791973337 ts 1791973325 (-12s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791973347 ts 1791973325 (-22s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791973367 ts 1791973325 (-42s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791973377 ts 1791973325 (-52s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791973397 ts 1791973325 (-72s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791973407 ts 1791973325 (-82s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791973427 ts 1791973421 (-6s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 31850, 1: 31847} stop Sutherland.SC25.1/SD40 Loc
+
+== T4 dir 0 branch 1 seg 139 (34.75 km): running None with stops 61  vehicle 7522.8491.9071.6739.8511.2581.2627.8637
+   header 1791973317 ts 1791973287 (-30s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 33211} stop Sutherland.Loftus 2 Loc
+   header 1791973337 ts 1791973287 (-50s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 33211} stop Sutherland.Loftus 2 Loc
+   header 1791973347 ts 1791973287 (-60s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 33211} stop Sutherland.Loftus 2 Loc
+   header 1791973367 ts 1791973287 (-80s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 33211} stop Sutherland.Loftus 2 Loc
+   header 1791973377 ts 1791973363 (-14s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 34962} stop Sutherland.SW17.5 Loc
+   header 1791973397 ts 1791973363 (-34s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 34962} stop Sutherland.SW17.5 Loc
+   header 1791973407 ts 1791973363 (-44s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 34962} stop Sutherland.SW17.5 Loc
+   header 1791973427 ts 1791973363 (-64s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 34962} stop Sutherland.SW17.5 Loc
+   header 1791973437 ts 1791973363 (-74s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 34962} stop Sutherland.SW17.5 Loc
+   header 1791973457 ts 1791973450 (-7s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 36428} stop Sutherland.SW18.3 Loc
+
+== T4 dir 0 branch 0 seg 127 (31.75 km): running None with stops 49  vehicle 7246.5072.1675.6327.4419.1314.3641.6538
+   header 1791973347 ts 1791973325 (-22s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791973367 ts 1791973325 (-42s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791973377 ts 1791973325 (-52s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791973397 ts 1791973325 (-72s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791973407 ts 1791973325 (-82s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791973427 ts 1791973421 (-6s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 31850, 1: 31847} stop Sutherland.SC25.1/SD40 Loc
+   header 1791973437 ts 1791973421 (-16s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 31850, 1: 31847} stop Sutherland.SC25.1/SD40 Loc
+   header 1791973457 ts 1791973421 (-36s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 31850, 1: 31847} stop Sutherland.SC25.1/SD40 Loc
+   header 1791973467 ts 1791973421 (-46s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 31850, 1: 31847} stop Sutherland.SC25.1/SD40 Loc
+   header 1791973487 ts 1791973470 (-17s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 32511} stop Sutherland.SC25.5 Loc
+
+== T4 dir 0 branch 1 seg 145 (36.25 km): running None with stops 78  vehicle 7522.8491.9071.6739.8511.2581.2627.8637
+   header 1791973377 ts 1791973363 (-14s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 34962} stop Sutherland.SW17.5 Loc
+   header 1791973397 ts 1791973363 (-34s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 34962} stop Sutherland.SW17.5 Loc
+   header 1791973407 ts 1791973363 (-44s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 34962} stop Sutherland.SW17.5 Loc
+   header 1791973427 ts 1791973363 (-64s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 34962} stop Sutherland.SW17.5 Loc
+   header 1791973437 ts 1791973363 (-74s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 34962} stop Sutherland.SW17.5 Loc
+   header 1791973457 ts 1791973450 (-7s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 36428} stop Sutherland.SW18.3 Loc
+   header 1791973467 ts 1791973450 (-17s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 36428} stop Sutherland.SW18.3 Loc
+   header 1791973487 ts 1791973450 (-37s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 36428} stop Sutherland.SW18.3 Loc
+   header 1791973497 ts 1791973450 (-47s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 36428} stop Sutherland.SW18.3 Loc
+   header 1791973517 ts 1791973505 (-12s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 37619} stop Sutherland.Engadine 2 Loc
+
+== T4 dir 0 branch 0 seg 130 (32.50 km): running 51 with stops 51  vehicle 7246.5072.1675.6327.4419.1314.3641.6538
+   header 1791973467 ts 1791973421 (-46s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 31850, 1: 31847} stop Sutherland.SC25.1/SD40 Loc
+   header 1791973487 ts 1791973470 (-17s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 32511} stop Sutherland.SC25.5 Loc
+   header 1791973497 ts 1791973470 (-27s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 32511} stop Sutherland.SC25.5 Loc
+   header 1791973517 ts 1791973470 (-47s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 32511} stop Sutherland.SC25.5 Loc
+   header 1791973527 ts 1791973512 (-15s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 32820} stop Sutherland.SC25.9 Loc
+   header 1791973547 ts 1791973512 (-35s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 33149} stop Sutherland.SC26.3 Loc
+   header 1791973557 ts 1791973543 (-14s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 33550} stop Sutherland.Kirrawee 2 Loc
+   header 1791973577 ts 1791973543 (-34s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 33550} stop Sutherland.Kirrawee 2 Loc
+   header 1791973587 ts 1791973543 (-44s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 33550} stop Sutherland.Kirrawee 2 Loc
+   header 1791973607 ts 1791973543 (-64s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 33550} stop Sutherland.Kirrawee 2 Loc
+
+== T4 dir 0 branch 0 seg 134 (33.50 km): running None with stops 27  vehicle 7246.5072.1675.6327.4419.1314.3641.6538
+   header 1791973497 ts 1791973470 (-27s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 32511} stop Sutherland.SC25.5 Loc
+   header 1791973517 ts 1791973470 (-47s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 32511} stop Sutherland.SC25.5 Loc
+   header 1791973527 ts 1791973512 (-15s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 32820} stop Sutherland.SC25.9 Loc
+   header 1791973547 ts 1791973512 (-35s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 33149} stop Sutherland.SC26.3 Loc
+   header 1791973557 ts 1791973543 (-14s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 33550} stop Sutherland.Kirrawee 2 Loc
+   header 1791973577 ts 1791973543 (-34s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 33550} stop Sutherland.Kirrawee 2 Loc
+   header 1791973587 ts 1791973543 (-44s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 33550} stop Sutherland.Kirrawee 2 Loc
+   header 1791973607 ts 1791973543 (-64s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 33550} stop Sutherland.Kirrawee 2 Loc
+   header 1791973617 ts 1791973543 (-74s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 33550} stop Sutherland.Kirrawee 2 Loc
+   header 1791973637 ts 1791973623 (-14s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 34141} stop Sutherland.SC27.3 Loc
+
+== T4 dir 0 branch 1 seg 150 (37.50 km): running None with stops 42  vehicle 7522.8491.9071.6739.8511.2581.2627.8637
+   header 1791973517 ts 1791973505 (-12s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 37619} stop Sutherland.Engadine 2 Loc
+   header 1791973527 ts 1791973505 (-22s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 37619} stop Sutherland.Engadine 2 Loc
+   header 1791973547 ts 1791973505 (-42s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 37619} stop Sutherland.Engadine 2 Loc
+   header 1791973557 ts 1791973505 (-52s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 37619} stop Sutherland.Engadine 2 Loc
+   header 1791973577 ts 1791973505 (-72s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 37619} stop Sutherland.Engadine 2 Loc
+   header 1791973587 ts 1791973505 (-82s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 37619} stop Sutherland.Engadine 2 Loc
+   header 1791973607 ts 1791973505 (-102s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 37619} stop Sutherland.Engadine 2 Loc
+   header 1791973617 ts 1791973505 (-112s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 37619} stop Sutherland.Engadine 2 Loc
+   header 1791973637 ts 1791973505 (-132s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 37619} stop Sutherland.Engadine 2 Loc
+   header 1791973647 ts 1791973637 (-10s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 39170} stop Sutherland.SW20.1 Loc
+
+== T4 dir 0 branch 1 seg 156 (39.00 km): running None with stops 47  vehicle 7522.8491.9071.6739.8511.2581.2627.8637
+   header 1791973587 ts 1791973505 (-82s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 37619} stop Sutherland.Engadine 2 Loc
+   header 1791973607 ts 1791973505 (-102s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 37619} stop Sutherland.Engadine 2 Loc
+   header 1791973617 ts 1791973505 (-112s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 37619} stop Sutherland.Engadine 2 Loc
+   header 1791973637 ts 1791973505 (-132s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 37619} stop Sutherland.Engadine 2 Loc
+   header 1791973647 ts 1791973637 (-10s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 39170} stop Sutherland.SW20.1 Loc
+   header 1791973667 ts 1791973637 (-30s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 39170} stop Sutherland.SW20.1 Loc
+   header 1791973677 ts 1791973637 (-40s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 39170} stop Sutherland.SW20.1 Loc
+   header 1791973697 ts 1791973637 (-60s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 39170} stop Sutherland.SW20.1 Loc
+   header 1791973707 ts 1791973637 (-70s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 39170} stop Sutherland.SW20.1 Loc
+   header 1791973727 ts 1791973705 (-22s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 40065} stop Sutherland.Heathcote 2 Loc
+
+== T4 dir 0 branch 0 seg 136 (34.00 km): running 64 with stops 64  vehicle 7246.5072.1675.6327.4419.1314.3641.6538
+   header 1791973587 ts 1791973543 (-44s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 33550} stop Sutherland.Kirrawee 2 Loc
+   header 1791973607 ts 1791973543 (-64s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 33550} stop Sutherland.Kirrawee 2 Loc
+   header 1791973617 ts 1791973543 (-74s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 33550} stop Sutherland.Kirrawee 2 Loc
+   header 1791973637 ts 1791973623 (-14s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 34141} stop Sutherland.SC27.3 Loc
+   header 1791973647 ts 1791973623 (-24s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 34141} stop Sutherland.SC27.3 Loc
+   header 1791973667 ts 1791973623 (-44s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 34450} stop Sutherland.SC27.5 Loc
+   header 1791973677 ts 1791973663 (-14s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 34850} stop Sutherland.Gymea 2 Loc
+   header 1791973697 ts 1791973663 (-34s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 34850} stop Sutherland.Gymea 2 Loc
+   header 1791973707 ts 1791973663 (-44s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 34850} stop Sutherland.Gymea 2 Loc
+   header 1791973727 ts 1791973663 (-64s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 34850} stop Sutherland.Gymea 2 Loc
+
+== T4 dir 0 branch 0 seg 139 (34.75 km): running None with stops 31  vehicle 7246.5072.1675.6327.4419.1314.3641.6538
+   header 1791973617 ts 1791973543 (-74s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 33550} stop Sutherland.Kirrawee 2 Loc
+   header 1791973637 ts 1791973623 (-14s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 34141} stop Sutherland.SC27.3 Loc
+   header 1791973647 ts 1791973623 (-24s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 34141} stop Sutherland.SC27.3 Loc
+   header 1791973667 ts 1791973623 (-44s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 34450} stop Sutherland.SC27.5 Loc
+   header 1791973677 ts 1791973663 (-14s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 34850} stop Sutherland.Gymea 2 Loc
+   header 1791973697 ts 1791973663 (-34s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 34850} stop Sutherland.Gymea 2 Loc
+   header 1791973707 ts 1791973663 (-44s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 34850} stop Sutherland.Gymea 2 Loc
+   header 1791973727 ts 1791973663 (-64s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 34850} stop Sutherland.Gymea 2 Loc
+   header 1791973737 ts 1791973663 (-74s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 34850} stop Sutherland.Gymea 2 Loc
+   header 1791973757 ts 1791973740 (-17s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 35506} stop Sutherland.SC28.5 Loc
+
+== T4 dir 0 branch 0 seg 142 (35.50 km): running 71 with stops 71  vehicle 7246.5072.1675.6327.4419.1314.3641.6538
+   header 1791973707 ts 1791973663 (-44s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 34850} stop Sutherland.Gymea 2 Loc
+   header 1791973727 ts 1791973663 (-64s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 34850} stop Sutherland.Gymea 2 Loc
+   header 1791973737 ts 1791973663 (-74s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 34850} stop Sutherland.Gymea 2 Loc
+   header 1791973757 ts 1791973740 (-17s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 35506} stop Sutherland.SC28.5 Loc
+   header 1791973767 ts 1791973740 (-27s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 35506} stop Sutherland.SC28.5 Loc
+   header 1791973787 ts 1791973771 (-16s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 35818} stop Sutherland.SC28.9 Loc
+   header 1791973797 ts 1791973786 (-11s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 36410} stop Sutherland.Miranda 2 Loc
+   header 1791973817 ts 1791973786 (-31s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 36410} stop Sutherland.Miranda 2 Loc
+   header 1791973827 ts 1791973786 (-41s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 36410} stop Sutherland.Miranda 2 Loc
+   header 1791973847 ts 1791973786 (-61s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 36410} stop Sutherland.Miranda 2 Loc
+
+== T4 dir 0 branch 0 seg 145 (36.25 km): running None with stops 20  vehicle 7246.5072.1675.6327.4419.1314.3641.6538
+   header 1791973757 ts 1791973740 (-17s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 35506} stop Sutherland.SC28.5 Loc
+   header 1791973767 ts 1791973740 (-27s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 35506} stop Sutherland.SC28.5 Loc
+   header 1791973787 ts 1791973771 (-16s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 35818} stop Sutherland.SC28.9 Loc
+   header 1791973797 ts 1791973786 (-11s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 36410} stop Sutherland.Miranda 2 Loc
+   header 1791973817 ts 1791973786 (-31s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 36410} stop Sutherland.Miranda 2 Loc
+   header 1791973827 ts 1791973786 (-41s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 36410} stop Sutherland.Miranda 2 Loc
+   header 1791973847 ts 1791973786 (-61s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 36410} stop Sutherland.Miranda 2 Loc
+   header 1791973857 ts 1791973786 (-71s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 36410} stop Sutherland.Miranda 2 Loc
+   header 1791973877 ts 1791973786 (-91s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 36410} stop Sutherland.Miranda 2 Loc
+   header 1791973887 ts 1791973880 (-7s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 36939} stop Sutherland.SC29.9 Loc
+
+== T4 dir 0 branch 1 seg 168 (42.00 km): running None with stops 80  vehicle 7522.8491.9071.6739.8511.2581.2627.8637
+   header 1791973767 ts 1791973705 (-62s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 40065} stop Sutherland.Heathcote 2 Loc
+   header 1791973787 ts 1791973705 (-82s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 40065} stop Sutherland.Heathcote 2 Loc
+   header 1791973797 ts 1791973705 (-92s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 40065} stop Sutherland.Heathcote 2 Loc
+   header 1791973817 ts 1791973705 (-112s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 40065} stop Sutherland.Heathcote 2 Loc
+   header 1791973827 ts 1791973705 (-122s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 40065} stop Sutherland.Heathcote 2 Loc
+   header 1791973847 ts 1791973825 (-22s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 42168} stop Sutherland.WL1 Loc
+   header 1791973857 ts 1791973825 (-32s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 42168} stop Sutherland.WL1 Loc
+   header 1791973877 ts 1791973825 (-52s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 42168} stop Sutherland.WL1 Loc
+   header 1791973887 ts 1791973825 (-62s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 42168} stop Sutherland.WL1 Loc
+   header 1791973907 ts 1791973890 (-17s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 43614} stop Sutherland.WL3 Loc
+
+== T4 dir 0 branch 1 seg 174 (43.50 km): running None with stops 32  vehicle 7522.8491.9071.6739.8511.2581.2627.8637
+   header 1791973827 ts 1791973705 (-122s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 40065} stop Sutherland.Heathcote 2 Loc
+   header 1791973847 ts 1791973825 (-22s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 42168} stop Sutherland.WL1 Loc
+   header 1791973857 ts 1791973825 (-32s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 42168} stop Sutherland.WL1 Loc
+   header 1791973877 ts 1791973825 (-52s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 42168} stop Sutherland.WL1 Loc
+   header 1791973887 ts 1791973825 (-62s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 42168} stop Sutherland.WL1 Loc
+   header 1791973907 ts 1791973890 (-17s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 43614} stop Sutherland.WL3 Loc
+   header 1791973917 ts 1791973890 (-27s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 43614} stop Sutherland.WL3 Loc
+   header 1791973937 ts 1791973890 (-47s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 43614} stop Sutherland.WL3 Loc
+   header 1791973947 ts 1791973890 (-57s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 43614} stop Sutherland.WL3 Loc
+   header 1791973967 ts 1791973961 (-6s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 44248} stop Sutherland.WL17 Loc
+
+== T4 dir 0 branch 0 seg 147 (36.75 km): running 72 with stops 72  vehicle 7246.5072.1675.6327.4419.1314.3641.6538
+   header 1791973877 ts 1791973786 (-91s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 36410} stop Sutherland.Miranda 2 Loc
+   header 1791973887 ts 1791973880 (-7s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 36939} stop Sutherland.SC29.9 Loc
+   header 1791973907 ts 1791973880 (-27s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 36939} stop Sutherland.SC29.9 Loc
+   header 1791973917 ts 1791973880 (-37s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 37483} stop Sutherland.SC30.5 Loc
+   header 1791973937 ts 1791973880 (-57s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 37964} stop Sutherland.SC31.1 Loc
+   header 1791973947 ts 1791973880 (-67s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 37964} stop Sutherland.SC31.1 Loc
+   header 1791973967 ts 1791973952 (-15s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 38373} stop Sutherland.Caringbah 2 Loc
+   header 1791973977 ts 1791973952 (-25s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 38373} stop Sutherland.Caringbah 2 Loc
+   header 1791973997 ts 1791973952 (-45s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 38373} stop Sutherland.Caringbah 2 Loc
+   header 1791974007 ts 1791973952 (-55s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 38373} stop Sutherland.Caringbah 2 Loc
+
+== T4 dir 0 branch 1 seg 176 (44.00 km): running 101 with stops 101  vehicle 7522.8491.9071.6739.8511.2581.2627.8637
+   header 1791973917 ts 1791973890 (-27s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 43614} stop Sutherland.WL3 Loc
+   header 1791973937 ts 1791973890 (-47s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 43614} stop Sutherland.WL3 Loc
+   header 1791973947 ts 1791973890 (-57s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 43614} stop Sutherland.WL3 Loc
+   header 1791973967 ts 1791973961 (-6s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 44248} stop Sutherland.WL17 Loc
+   header 1791973977 ts 1791973961 (-16s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 44248} stop Sutherland.WL17 Loc
+   header 1791973997 ts 1791973961 (-36s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 44248} stop Sutherland.WL17 Loc
+   header 1791974007 ts 1791973993 (-14s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 45145} stop Sutherland.WL37 Loc
+   header 1791974027 ts 1791973993 (-34s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 45145} stop Sutherland.WL37 Loc
+   header 1791974037 ts 1791973993 (-44s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 45145} stop Sutherland.WL37 Loc
+   header 1791974057 ts 1791973993 (-64s) trip 615R.947.166.120.T.8.91438428 dir 0 pos {1: 45145} stop Sutherland.WL37 Loc
+
+== T4 dir 0 branch 0 seg 153 (38.25 km): running None with stops 27  vehicle 7246.5072.1675.6327.4419.1314.3641.6538
+   header 1791973917 ts 1791973880 (-37s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 37483} stop Sutherland.SC30.5 Loc
+   header 1791973937 ts 1791973880 (-57s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 37964} stop Sutherland.SC31.1 Loc
+   header 1791973947 ts 1791973880 (-67s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 37964} stop Sutherland.SC31.1 Loc
+   header 1791973967 ts 1791973952 (-15s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 38373} stop Sutherland.Caringbah 2 Loc
+   header 1791973977 ts 1791973952 (-25s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 38373} stop Sutherland.Caringbah 2 Loc
+   header 1791973997 ts 1791973952 (-45s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 38373} stop Sutherland.Caringbah 2 Loc
+   header 1791974007 ts 1791973952 (-55s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 38373} stop Sutherland.Caringbah 2 Loc
+   header 1791974027 ts 1791973952 (-75s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 38373} stop Sutherland.Caringbah 2 Loc
+   header 1791974037 ts 1791973952 (-85s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 38373} stop Sutherland.Caringbah 2 Loc
+   header 1791974057 ts 1791974034 (-23s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 38995} stop Sutherland.SC32.1 Loc
+
+== T4 dir 0 branch 0 seg 155 (38.75 km): running 85 with stops 85  vehicle 7246.5072.1675.6327.4419.1314.3641.6538
+   header 1791974027 ts 1791973952 (-75s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 38373} stop Sutherland.Caringbah 2 Loc
+   header 1791974037 ts 1791973952 (-85s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 38373} stop Sutherland.Caringbah 2 Loc
+   header 1791974057 ts 1791974034 (-23s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 38995} stop Sutherland.SC32.1 Loc
+   header 1791974067 ts 1791974034 (-33s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 38995} stop Sutherland.SC32.1 Loc
+   header 1791974087 ts 1791974034 (-53s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 39502} stop Sutherland.SC32.5 Loc
+   header 1791974097 ts 1791974034 (-63s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 39946} stop Sutherland.SC33.1 Loc
+   header 1791974117 ts 1791974098 (-19s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 40513} stop Sutherland.Woolooware 2 Loc
+   header 1791974127 ts 1791974098 (-29s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 40513} stop Sutherland.Woolooware 2 Loc
+   header 1791974147 ts 1791974098 (-49s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 40513} stop Sutherland.Woolooware 2 Loc
+   header 1791974157 ts 1791974098 (-59s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 40513} stop Sutherland.Woolooware 2 Loc
+
+== T4 dir 0 branch 0 seg 162 (40.50 km): running None with stops 13  vehicle 7246.5072.1675.6327.4419.1314.3641.6538
+   header 1791974127 ts 1791974098 (-29s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 40513} stop Sutherland.Woolooware 2 Loc
+   header 1791974147 ts 1791974098 (-49s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 40513} stop Sutherland.Woolooware 2 Loc
+   header 1791974157 ts 1791974098 (-59s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 40513} stop Sutherland.Woolooware 2 Loc
+   header 1791974177 ts 1791974098 (-79s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 40513} stop Sutherland.Woolooware 2 Loc
+   header 1791974187 ts 1791974098 (-89s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 40513} stop Sutherland.Woolooware 2 Loc
+   header 1791974207 ts 1791974098 (-109s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 40513} stop Sutherland.Woolooware 2 Loc
+   header 1791974217 ts 1791974098 (-119s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 40513} stop Sutherland.Woolooware 2 Loc
+   header 1791974237 ts 1791974098 (-139s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 40513} stop Sutherland.Woolooware 2 Loc
+   header 1791974247 ts 1791974098 (-149s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 40513} stop Sutherland.Woolooware 2 Loc
+   header 1791974267 ts 1791974249 (-18s) trip 619P.947.166.120.T.8.91440921 dir 0 pos {0: 41063} stop Sutherland.CA5 Loc
+
+== T4 dir 0 branch 0 seg 124 (31.00 km): running 48 with stops 48  vehicle 5831.4573.9088.6688.3118.5455.3950.7638
+   header 1791974157 ts 1791974110 (-47s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 29666, 1: 29666} stop Sutherland.SUTJan2 Entry Loc
+   header 1791974177 ts 1791974110 (-67s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 29666, 1: 29666} stop Sutherland.SUTJan2 Entry Loc
+   header 1791974187 ts 1791974110 (-77s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 29666, 1: 29666} stop Sutherland.SUTJan2 Entry Loc
+   header 1791974207 ts 1791974187 (-20s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 30254, 1: 30254} stop Sutherland.SM1152/SD7 Loc
+   header 1791974217 ts 1791974187 (-30s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 30254, 1: 30254} stop Sutherland.SM1152/SD7 Loc
+   header 1791974237 ts 1791974227 (-10s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 30857, 1: 30857} stop Sutherland.SM1158/SD11 Loc
+   header 1791974247 ts 1791974227 (-20s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 30857, 1: 30857} stop Sutherland.SM1158/SD11 Loc
+   header 1791974267 ts 1791974259 (-8s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 31222, 1: 31222} stop Sutherland.SD17/14 Loc
+   header 1791974277 ts 1791974259 (-18s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 31222, 1: 31222} stop Sutherland.SD17/14 Loc
+   header 1791974297 ts 1791974284 (-13s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+
+== T4 dir 0 branch 1 seg 124 (31.00 km): running 48 with stops 48  vehicle 5831.4573.9088.6688.3118.5455.3950.7638
+   header 1791974157 ts 1791974110 (-47s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 29666, 1: 29666} stop Sutherland.SUTJan2 Entry Loc
+   header 1791974177 ts 1791974110 (-67s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 29666, 1: 29666} stop Sutherland.SUTJan2 Entry Loc
+   header 1791974187 ts 1791974110 (-77s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 29666, 1: 29666} stop Sutherland.SUTJan2 Entry Loc
+   header 1791974207 ts 1791974187 (-20s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 30254, 1: 30254} stop Sutherland.SM1152/SD7 Loc
+   header 1791974217 ts 1791974187 (-30s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 30254, 1: 30254} stop Sutherland.SM1152/SD7 Loc
+   header 1791974237 ts 1791974227 (-10s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 30857, 1: 30857} stop Sutherland.SM1158/SD11 Loc
+   header 1791974247 ts 1791974227 (-20s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 30857, 1: 30857} stop Sutherland.SM1158/SD11 Loc
+   header 1791974267 ts 1791974259 (-8s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 31222, 1: 31222} stop Sutherland.SD17/14 Loc
+   header 1791974277 ts 1791974259 (-18s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 31222, 1: 31222} stop Sutherland.SD17/14 Loc
+   header 1791974297 ts 1791974284 (-13s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+
+== T4 dir 0 branch 0 seg 126 (31.50 km): running None with stops 11  vehicle 5831.4573.9088.6688.3118.5455.3950.7638
+   header 1791974247 ts 1791974227 (-20s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 30857, 1: 30857} stop Sutherland.SM1158/SD11 Loc
+   header 1791974267 ts 1791974259 (-8s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 31222, 1: 31222} stop Sutherland.SD17/14 Loc
+   header 1791974277 ts 1791974259 (-18s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 31222, 1: 31222} stop Sutherland.SD17/14 Loc
+   header 1791974297 ts 1791974284 (-13s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791974307 ts 1791974284 (-23s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791974327 ts 1791974284 (-43s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791974337 ts 1791974284 (-53s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791974357 ts 1791974284 (-73s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791974367 ts 1791974284 (-83s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791974387 ts 1791974377 (-10s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 31850, 1: 31847} stop Sutherland.SC25.1/SD40 Loc
+
+== T4 dir 0 branch 1 seg 126 (31.50 km): running None with stops 11  vehicle 5831.4573.9088.6688.3118.5455.3950.7638
+   header 1791974247 ts 1791974227 (-20s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 30857, 1: 30857} stop Sutherland.SM1158/SD11 Loc
+   header 1791974267 ts 1791974259 (-8s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 31222, 1: 31222} stop Sutherland.SD17/14 Loc
+   header 1791974277 ts 1791974259 (-18s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 31222, 1: 31222} stop Sutherland.SD17/14 Loc
+   header 1791974297 ts 1791974284 (-13s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791974307 ts 1791974284 (-23s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791974327 ts 1791974284 (-43s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791974337 ts 1791974284 (-53s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791974357 ts 1791974284 (-73s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791974367 ts 1791974284 (-83s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791974387 ts 1791974377 (-10s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 31850, 1: 31847} stop Sutherland.SC25.1/SD40 Loc
+
+== T4 dir 0 branch 0 seg 127 (31.75 km): running None with stops 52  vehicle 5831.4573.9088.6688.3118.5455.3950.7638
+   header 1791974307 ts 1791974284 (-23s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791974327 ts 1791974284 (-43s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791974337 ts 1791974284 (-53s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791974357 ts 1791974284 (-73s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791974367 ts 1791974284 (-83s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791974387 ts 1791974377 (-10s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 31850, 1: 31847} stop Sutherland.SC25.1/SD40 Loc
+   header 1791974397 ts 1791974377 (-20s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 31850, 1: 31847} stop Sutherland.SC25.1/SD40 Loc
+   header 1791974417 ts 1791974377 (-40s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 31850, 1: 31847} stop Sutherland.SC25.1/SD40 Loc
+   header 1791974427 ts 1791974377 (-50s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 31850, 1: 31847} stop Sutherland.SC25.1/SD40 Loc
+   header 1791974447 ts 1791974423 (-24s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 32511} stop Sutherland.SC25.5 Loc
+
+== T4 dir 0 branch 0 seg 130 (32.50 km): running 47 with stops 47  vehicle 5831.4573.9088.6688.3118.5455.3950.7638
+   header 1791974427 ts 1791974377 (-50s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 31850, 1: 31847} stop Sutherland.SC25.1/SD40 Loc
+   header 1791974447 ts 1791974423 (-24s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 32511} stop Sutherland.SC25.5 Loc
+   header 1791974457 ts 1791974423 (-34s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 32511} stop Sutherland.SC25.5 Loc
+   header 1791974477 ts 1791974463 (-14s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 32820} stop Sutherland.SC25.9 Loc
+   header 1791974487 ts 1791974463 (-24s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 32820} stop Sutherland.SC25.9 Loc
+   header 1791974507 ts 1791974463 (-44s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 33149} stop Sutherland.SC26.3 Loc
+   header 1791974517 ts 1791974502 (-15s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 33550} stop Sutherland.Kirrawee 2 Loc
+   header 1791974537 ts 1791974502 (-35s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 33550} stop Sutherland.Kirrawee 2 Loc
+   header 1791974547 ts 1791974502 (-45s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 33550} stop Sutherland.Kirrawee 2 Loc
+   header 1791974567 ts 1791974502 (-65s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 33550} stop Sutherland.Kirrawee 2 Loc
+
+== T4 dir 0 branch 0 seg 134 (33.50 km): running None with stops 23  vehicle 5831.4573.9088.6688.3118.5455.3950.7638
+   header 1791974477 ts 1791974463 (-14s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 32820} stop Sutherland.SC25.9 Loc
+   header 1791974487 ts 1791974463 (-24s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 32820} stop Sutherland.SC25.9 Loc
+   header 1791974507 ts 1791974463 (-44s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 33149} stop Sutherland.SC26.3 Loc
+   header 1791974517 ts 1791974502 (-15s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 33550} stop Sutherland.Kirrawee 2 Loc
+   header 1791974537 ts 1791974502 (-35s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 33550} stop Sutherland.Kirrawee 2 Loc
+   header 1791974547 ts 1791974502 (-45s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 33550} stop Sutherland.Kirrawee 2 Loc
+   header 1791974567 ts 1791974502 (-65s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 33550} stop Sutherland.Kirrawee 2 Loc
+   header 1791974577 ts 1791974502 (-75s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 33550} stop Sutherland.Kirrawee 2 Loc
+   header 1791974597 ts 1791974502 (-95s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 33550} stop Sutherland.Kirrawee 2 Loc
+   header 1791974607 ts 1791974595 (-12s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 34141} stop Sutherland.SC27.3 Loc
+
+== T4 dir 0 branch 0 seg 136 (34.00 km): running 54 with stops 54  vehicle 5831.4573.9088.6688.3118.5455.3950.7638
+   header 1791974567 ts 1791974502 (-65s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 33550} stop Sutherland.Kirrawee 2 Loc
+   header 1791974577 ts 1791974502 (-75s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 33550} stop Sutherland.Kirrawee 2 Loc
+   header 1791974597 ts 1791974502 (-95s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 33550} stop Sutherland.Kirrawee 2 Loc
+   header 1791974607 ts 1791974595 (-12s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 34141} stop Sutherland.SC27.3 Loc
+   header 1791974627 ts 1791974595 (-32s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 34141} stop Sutherland.SC27.3 Loc
+   header 1791974637 ts 1791974595 (-42s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 34450} stop Sutherland.SC27.5 Loc
+   header 1791974657 ts 1791974642 (-15s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 34850} stop Sutherland.Gymea 2 Loc
+   header 1791974667 ts 1791974642 (-25s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 34850} stop Sutherland.Gymea 2 Loc
+   header 1791974687 ts 1791974642 (-45s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 34850} stop Sutherland.Gymea 2 Loc
+   header 1791974697 ts 1791974642 (-55s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 34850} stop Sutherland.Gymea 2 Loc
+
+== T4 dir 0 branch 0 seg 139 (34.75 km): running None with stops 26  vehicle 5831.4573.9088.6688.3118.5455.3950.7638
+   header 1791974607 ts 1791974595 (-12s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 34141} stop Sutherland.SC27.3 Loc
+   header 1791974627 ts 1791974595 (-32s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 34141} stop Sutherland.SC27.3 Loc
+   header 1791974637 ts 1791974595 (-42s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 34450} stop Sutherland.SC27.5 Loc
+   header 1791974657 ts 1791974642 (-15s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 34850} stop Sutherland.Gymea 2 Loc
+   header 1791974667 ts 1791974642 (-25s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 34850} stop Sutherland.Gymea 2 Loc
+   header 1791974687 ts 1791974642 (-45s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 34850} stop Sutherland.Gymea 2 Loc
+   header 1791974697 ts 1791974642 (-55s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 34850} stop Sutherland.Gymea 2 Loc
+   header 1791974717 ts 1791974642 (-75s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 34850} stop Sutherland.Gymea 2 Loc
+   header 1791974727 ts 1791974642 (-85s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 34850} stop Sutherland.Gymea 2 Loc
+   header 1791974747 ts 1791974734 (-13s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 35506} stop Sutherland.SC28.5 Loc
+
+== T4 dir 0 branch 0 seg 124 (31.00 km): running 58 with stops 58  vehicle 9453.9318.6136.6407.1935.8456.5887.1901
+   header 1791974717 ts 1791974711 (-6s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {0: 30254, 1: 30254} stop Sutherland.SM1152/SD7 Loc
+   header 1791974727 ts 1791974711 (-16s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {0: 30254, 1: 30254} stop Sutherland.SM1152/SD7 Loc
+   header 1791974747 ts 1791974736 (-11s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {0: 30857, 1: 30857} stop Sutherland.SM1158/SD11 Loc
+   header 1791974757 ts 1791974736 (-21s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {0: 30857, 1: 30857} stop Sutherland.SM1158/SD11 Loc
+   header 1791974777 ts 1791974769 (-8s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {0: 31222, 1: 31222} stop Sutherland.SD17/14 Loc
+   header 1791974787 ts 1791974769 (-18s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {0: 31222, 1: 31222} stop Sutherland.SD17/14 Loc
+   header 1791974807 ts 1791974792 (-15s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791974817 ts 1791974792 (-25s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791974837 ts 1791974792 (-45s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791974847 ts 1791974792 (-55s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+
+== T4 dir 0 branch 1 seg 124 (31.00 km): running 58 with stops 58  vehicle 9453.9318.6136.6407.1935.8456.5887.1901
+   header 1791974717 ts 1791974711 (-6s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {0: 30254, 1: 30254} stop Sutherland.SM1152/SD7 Loc
+   header 1791974727 ts 1791974711 (-16s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {0: 30254, 1: 30254} stop Sutherland.SM1152/SD7 Loc
+   header 1791974747 ts 1791974736 (-11s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {0: 30857, 1: 30857} stop Sutherland.SM1158/SD11 Loc
+   header 1791974757 ts 1791974736 (-21s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {0: 30857, 1: 30857} stop Sutherland.SM1158/SD11 Loc
+   header 1791974777 ts 1791974769 (-8s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {0: 31222, 1: 31222} stop Sutherland.SD17/14 Loc
+   header 1791974787 ts 1791974769 (-18s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {0: 31222, 1: 31222} stop Sutherland.SD17/14 Loc
+   header 1791974807 ts 1791974792 (-15s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791974817 ts 1791974792 (-25s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791974837 ts 1791974792 (-45s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791974847 ts 1791974792 (-55s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+
+== T4 dir 0 branch 0 seg 142 (35.50 km): running 68 with stops 68  vehicle 5831.4573.9088.6688.3118.5455.3950.7638
+   header 1791974717 ts 1791974642 (-75s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 34850} stop Sutherland.Gymea 2 Loc
+   header 1791974727 ts 1791974642 (-85s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 34850} stop Sutherland.Gymea 2 Loc
+   header 1791974747 ts 1791974734 (-13s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 35506} stop Sutherland.SC28.5 Loc
+   header 1791974757 ts 1791974734 (-23s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 35506} stop Sutherland.SC28.5 Loc
+   header 1791974777 ts 1791974767 (-10s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 35818} stop Sutherland.SC28.9 Loc
+   header 1791974787 ts 1791974767 (-20s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 35818} stop Sutherland.SC28.9 Loc
+   header 1791974807 ts 1791974782 (-25s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 36410} stop Sutherland.Miranda 2 Loc
+   header 1791974817 ts 1791974782 (-35s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 36410} stop Sutherland.Miranda 2 Loc
+   header 1791974837 ts 1791974782 (-55s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 36410} stop Sutherland.Miranda 2 Loc
+   header 1791974847 ts 1791974782 (-65s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 36410} stop Sutherland.Miranda 2 Loc
+
+== T4 dir 0 branch 0 seg 145 (36.25 km): running None with stops 19  vehicle 5831.4573.9088.6688.3118.5455.3950.7638
+   header 1791974757 ts 1791974734 (-23s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 35506} stop Sutherland.SC28.5 Loc
+   header 1791974777 ts 1791974767 (-10s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 35818} stop Sutherland.SC28.9 Loc
+   header 1791974787 ts 1791974767 (-20s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 35818} stop Sutherland.SC28.9 Loc
+   header 1791974807 ts 1791974782 (-25s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 36410} stop Sutherland.Miranda 2 Loc
+   header 1791974817 ts 1791974782 (-35s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 36410} stop Sutherland.Miranda 2 Loc
+   header 1791974837 ts 1791974782 (-55s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 36410} stop Sutherland.Miranda 2 Loc
+   header 1791974847 ts 1791974782 (-65s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 36410} stop Sutherland.Miranda 2 Loc
+   header 1791974867 ts 1791974782 (-85s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 36410} stop Sutherland.Miranda 2 Loc
+   header 1791974877 ts 1791974782 (-95s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 36410} stop Sutherland.Miranda 2 Loc
+   header 1791974897 ts 1791974880 (-17s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 36939} stop Sutherland.SC29.9 Loc
+
+== T4 dir 0 branch 0 seg 147 (36.75 km): running 67 with stops 67  vehicle 5831.4573.9088.6688.3118.5455.3950.7638
+   header 1791974877 ts 1791974782 (-95s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 36410} stop Sutherland.Miranda 2 Loc
+   header 1791974897 ts 1791974880 (-17s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 36939} stop Sutherland.SC29.9 Loc
+   header 1791974907 ts 1791974880 (-27s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 36939} stop Sutherland.SC29.9 Loc
+   header 1791974927 ts 1791974880 (-47s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 37483} stop Sutherland.SC30.5 Loc
+   header 1791974937 ts 1791974880 (-57s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 37483} stop Sutherland.SC30.5 Loc
+   header 1791974957 ts 1791974880 (-77s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 37964} stop Sutherland.SC31.1 Loc
+   header 1791974967 ts 1791974957 (-10s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 38373} stop Sutherland.Caringbah 2 Loc
+   header 1791974987 ts 1791974957 (-30s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 38373} stop Sutherland.Caringbah 2 Loc
+   header 1791974997 ts 1791974957 (-40s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 38373} stop Sutherland.Caringbah 2 Loc
+   header 1791975017 ts 1791974957 (-60s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 38373} stop Sutherland.Caringbah 2 Loc
+
+== T4 dir 0 branch 0 seg 126 (31.50 km): running None with stops 5  vehicle 9453.9318.6136.6407.1935.8456.5887.1901
+   header 1791974907 ts 1791974792 (-115s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791974927 ts 1791974792 (-135s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791974937 ts 1791974792 (-145s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791974957 ts 1791974792 (-165s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791974967 ts 1791974792 (-175s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791974987 ts 1791974792 (-195s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791974997 ts 1791974792 (-205s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791975017 ts 1791974792 (-225s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791975027 ts 1791974792 (-235s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791975047 ts 1791975026 (-21s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {0: 31899, 1: 31912} stop Sutherland.SD49 Loc
+
+== T4 dir 0 branch 1 seg 126 (31.50 km): running None with stops 6  vehicle 9453.9318.6136.6407.1935.8456.5887.1901
+   header 1791974907 ts 1791974792 (-115s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791974927 ts 1791974792 (-135s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791974937 ts 1791974792 (-145s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791974957 ts 1791974792 (-165s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791974967 ts 1791974792 (-175s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791974987 ts 1791974792 (-195s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791974997 ts 1791974792 (-205s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791975017 ts 1791974792 (-225s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791975027 ts 1791974792 (-235s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791975047 ts 1791975026 (-21s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {0: 31899, 1: 31912} stop Sutherland.SD49 Loc
+
+== T4 dir 0 branch 0 seg 153 (38.25 km): running None with stops 25  vehicle 5831.4573.9088.6688.3118.5455.3950.7638
+   header 1791974927 ts 1791974880 (-47s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 37483} stop Sutherland.SC30.5 Loc
+   header 1791974937 ts 1791974880 (-57s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 37483} stop Sutherland.SC30.5 Loc
+   header 1791974957 ts 1791974880 (-77s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 37964} stop Sutherland.SC31.1 Loc
+   header 1791974967 ts 1791974957 (-10s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 38373} stop Sutherland.Caringbah 2 Loc
+   header 1791974987 ts 1791974957 (-30s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 38373} stop Sutherland.Caringbah 2 Loc
+   header 1791974997 ts 1791974957 (-40s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 38373} stop Sutherland.Caringbah 2 Loc
+   header 1791975017 ts 1791974957 (-60s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 38373} stop Sutherland.Caringbah 2 Loc
+   header 1791975027 ts 1791974957 (-70s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 38373} stop Sutherland.Caringbah 2 Loc
+   header 1791975047 ts 1791974957 (-90s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 38373} stop Sutherland.Caringbah 2 Loc
+   header 1791975057 ts 1791975048 (-9s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 38995} stop Sutherland.SC32.1 Loc
+
+== T4 dir 0 branch 0 seg 124 (31.00 km): running None with stops 20  vehicle 1059.7242.4111.2630.9985.1931.6990.2674
+   header 1791974967 ts 1791974911 (-56s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 29666, 1: 29666} stop Sutherland.SUTJan2 Entry Loc
+   header 1791974987 ts 1791974980 (-7s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 30254, 1: 30254} stop Sutherland.SM1152/SD7 Loc
+   header 1791974997 ts 1791974980 (-17s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 30254, 1: 30254} stop Sutherland.SM1152/SD7 Loc
+   header 1791975017 ts 1791974980 (-37s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 30254, 1: 30254} stop Sutherland.SM1152/SD7 Loc
+   header 1791975027 ts 1791974980 (-47s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 30254, 1: 30254} stop Sutherland.SM1152/SD7 Loc
+   header 1791975047 ts 1791975033 (-14s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 30857, 1: 30857} stop Sutherland.SM1158/SD11 Loc
+   header 1791975057 ts 1791975033 (-24s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 30857, 1: 30857} stop Sutherland.SM1158/SD11 Loc
+   header 1791975077 ts 1791975033 (-44s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 30857, 1: 30857} stop Sutherland.SM1158/SD11 Loc
+   header 1791975087 ts 1791975033 (-54s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 30857, 1: 30857} stop Sutherland.SM1158/SD11 Loc
+   header 1791975107 ts 1791975098 (-9s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 31222, 1: 31222} stop Sutherland.SD17/14 Loc
+
+== T4 dir 0 branch 1 seg 124 (31.00 km): running None with stops 20  vehicle 1059.7242.4111.2630.9985.1931.6990.2674
+   header 1791974967 ts 1791974911 (-56s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 29666, 1: 29666} stop Sutherland.SUTJan2 Entry Loc
+   header 1791974987 ts 1791974980 (-7s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 30254, 1: 30254} stop Sutherland.SM1152/SD7 Loc
+   header 1791974997 ts 1791974980 (-17s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 30254, 1: 30254} stop Sutherland.SM1152/SD7 Loc
+   header 1791975017 ts 1791974980 (-37s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 30254, 1: 30254} stop Sutherland.SM1152/SD7 Loc
+   header 1791975027 ts 1791974980 (-47s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 30254, 1: 30254} stop Sutherland.SM1152/SD7 Loc
+   header 1791975047 ts 1791975033 (-14s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 30857, 1: 30857} stop Sutherland.SM1158/SD11 Loc
+   header 1791975057 ts 1791975033 (-24s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 30857, 1: 30857} stop Sutherland.SM1158/SD11 Loc
+   header 1791975077 ts 1791975033 (-44s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 30857, 1: 30857} stop Sutherland.SM1158/SD11 Loc
+   header 1791975087 ts 1791975033 (-54s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 30857, 1: 30857} stop Sutherland.SM1158/SD11 Loc
+   header 1791975107 ts 1791975098 (-9s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 31222, 1: 31222} stop Sutherland.SD17/14 Loc
+
+== T4 dir 0 branch 1 seg 127 (31.75 km): running 48 with stops 48  vehicle 9453.9318.6136.6407.1935.8456.5887.1901
+   header 1791974997 ts 1791974792 (-205s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791975017 ts 1791974792 (-225s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791975027 ts 1791974792 (-235s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791975047 ts 1791975026 (-21s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {0: 31899, 1: 31912} stop Sutherland.SD49 Loc
+   header 1791975057 ts 1791975026 (-31s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {0: 31899, 1: 31912} stop Sutherland.SD49 Loc
+   header 1791975077 ts 1791975066 (-11s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {1: 32161} stop Sutherland.SD57/52 Loc
+   header 1791975087 ts 1791975066 (-21s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {1: 32161} stop Sutherland.SD57/52 Loc
+   header 1791975107 ts 1791975102 (-5s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {1: 32959} stop Sutherland.SD71 Loc
+   header 1791975117 ts 1791975102 (-15s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {1: 32959} stop Sutherland.SD71 Loc
+   header 1791975137 ts 1791975124 (-13s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {1: 33211} stop Sutherland.Loftus 2 Loc
+
+== T4 dir 0 branch 0 seg 124 (31.00 km): running 44 with stops 44  vehicle 1059.7242.4111.2630.9985.1931.6990.2674
+   header 1791975047 ts 1791975033 (-14s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 30857, 1: 30857} stop Sutherland.SM1158/SD11 Loc
+   header 1791975057 ts 1791975033 (-24s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 30857, 1: 30857} stop Sutherland.SM1158/SD11 Loc
+   header 1791975077 ts 1791975033 (-44s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 30857, 1: 30857} stop Sutherland.SM1158/SD11 Loc
+   header 1791975087 ts 1791975033 (-54s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 30857, 1: 30857} stop Sutherland.SM1158/SD11 Loc
+   header 1791975107 ts 1791975098 (-9s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 31222, 1: 31222} stop Sutherland.SD17/14 Loc
+   header 1791975117 ts 1791975098 (-19s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 31222, 1: 31222} stop Sutherland.SD17/14 Loc
+   header 1791975137 ts 1791975125 (-12s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791975147 ts 1791975125 (-22s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791975167 ts 1791975125 (-42s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791975177 ts 1791975125 (-52s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+
+== T4 dir 0 branch 1 seg 124 (31.00 km): running 44 with stops 44  vehicle 1059.7242.4111.2630.9985.1931.6990.2674
+   header 1791975047 ts 1791975033 (-14s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 30857, 1: 30857} stop Sutherland.SM1158/SD11 Loc
+   header 1791975057 ts 1791975033 (-24s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 30857, 1: 30857} stop Sutherland.SM1158/SD11 Loc
+   header 1791975077 ts 1791975033 (-44s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 30857, 1: 30857} stop Sutherland.SM1158/SD11 Loc
+   header 1791975087 ts 1791975033 (-54s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 30857, 1: 30857} stop Sutherland.SM1158/SD11 Loc
+   header 1791975107 ts 1791975098 (-9s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 31222, 1: 31222} stop Sutherland.SD17/14 Loc
+   header 1791975117 ts 1791975098 (-19s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 31222, 1: 31222} stop Sutherland.SD17/14 Loc
+   header 1791975137 ts 1791975125 (-12s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791975147 ts 1791975125 (-22s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791975167 ts 1791975125 (-42s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791975177 ts 1791975125 (-52s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+
+== T4 dir 0 branch 0 seg 155 (38.75 km): running 83 with stops 83  vehicle 5831.4573.9088.6688.3118.5455.3950.7638
+   header 1791975047 ts 1791974957 (-90s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 38373} stop Sutherland.Caringbah 2 Loc
+   header 1791975057 ts 1791975048 (-9s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 38995} stop Sutherland.SC32.1 Loc
+   header 1791975077 ts 1791975048 (-29s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 38995} stop Sutherland.SC32.1 Loc
+   header 1791975087 ts 1791975048 (-39s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 39502} stop Sutherland.SC32.5 Loc
+   header 1791975107 ts 1791975048 (-59s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 39946} stop Sutherland.SC33.1 Loc
+   header 1791975117 ts 1791975048 (-69s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 39946} stop Sutherland.SC33.1 Loc
+   header 1791975137 ts 1791975114 (-23s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 40513} stop Sutherland.Woolooware 2 Loc
+   header 1791975147 ts 1791975114 (-33s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 40513} stop Sutherland.Woolooware 2 Loc
+   header 1791975167 ts 1791975114 (-53s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 40513} stop Sutherland.Woolooware 2 Loc
+   header 1791975177 ts 1791975114 (-63s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 40513} stop Sutherland.Woolooware 2 Loc
+
+== T4 dir 0 branch 1 seg 132 (33.00 km): running None with stops 85  vehicle 9453.9318.6136.6407.1935.8456.5887.1901
+   header 1791975077 ts 1791975066 (-11s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {1: 32161} stop Sutherland.SD57/52 Loc
+   header 1791975087 ts 1791975066 (-21s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {1: 32161} stop Sutherland.SD57/52 Loc
+   header 1791975107 ts 1791975102 (-5s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {1: 32959} stop Sutherland.SD71 Loc
+   header 1791975117 ts 1791975102 (-15s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {1: 32959} stop Sutherland.SD71 Loc
+   header 1791975137 ts 1791975124 (-13s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {1: 33211} stop Sutherland.Loftus 2 Loc
+   header 1791975147 ts 1791975124 (-23s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {1: 33211} stop Sutherland.Loftus 2 Loc
+   header 1791975167 ts 1791975124 (-43s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {1: 33211} stop Sutherland.Loftus 2 Loc
+   header 1791975177 ts 1791975124 (-53s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {1: 33211} stop Sutherland.Loftus 2 Loc
+   header 1791975197 ts 1791975124 (-73s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {1: 33211} stop Sutherland.Loftus 2 Loc
+   header 1791975207 ts 1791975198 (-9s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {1: 34962} stop Sutherland.SW17.5 Loc
+
+== T4 dir 0 branch 0 seg 126 (31.50 km): running None with stops 12  vehicle 1059.7242.4111.2630.9985.1931.6990.2674
+   header 1791975087 ts 1791975033 (-54s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 30857, 1: 30857} stop Sutherland.SM1158/SD11 Loc
+   header 1791975107 ts 1791975098 (-9s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 31222, 1: 31222} stop Sutherland.SD17/14 Loc
+   header 1791975117 ts 1791975098 (-19s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 31222, 1: 31222} stop Sutherland.SD17/14 Loc
+   header 1791975137 ts 1791975125 (-12s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791975147 ts 1791975125 (-22s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791975167 ts 1791975125 (-42s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791975177 ts 1791975125 (-52s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791975197 ts 1791975125 (-72s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791975207 ts 1791975125 (-82s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791975227 ts 1791975216 (-11s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 31850, 1: 31847} stop Sutherland.SC25.1/SD40 Loc
+
+== T4 dir 0 branch 1 seg 126 (31.50 km): running None with stops 12  vehicle 1059.7242.4111.2630.9985.1931.6990.2674
+   header 1791975087 ts 1791975033 (-54s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 30857, 1: 30857} stop Sutherland.SM1158/SD11 Loc
+   header 1791975107 ts 1791975098 (-9s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 31222, 1: 31222} stop Sutherland.SD17/14 Loc
+   header 1791975117 ts 1791975098 (-19s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 31222, 1: 31222} stop Sutherland.SD17/14 Loc
+   header 1791975137 ts 1791975125 (-12s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791975147 ts 1791975125 (-22s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791975167 ts 1791975125 (-42s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791975177 ts 1791975125 (-52s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791975197 ts 1791975125 (-72s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791975207 ts 1791975125 (-82s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791975227 ts 1791975216 (-11s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 31850, 1: 31847} stop Sutherland.SC25.1/SD40 Loc
+
+== T4 dir 0 branch 0 seg 162 (40.50 km): running None with stops 21  vehicle 5831.4573.9088.6688.3118.5455.3950.7638
+   header 1791975087 ts 1791975048 (-39s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 39502} stop Sutherland.SC32.5 Loc
+   header 1791975107 ts 1791975048 (-59s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 39946} stop Sutherland.SC33.1 Loc
+   header 1791975117 ts 1791975048 (-69s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 39946} stop Sutherland.SC33.1 Loc
+   header 1791975137 ts 1791975114 (-23s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 40513} stop Sutherland.Woolooware 2 Loc
+   header 1791975147 ts 1791975114 (-33s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 40513} stop Sutherland.Woolooware 2 Loc
+   header 1791975167 ts 1791975114 (-53s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 40513} stop Sutherland.Woolooware 2 Loc
+   header 1791975177 ts 1791975114 (-63s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 40513} stop Sutherland.Woolooware 2 Loc
+   header 1791975197 ts 1791975114 (-83s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 40513} stop Sutherland.Woolooware 2 Loc
+   header 1791975207 ts 1791975114 (-93s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 40513} stop Sutherland.Woolooware 2 Loc
+   header 1791975227 ts 1791975210 (-17s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 41063} stop Sutherland.CA5 Loc
+
+== T4 dir 0 branch 0 seg 127 (31.75 km): running None with stops 41  vehicle 1059.7242.4111.2630.9985.1931.6990.2674
+   header 1791975147 ts 1791975125 (-22s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791975167 ts 1791975125 (-42s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791975177 ts 1791975125 (-52s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791975197 ts 1791975125 (-72s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791975207 ts 1791975125 (-82s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 31554, 1: 31554} stop Sutherland.Sutherland 3 Loc
+   header 1791975227 ts 1791975216 (-11s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 31850, 1: 31847} stop Sutherland.SC25.1/SD40 Loc
+   header 1791975237 ts 1791975216 (-21s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 31850, 1: 31847} stop Sutherland.SC25.1/SD40 Loc
+   header 1791975257 ts 1791975216 (-41s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 31850, 1: 31847} stop Sutherland.SC25.1/SD40 Loc
+   header 1791975267 ts 1791975216 (-51s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 31850, 1: 31847} stop Sutherland.SC25.1/SD40 Loc
+   header 1791975287 ts 1791975274 (-13s) trip 621R.947.166.112.T.8.91438796 dir 0 pos {0: 32511} stop Sutherland.SC25.5 Loc
+
+== T4 dir 0 branch 0 seg 164 (41.00 km): running 31 with stops 31  vehicle 5831.4573.9088.6688.3118.5455.3950.7638
+   header 1791975167 ts 1791975114 (-53s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 40513} stop Sutherland.Woolooware 2 Loc
+   header 1791975177 ts 1791975114 (-63s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 40513} stop Sutherland.Woolooware 2 Loc
+   header 1791975197 ts 1791975114 (-83s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 40513} stop Sutherland.Woolooware 2 Loc
+   header 1791975207 ts 1791975114 (-93s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 40513} stop Sutherland.Woolooware 2 Loc
+   header 1791975227 ts 1791975210 (-17s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 41063} stop Sutherland.CA5 Loc
+   header 1791975237 ts 1791975210 (-27s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 41063} stop Sutherland.CA5 Loc
+   header 1791975257 ts 1791975248 (-9s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 41393} stop Sutherland.CA9 Loc
+   header 1791975267 ts 1791975248 (-19s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 41393} stop Sutherland.CA9 Loc
+   header 1791975287 ts 1791975248 (-39s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 41393} stop Sutherland.CA9 Loc
+   header 1791975297 ts 1791975248 (-49s) trip 618K.947.166.24.T.8.91438753 dir 0 pos {0: 41393} stop Sutherland.CA9 Loc
+
+== T4 dir 0 branch 1 seg 139 (34.75 km): running None with stops 54  vehicle 9453.9318.6136.6407.1935.8456.5887.1901
+   header 1791975177 ts 1791975124 (-53s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {1: 33211} stop Sutherland.Loftus 2 Loc
+   header 1791975197 ts 1791975124 (-73s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {1: 33211} stop Sutherland.Loftus 2 Loc
+   header 1791975207 ts 1791975198 (-9s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {1: 34962} stop Sutherland.SW17.5 Loc
+   header 1791975227 ts 1791975198 (-29s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {1: 34962} stop Sutherland.SW17.5 Loc
+   header 1791975237 ts 1791975198 (-39s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {1: 34962} stop Sutherland.SW17.5 Loc
+   header 1791975257 ts 1791975198 (-59s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {1: 34962} stop Sutherland.SW17.5 Loc
+   header 1791975267 ts 1791975198 (-69s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {1: 34962} stop Sutherland.SW17.5 Loc
+   header 1791975287 ts 1791975198 (-89s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {1: 34962} stop Sutherland.SW17.5 Loc
+   header 1791975297 ts 1791975198 (-99s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {1: 34962} stop Sutherland.SW17.5 Loc
+   header 1791975317 ts 1791975295 (-22s) trip 611R.947.166.16.T.8.91436941 dir 0 pos {1: 36428} stop Sutherland.SW18.3 Loc
+
+160 polls, 64 suspicious spans
