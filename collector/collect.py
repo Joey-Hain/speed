@@ -449,7 +449,7 @@ class FeedRunner:
                 # only regular stops count: a station few trains on the line
                 # stop at (Erskineville on T4) doesn't make every T4 an express
                 names = [x["name"] for x in sorted(stations, key=lambda x: x["s"])
-                         if x.get("share", 1.0) >= geo.REGULAR_SHARE]
+                         if x.get("regular", x.get("share", 1.0) >= geo.REGULAR_SHARE)]
                 hit = [i for i, n in enumerate(names) if n in served]
                 if len(hit) >= 2:
                     verdicts.append(any(n not in served for n in names[hit[0]:hit[-1] + 1]))

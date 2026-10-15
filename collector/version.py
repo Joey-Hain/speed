@@ -9,7 +9,8 @@ collector also refuses to run when GitHub has a newer version.
      misplaced airport-line circuit skipped
   5  trains in an up/down layout from Central, express by regular stops,
      stops only near timetabled stations, stale fixes ignored
-  5  trains in an up/down layout from Central, express by regular stops,
-     stale fixes ignored
+  6  regular stops counted only from trains that run that branch (T8 Airport
+     trains were all "express" for skipping Redfern), request stops and
+     T1's Lidcombe-Harris Park never regular, branch ends cut exactly
 """
-VERSION = 5
+VERSION = 6

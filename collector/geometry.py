@@ -49,7 +49,8 @@ STATION_MODES = {"train", "metro", "lightrail", "ferry"}
 # from Central like railway kilometrage.
 UPDOWN_MODES = {"train"}
 UPDOWN_ACTIVE = True
-GEOMETRY_VERSION = 5   # 2: up/down layout; 3: weighted by days run; 4: BRANCH_RULES; 5: shapes cut to served stops
+GEOMETRY_VERSION = 6   # 2: up/down layout; 3: weighted by days run; 4: BRANCH_RULES; 5: shapes cut to served stops;
+                       # 6: stations from trains running the branch, exact cuts, wrong shapes ignored, hub split
 CENTRAL_LONLAT = (151.2065, -33.8832)
 CENTRAL_NEAR_M = 400   # a shape passing this close to Central is split there
 MIN_NEW_TRACK_M = 1000  # a candidate branch must add this much track not already covered
@@ -60,7 +61,9 @@ INTERIOR_SPLIT_M = 5000  # see _pieces
 # wanted as branches (from Joey, 2026-10-14). Keyed by "feed:line".
 #   exclude_via: drop candidate branches passing these stations
 #   truncate:    (via, at) - a branch passing `via` ends at station `at`
+#   begin_at:    branches passing this station are cut to begin there
 #   start_at:    branches start (km 0, the "up" end) at the end nearer this station
+#   minor:       stations that never count as regular stops (see REGULAR_SHARE)
 BRANCH_RULES = {
     "sydneytrains:T8": {"exclude_via": ["Sydenham"]},      # via Sydenham ends with the 15/11 timetable
     # Blacktown and Central trains are special workings; the shuttle's down
@@ -68,6 +71,12 @@ BRANCH_RULES = {
     "sydneytrains:T7": {"exclude_via": ["Blacktown", "Redfern"], "start_at": "Lidcombe"},
     "sydneytrains:T5": {"exclude_via": ["Penrith", "Doonside"]},  # nothing west of Blacktown
     "sydneytrains:T9": {"truncate": [("Strathfield", "Hornsby")]},  # via Strathfield only to Hornsby
+    "sydneytrains:SHL": {"begin_at": "Campbelltown"},  # the few Central trains run via East Hills
+    # minor: stations skipping which doesn't make a train an express
+    "sydneytrains:T1": {"minor": ["Lidcombe", "Auburn", "Clyde", "Granville", "Harris Park"]},  # T1 runs the main lines to Parramatta
+    "sydneytrains:BMT": {"minor": ["Zig Zag"]},       # request stop
+    "sydneytrains:CCN": {"minor": ["Wondabyne"]},     # request stop
+    "nswtrains:North_Coast_NSW": {"minor": ["Eungai"]},  # request stop
 }
 RULE_NEAR_M = 300
 REGULAR_SHARE = 0.3    # a station where this share of passing trips stop is a regular stop;
@@ -296,7 +305,7 @@ def _central_xy() -> np.ndarray:
     return to_metric(np.array([CENTRAL_LONLAT], dtype=float))[0]
 
 
-def _pieces(lonlat: np.ndarray) -> list[np.ndarray]:
+def _pieces(lonlat: np.ndarray, hub=None) -> list[np.ndarray]:
     """Split a shape where it passes Central (or at its point nearest Central,
     for lines that don't get within CENTRAL_NEAR_M), and orient every piece to
     start at its end nearer Central. A loop through Central (City Circle)
@@ -305,6 +314,15 @@ def _pieces(lonlat: np.ndarray) -> list[np.ndarray]:
     dist = np.hypot(*(xy - _central_xy()).T)
     n = len(dist)
     near = dist < CENTRAL_NEAR_M
+    if not near.any() and hub is not None:
+        # a line that doesn't reach Central splits where its track comes
+        # nearest (T5 at Harris Park), for every trip passing that point
+        hd = np.hypot(*(xy - hub).T)
+        if hd.min() < CENTRAL_NEAR_M:
+            k = int(np.argmin(hd))  # pieces start at the hub
+            if 0 < k < n - 1:
+                return [p for p in (lonlat[:k + 1][::-1], lonlat[k:]) if len(p) >= 2]
+            return [lonlat[::-1] if k == n - 1 else lonlat]
     cuts = []
     if near.any():
         i = 0
@@ -350,40 +368,32 @@ def _draw_flags(lines: list, segment_m: int, tol: float) -> list[str]:
     return out
 
 
-def _updown_stations(static, trips, lines: list, tol: float) -> list[list[dict]]:
-    """Stations along each (down-oriented) branch with the share of passing trips
-    that stop there. A trip 'passes' a station if it lies between the trip's
-    first and last stop on that branch."""
+def _branch_runs(static, trips, lines: list, tol: float):
+    """For each (down-oriented) branch: the stations near it {name: (s, offset,
+    lat, lon)} and the trips that run along it [(trip_id, stop names, lo, hi,
+    days run)], lo..hi being the stretch between its first and last stop on the
+    branch. A trip only counts on a branch if its own track follows the branch
+    over that stretch: a T8 via Sydenham stops at Central and Wolli Creek but
+    doesn't run the Airport line between them."""
     stop_lists = static.all_stop_lists()
     stops = static.stops()
     ids = {s for t in trips.trip_id for s in stop_lists.get(t, ())
            if s in stops.index and not str(s).endswith(" Loc")}
     if not ids:
-        return [[] for _ in lines]
+        return [({}, []) for _ in lines]
     st = stops.loc[sorted(ids)]
     st = st[~st.station.astype(str).str.endswith(" Loc")].dropna(subset=["lat", "lon"])
     station_of = st["station"].to_dict()
     pts = shapely.points(to_metric(st[["lon", "lat"]].to_numpy(dtype=float)))
-    days = static.trip_days()
-    use_days = any(days.get(t, 0) for t in trips.trip_id)
-    shapes = static.shapes()
-    # trips grouped by the track they run: (shape, first stop, last stop) ->
-    # that shape cut to the stops, and each trip's (stop names, days it runs)
-    groups: dict[tuple, list] = {}
-    for t, sid in zip(trips.trip_id, trips.shape_id):
-        w = days.get(t, 0) if use_days else 1
-        sl = [x for x in stop_lists.get(t, ()) if x in stops.index]
-        names = {station_of[x] for x in sl if x in station_of}
-        if w and len(names) >= 2:
-            groups.setdefault((sid, sl[0], sl[-1]), []).append((names, w))
-    track = {}
-    for key in groups:
-        sid, first, last = key
-        if sid in shapes and len(shapes[sid]) >= 2:
-            ll = _trim_to_stops(np.asarray(shapes[sid], dtype=float), stops, first, last)
-            track[key] = LineString(to_metric(ll))
-        else:
-            track[key] = None
+    groups = {}
+    for key, (ll, members) in _trip_tracks(static, trips).items():
+        if ll is None:
+            continue  # unknown track: can't tell which branch it runs
+        tl = LineString(to_metric(ll))
+        for t, sl, w in members:
+            names = {station_of[x] for x in sl if x in station_of}
+            if len(names) >= 2:
+                groups.setdefault(key, (tl, []))[1].append((t, names, w))
     out = []
     for ml in lines:
         s_along = shapely.line_locate_point(ml, pts)
@@ -393,36 +403,44 @@ def _updown_stations(static, trips, lines: list, tol: float) -> list[list[dict]]
             if oi <= tol * 2 and (name not in best or oi < best[name][1]):
                 best[name] = (float(si), float(oi), float(lat), float(lon))
         pos = {n: v[0] for n, v in best.items()}
-        where = shapely.points([ml.interpolate(v[0]).coords[0] for v in best.values()]) if best else []
-        passing, stopping = Counter(), Counter()
-        for key, members in groups.items():
-            tl = track[key]
-            # which branch stations this group's track actually goes past: a
-            # T8 via Sydenham stops at Redfern but never passes it on the
-            # Airport line, so it mustn't count there
-            near = (dict(zip(best, shapely.distance(tl, where) <= tol)) if tl is not None
-                    else dict.fromkeys(best, True))
-            for names, w in members:
+        runs = []
+        for tl, members in groups.values():
+            for t, names, w in members:
                 here = [pos[n] for n in names if n in pos]
                 if len(here) < 2:
                     continue
                 lo, hi = min(here), max(here)
-                if tl is not None:
-                    k = max(2, min(40, int((hi - lo) // 250)))
-                    probe = shapely.points([ml.interpolate(lo + (hi - lo) * i / (k - 1)).coords[0] for i in range(k)])
-                    if (shapely.distance(tl, probe) <= tol).mean() < 0.9:
-                        continue  # runs a different way between these stops
-                for n, sp in pos.items():
-                    if lo <= sp <= hi and near[n]:
-                        passing[n] += w
-                        if n in names:
-                            stopping[n] += w
+                k = max(2, min(40, int((hi - lo) // 250)))
+                probe = shapely.points([ml.interpolate(lo + (hi - lo) * i / (k - 1)).coords[0]
+                                        for i in range(k)])
+                if (shapely.distance(tl, probe) <= tol).mean() < 0.9:
+                    continue  # runs a different way between these stops
+                runs.append((t, names, lo, hi, w))
+        out.append((best, runs))
+    return out
+
+
+def _updown_stations(static, trips, lines: list, tol: float, minor=()) -> list[list[dict]]:
+    """Stations along each (down-oriented) branch with the share of the trips
+    running past them that stop there. 'regular' stations are the ones a trip
+    has to stop at all of to count as all-stations; `minor` stations (request
+    stops, stations the line's trains skip whatever their pattern) never are."""
+    out = []
+    for best, runs in _branch_runs(static, trips, lines, tol):
+        passing, stopping = Counter(), Counter()
+        for t, names, lo, hi, w in runs:
+            for n, v in best.items():
+                if lo <= v[0] <= hi:
+                    passing[n] += w
+                    if n in names:
+                        stopping[n] += w
         stations = []
         for n, (si, oi, lat, lon) in best.items():
             share = stopping[n] / passing[n] if passing[n] else 0.0
             if share >= SHOW_SHARE:
                 stations.append({"name": n, "s": round(si, 1), "lat": round(lat, 6), "lon": round(lon, 6),
-                                 "share": round(share, 3)})
+                                 "share": round(share, 3),
+                                 "regular": share >= REGULAR_SHARE and n not in minor})
         out.append(sorted(stations, key=lambda x: x["s"]))
     return out
 
@@ -453,9 +471,23 @@ def _trim_to_stops(lonlat: np.ndarray, stops, first, last, near_m: float = 400, 
         return lonlat
     if a is None or b is None or b - a < MIN_NEW_TRACK_M:
         return lonlat
-    i = max(0, int(np.searchsorted(cum, a - pad_m)) - 1)
-    j = min(len(lonlat), int(np.searchsorted(cum, b + pad_m)) + 1)
-    return lonlat[i:j] if j - i >= 2 else lonlat
+    return _cut(lonlat, cum, a - pad_m, b + pad_m)
+
+
+def _cut(lonlat: np.ndarray, cum: np.ndarray, s0: float, s1: float) -> np.ndarray:
+    """The part of a polyline between distances s0 and s1 along it, with the
+    ends interpolated (shape points can be kilometres apart on straight track,
+    so cutting at a vertex would overshoot)."""
+    s0, s1 = max(0.0, s0), min(float(cum[-1]), s1)
+    if s1 - s0 <= 0:
+        return lonlat
+    def at(s):
+        k = min(max(int(np.searchsorted(cum, s)), 1), len(cum) - 1)
+        seg = cum[k] - cum[k - 1]
+        f = 0.0 if seg <= 0 else (s - cum[k - 1]) / seg
+        return lonlat[k - 1] + f * (lonlat[k] - lonlat[k - 1])
+    inner = lonlat[(cum > s0) & (cum < s1)]
+    return np.vstack([at(s0), inner, at(s1)])
 
 
 def _station_points(static, name: str):
@@ -481,8 +513,17 @@ def _apply_rules(static, cands, rules):
                 if end < ml.length:
                     xy = to_metric(ll)
                     cum = np.concatenate([[0], np.cumsum(np.hypot(*np.diff(xy, axis=0).T))])
-                    k = max(2, int(np.searchsorted(cum, end)) + 1)
-                    ll = ll[:k]
+                    ll = _cut(ll, cum, 0, end)
+                    ml = LineString(to_metric(ll))
+                    length = ml.length
+        if rules.get("begin_at"):
+            at = _station_points(static, rules["begin_at"])
+            if at is not None and shapely.distance(ml, at).min() <= RULE_NEAR_M:
+                begin = float(shapely.line_locate_point(ml, at).min()) - 200
+                if begin > 0:
+                    xy = to_metric(ll)
+                    cum = np.concatenate([[0], np.cumsum(np.hypot(*np.diff(xy, axis=0).T))])
+                    ll = _cut(ll, cum, begin, cum[-1])
                     ml = LineString(to_metric(ll))
                     length = ml.length
         if rules.get("start_at"):
@@ -495,6 +536,63 @@ def _apply_rules(static, cands, rules):
         if length >= MIN_NEW_TRACK_M:
             out.append((c, length, sid, ll, ml))
     return out
+
+
+BAD_SHAPE_M = 1000  # a trip whose stops are further than this from its shape has the wrong shape
+
+
+def _trip_tracks(static, trips, weights=None) -> dict:
+    """Trips grouped by the track they run: (shape_id, first stop, last stop)
+    -> (the shape cut to those stops as lon/lat, or None if there's no shape or
+    it's the wrong one, [(trip_id, passenger stop ids, weight)]). Some trips
+    carry another route's shape (CCN via Strathfield on the via-Gordon shape);
+    their track is unknown rather than wrong."""
+    stop_lists = static.all_stop_lists()
+    stops = static.stops()
+    shapes = static.shapes()
+    if weights is None:
+        days = static.trip_days()
+        weights = [days.get(t, 0) for t in trips.trip_id]
+        if not any(weights):
+            weights = [1] * len(trips)
+    groups: dict[tuple, list] = {}
+    for t, sid, w in zip(trips.trip_id, trips.shape_id, weights):
+        if w <= 0:
+            continue
+        sl = [x for x in stop_lists.get(t, ()) if x in stops.index and not str(x).endswith(" Loc")]
+        if len(sl) < 2:
+            continue
+        groups.setdefault((sid, sl[0], sl[-1]), []).append((t, sl, w))
+    out = {}
+    for (sid, first, last), members in groups.items():
+        ll = None
+        if sid in shapes and len(shapes[sid]) >= 2:
+            ll = _trim_to_stops(np.asarray(shapes[sid], dtype=float), stops, first, last)
+            ids = sorted({x for _, sl, _ in members for x in sl})
+            st = stops.loc[ids].dropna(subset=["lat", "lon"])
+            if len(st):
+                pts = shapely.points(to_metric(st[["lon", "lat"]].to_numpy(dtype=float)))
+                full = LineString(to_metric(np.asarray(shapes[sid], dtype=float)))
+                if shapely.distance(full, pts).max() > BAD_SHAPE_M:
+                    ll = None
+        out[(sid, first, last)] = (ll, members)
+    return out
+
+
+def _hub(lonlats: list):
+    """Where a line that doesn't reach Central splits into up and down: the
+    point of its track nearest Central. None for lines through Central."""
+    best = None
+    c = _central_xy()
+    for ll in lonlats:
+        xy = to_metric(ll)
+        d = np.hypot(*(xy - c).T)
+        k = int(np.argmin(d))
+        if d[k] < CENTRAL_NEAR_M:
+            return None
+        if best is None or d[k] < best[0]:
+            best = (d[k], xy[k])
+    return None if best is None else best[1]
 
 
 def build_updown(static: StaticGtfs, line: str) -> dict | None:
@@ -514,29 +612,23 @@ def build_updown(static: StaticGtfs, line: str) -> dict | None:
     weights = [days.get(t, 0) for t in trips.trip_id]
     if sum(weights) == 0:  # no usable calendar: count every trip once
         weights = [1] * len(trips)
-    counts = Counter()
-    for sid, w in zip(trips.shape_id, weights):
-        counts[sid] += w
-    counts = Counter({k: v for k, v in counts.items() if v > 0})
-    total = sum(counts.values())
-
     # a trip's shape can run well past its first and last stop (every T7
     # shuttle uses a shape that carries on to Blacktown), so cut each shape
     # to the stretch its trips actually serve
-    stop_lists = static.all_stop_lists()
-    stops = static.stops()
-    groups = Counter()
-    for t, sid, w in zip(trips.trip_id, trips.shape_id, weights):
-        if w <= 0:
-            continue
-        sl = [x for x in stop_lists.get(t, ()) if x in stops.index]
-        groups[(sid, sl[0] if sl else None, sl[-1] if sl else None)] += w
+    tracks = _trip_tracks(static, trips, weights)
+    counts = Counter()
+    for (sid, first, last), (ll, members) in tracks.items():
+        if ll is not None:
+            counts[sid] += sum(w for t, sl, w in members)
+    counts = Counter({k: v for k, v in counts.items() if v > 0})
+    total = sum(counts.values())
+    hub = _hub([ll for ll, m in tracks.values() if ll is not None])
     cands = []  # (trip-days, length, shape_id, lonlat, metric line)
-    for (sid, first, last), c in groups.items():
-        if sid not in shapes or len(shapes[sid]) < 2:
+    for (sid, first, last), (lonlat, members) in tracks.items():
+        if lonlat is None:
             continue
-        lonlat = _trim_to_stops(np.asarray(shapes[sid], dtype=float), stops, first, last)
-        for piece in _pieces(lonlat):
+        c = sum(w for t, sl, w in members)
+        for piece in _pieces(lonlat, hub):
             ll = np.asarray(LineString(piece).simplify(0.00002).coords)
             ml = LineString(to_metric(ll))
             if ml.length >= MIN_NEW_TRACK_M:
@@ -591,7 +683,7 @@ def build_updown(static: StaticGtfs, line: str) -> dict | None:
     down_lines = [ch[4] for ch in chosen]
     up_ll = [ch[3][::-1] for ch in chosen]
     up_lines = [LineString(to_metric(ll)) for ll in up_ll]
-    stations = (_updown_stations(static, trips, down_lines, tol)
+    stations = (_updown_stations(static, trips, down_lines, tol, rules.get("minor", ()))
                 if feed.mode in STATION_MODES else [[] for _ in chosen])
     directions = {}
     for d, lls, lines in (("up", up_ll, up_lines), ("down", [ch[3] for ch in chosen], down_lines)):
@@ -635,7 +727,12 @@ def refresh_stations(static: StaticGtfs, data: dict):
     if data.get("layout") == "updown":
         trips = static.trips[static.trips.line == data["line"]]
         lines = [LineString(to_metric(np.asarray(b["lonlat"]))) for b in data["directions"]["down"]["branches"]]
-        sts = _updown_stations(static, trips, lines, max(static.feed.tolerance_m, 50))
+        trips = trips[trips.shape_id != ""]
+        in_service = trips[~trips.trip_headsign.str.contains(NOT_IN_SERVICE, regex=True)]
+        if not in_service.empty:
+            trips = in_service
+        minor = BRANCH_RULES.get(f"{static.feed.key}:{data['line']}", {}).get("minor", ())
+        sts = _updown_stations(static, trips, lines, max(static.feed.tolerance_m, 50), minor)
         for i, b in enumerate(data["directions"]["down"]["branches"]):
             b["stations"] = sts[i]
         for i, b in enumerate(data["directions"]["up"]["branches"]):

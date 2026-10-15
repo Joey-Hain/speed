@@ -56,7 +56,8 @@ def main():
     shutil.rmtree(OUT, ignore_errors=True)
     # deltas from before a fix are refused for its lines; check that, then turn it off
     assert _delta._too_old("sydneytrains|T1", 0)
-    assert not _delta._too_old("sydneytrains|T1", 5)
+    assert _delta._too_old("sydneytrains|T1", 5)
+    assert not _delta._too_old("sydneytrains|T1", 6)
     assert not _delta._too_old("buses|333", 0)
     cache = OUT / "cache"
     api = fixtures(cache)
