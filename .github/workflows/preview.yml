@@ -49,6 +49,11 @@ jobs:
           git fetch -q --depth 1 "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git" diag && git checkout -q FETCH_HEAD -- . || true
           rm -rf preview && cp -r ../preview . 2>/dev/null || mkdir preview
           cp ../preview.txt preview/summary.txt
+          # the rail timetables too, so geometry can be checked offline
+          rm -rf gtfs && mkdir gtfs
+          for f in ../gtfs_cache/sydneytrains.zip ../gtfs_cache/nswtrains.zip ../gtfs_cache/metro.zip; do
+            [ -f "$f" ] && [ "$(stat -c %s "$f")" -lt 95000000 ] && cp "$f" gtfs/ || true
+          done
           git add -A
           git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" commit -q -m "preview geometry"
           git push -q -f "https://x-access-token:${TOKEN}@github.com/${GITHUB_REPOSITORY}.git" HEAD:diag

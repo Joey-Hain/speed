@@ -366,12 +366,24 @@ def _updown_stations(static, trips, lines: list, tol: float) -> list[list[dict]]
     pts = shapely.points(to_metric(st[["lon", "lat"]].to_numpy(dtype=float)))
     days = static.trip_days()
     use_days = any(days.get(t, 0) for t in trips.trip_id)
-    served = []  # (stop names, weight = days it runs)
-    for t in trips.trip_id:
+    shapes = static.shapes()
+    # trips grouped by the track they run: (shape, first stop, last stop) ->
+    # that shape cut to the stops, and each trip's (stop names, days it runs)
+    groups: dict[tuple, list] = {}
+    for t, sid in zip(trips.trip_id, trips.shape_id):
         w = days.get(t, 0) if use_days else 1
-        names = {station_of[x] for x in stop_lists.get(t, ()) if x in station_of}
+        sl = [x for x in stop_lists.get(t, ()) if x in stops.index]
+        names = {station_of[x] for x in sl if x in station_of}
         if w and len(names) >= 2:
-            served.append((names, w))
+            groups.setdefault((sid, sl[0], sl[-1]), []).append((names, w))
+    track = {}
+    for key in groups:
+        sid, first, last = key
+        if sid in shapes and len(shapes[sid]) >= 2:
+            ll = _trim_to_stops(np.asarray(shapes[sid], dtype=float), stops, first, last)
+            track[key] = LineString(to_metric(ll))
+        else:
+            track[key] = None
     out = []
     for ml in lines:
         s_along = shapely.line_locate_point(ml, pts)
@@ -381,17 +393,30 @@ def _updown_stations(static, trips, lines: list, tol: float) -> list[list[dict]]
             if oi <= tol * 2 and (name not in best or oi < best[name][1]):
                 best[name] = (float(si), float(oi), float(lat), float(lon))
         pos = {n: v[0] for n, v in best.items()}
+        where = shapely.points([ml.interpolate(v[0]).coords[0] for v in best.values()]) if best else []
         passing, stopping = Counter(), Counter()
-        for names, w in served:
-            here = [pos[n] for n in names if n in pos]
-            if len(here) < 2:
-                continue
-            lo, hi = min(here), max(here)
-            for n, sp in pos.items():
-                if lo <= sp <= hi:
-                    passing[n] += w
-                    if n in names:
-                        stopping[n] += w
+        for key, members in groups.items():
+            tl = track[key]
+            # which branch stations this group's track actually goes past: a
+            # T8 via Sydenham stops at Redfern but never passes it on the
+            # Airport line, so it mustn't count there
+            near = (dict(zip(best, shapely.distance(tl, where) <= tol)) if tl is not None
+                    else dict.fromkeys(best, True))
+            for names, w in members:
+                here = [pos[n] for n in names if n in pos]
+                if len(here) < 2:
+                    continue
+                lo, hi = min(here), max(here)
+                if tl is not None:
+                    k = max(2, min(40, int((hi - lo) // 250)))
+                    probe = shapely.points([ml.interpolate(lo + (hi - lo) * i / (k - 1)).coords[0] for i in range(k)])
+                    if (shapely.distance(tl, probe) <= tol).mean() < 0.9:
+                        continue  # runs a different way between these stops
+                for n, sp in pos.items():
+                    if lo <= sp <= hi and near[n]:
+                        passing[n] += w
+                        if n in names:
+                            stopping[n] += w
         stations = []
         for n, (si, oi, lat, lon) in best.items():
             share = stopping[n] / passing[n] if passing[n] else 0.0
