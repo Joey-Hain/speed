@@ -9,10 +9,11 @@ and every stopping pattern with how the collector would classify it.
 Patterns are per branch (down direction): trips that stop at two or more of
 the branch's regular stations, grouped by where they join and leave the branch
 and which regular stations they skip, weighted by days run in the next four
-weeks. A pattern that skips a regular station is recorded as express there.
+weeks. Sydney Trains patterns are rated all / lim (limited) / exp (express)
+by how many regular stations they skip.
 """
 import argparse, json, sys
-from collections import defaultdict
+from collections import Counter, defaultdict
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -43,20 +44,31 @@ def patterns(st, line, g):
     trips = trips[~trips.trip_headsign.str.contains(geo.NOT_IN_SERVICE, regex=True)]
     lines = [LineString(geo.to_metric(np.asarray(b["lonlat"]))) for b in branches]
     runs = geo._branch_runs(st, trips, lines, max(st.feed.tolerance_m, 50))
-    out, placed = [], set()
-    for b, (best, rs) in zip(branches, runs):
+    need = geo.BRANCH_RULES.get(f"{st.feed.key}:{line}", {}).get("express_skips", geo.EXPRESS_SKIPS)
+    views = []  # per branch: [(trip, w, first, last, skipped)]
+    best = {}   # trip -> (-span, skipped) on the branch seeing most of it, as the collector rates it
+    for b, (_, rs) in zip(branches, runs):
         names = [x["name"] for x in b["stations"] if x.get("regular")]
-        pats = defaultdict(lambda: [0, 0])
+        v = []
         for t, served, lo, hi, w in rs:
             hit = [k for k, n in enumerate(names) if n in served]
             if len(hit) < 2:
                 continue
             span = names[hit[0]:hit[-1] + 1]
-            e = pats[(span[0], span[-1], tuple(n for n in span if n not in served))]
+            skipped = tuple(n for n in span if n not in served)
+            v.append((t, w, span[0], span[-1], skipped))
+            best[t] = min(best.get(t, (0, 99)), (-len(span), len(skipped)))
+        views.append(v)
+    out = []
+    for v in views:
+        pats = defaultdict(lambda: [0, 0])
+        for t, w, s0, s1, skipped in v:
+            tier = geo.service_type(best[t][1], need) if st.feed.key == "sydneytrains" else "all"
+            e = pats[(s0, s1, skipped, tier)]
             e[0] += w
             e[1] += 1
-            placed.add(t)
         out.append(pats)
+    placed = set(best)
     days = st.trip_days()
     unplaced = sum(days.get(t, 0) for t in trips.trip_id if t not in placed)
     total = sum(days.get(t, 0) for t in trips.trip_id) or 1
@@ -95,10 +107,12 @@ for fk in a.feeds.split(","):
                 n["name"] + ("" if n.get("share", 1) >= 0.95 else f" {n['share']:.2f}")
                 + ("" if n.get("regular") else " (minor)") for n in sts))
             btot = sum(v[0] for v in pats.values()) or 1
-            exp = sum(v[0] for k, v in pats.items() if k[2]) / btot
-            print(f"    express {exp:.0%}")
-            for (s0, s1, skipped), (w, n) in sorted(pats.items(), key=lambda kv: -kv[1][0])[:12]:
+            tier = Counter()
+            for k, v in pats.items():
+                tier[k[3]] += v[0]
+            print("    " + ", ".join(f"{t} {tier[t] / btot:.0%}" for t in ("all", "lim", "exp")))
+            for (s0, s1, skipped, t), (w, n) in sorted(pats.items(), key=lambda kv: -kv[1][0])[:12]:
                 if w / btot < 0.01:
                     break
-                skip = ("exp skips " + ", ".join(skipped)) if skipped else "all stops"
+                skip = (f"{t} skips " + ", ".join(skipped)) if skipped else "all stops"
                 print(f"    {w / btot:5.1%} {s0} - {s1}: {skip}")

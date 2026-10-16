@@ -74,6 +74,7 @@ class FeedRunner:
         self.alias: "FeedRunner | None" = None   # store these lines on another feed's lines
         self._alias_lines: set[str] | None = None
         self.svc_cache: dict[tuple, str] = {}
+        self.trip_skips: dict[str, dict] = {}   # line -> {trip_id: regular stations skipped}
         self.stops_cache: dict[tuple, list[float]] = {}
         self.gps_runs: dict[str, int] = {}
         self.excluded: dict[str, bool] = {}
@@ -434,28 +435,45 @@ class FeedRunner:
         return line in self._alias_lines
 
     def service(self, tid: str, g, d: str, branches) -> str:
-        """'exp' if the trip skips a station between its first and last stop,
-        else 'all'. The fix may lie on several branches (a shared trunk); the
-        trip counts as all-stations if it stops everywhere along any of them,
-        so a Sydenham train isn't called express against the Airport branch."""
-        key = (tid, d, tuple(sorted(branches)))
+        """'all' if the trip stops at every regular station between its first
+        and last stop, 'lim' if it skips a few, 'exp' if it skips
+        geo.EXPRESS_SKIPS or more, rated once per trip (geometry.trip_skips).
+        Trips that can't be placed that way are rated on the branches the fix
+        lies on, using the one covering most of the run.
+        Only Sydney Trains lines are rated (not regional trains)."""
+        if g.data.get("feed") != "sydneytrains":
+            return "all"
+        line = g.data.get("line")
+        need = geo.BRANCH_RULES.get(f"sydneytrains:{line}", {}).get("express_skips", geo.EXPRESS_SKIPS)
+        if line not in self.trip_skips:
+            try:
+                self.trip_skips[line] = geo.trip_skips(self.static, line, g.data)
+            except Exception as e:  # rate fix by fix instead
+                print(f"[{self.feed.key}] couldn't rate {line} trips: {e}", flush=True)
+                self.trip_skips[line] = {}
+        rated = self.trip_skips[line]
+        key = (tid, d) if tid in rated else (tid, d, tuple(sorted(branches)))
         if key not in self.svc_cache:
-            served = self.static.served_station_names(tid) if tid else None
-            verdicts = []
-            for b in key[2]:
-                stations = g.data["directions"][d]["branches"][b].get("stations", [])
-                if not served or len(stations) < 3:
-                    continue
-                # only regular stops count: a station few trains on the line
-                # stop at (Erskineville on T4) doesn't make every T4 an express
-                names = [x["name"] for x in sorted(stations, key=lambda x: x["s"])
-                         if x.get("regular", x.get("share", 1.0) >= geo.REGULAR_SHARE)]
-                hit = [i for i, n in enumerate(names) if n in served]
-                if len(hit) >= 2:
-                    verdicts.append(any(n not in served for n in names[hit[0]:hit[-1] + 1]))
-            svc = "exp" if verdicts and all(verdicts) else "all"
+            if tid in rated:
+                svc = geo.service_type(rated[tid], need)
+            else:
+                served = self.static.served_station_names(tid) if tid else None
+                skips = []
+                for b in key[2]:
+                    stations = g.data["directions"][d]["branches"][b].get("stations", [])
+                    if not served or len(stations) < 3:
+                        continue
+                    # only regular stops count: a station few trains on the line
+                    # stop at (Erskineville on T4) doesn't make every T4 an express
+                    names = [x["name"] for x in sorted(stations, key=lambda x: x["s"])
+                             if x.get("regular", x.get("share", 1.0) >= geo.REGULAR_SHARE)]
+                    hit = [i for i, n in enumerate(names) if n in served]
+                    if len(hit) >= 2:
+                        span = names[hit[0]:hit[-1] + 1]
+                        skips.append((-len(span), sum(n not in served for n in span)))
+                svc = geo.service_type(min(skips)[1], need) if skips else "all"
             self.svc_cache[key] = svc
-            self.stats["trips_express" if svc == "exp" else "trips_all_stations"] += 1
+            self.stats[{"all": "trips_all_stations", "lim": "trips_limited", "exp": "trips_express"}[svc]] += 1
         return self.svc_cache[key]
 
     def valid_lines(self) -> set[str]:

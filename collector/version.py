@@ -12,5 +12,7 @@ collector also refuses to run when GitHub has a newer version.
   6  regular stops counted only from trains that run that branch (T8 Airport
      trains were all "express" for skipping Redfern), request stops and
      T1's Lidcombe-Harris Park never regular, branch ends cut exactly
+  7  limited stops ("lim") between all stations and express, each trip rated
+     once; South Coast branches reworked; regional trains unrated
 """
-VERSION = 6
+VERSION = 7

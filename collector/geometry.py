@@ -49,8 +49,9 @@ STATION_MODES = {"train", "metro", "lightrail", "ferry"}
 # from Central like railway kilometrage.
 UPDOWN_MODES = {"train"}
 UPDOWN_ACTIVE = True
-GEOMETRY_VERSION = 6   # 2: up/down layout; 3: weighted by days run; 4: BRANCH_RULES; 5: shapes cut to served stops;
-                       # 6: stations from trains running the branch, exact cuts, wrong shapes ignored, hub split
+GEOMETRY_VERSION = 7   # 2: up/down layout; 3: weighted by days run; 4: BRANCH_RULES; 5: shapes cut to served stops;
+                       # 6: stations from trains running the branch, exact cuts, wrong shapes ignored, hub split;
+                       # 7: limited stops, SCO rules, join_at
 CENTRAL_LONLAT = (151.2065, -33.8832)
 CENTRAL_NEAR_M = 400   # a shape passing this close to Central is split there
 MIN_NEW_TRACK_M = 1000  # a candidate branch must add this much track not already covered
@@ -61,7 +62,9 @@ INTERIOR_SPLIT_M = 5000  # see _pieces
 # wanted as branches (from Joey, 2026-10-14). Keyed by "feed:line".
 #   exclude_via: drop candidate branches passing these stations
 #   truncate:    (via, at) - a branch passing `via` ends at station `at`
-#   begin_at:    branches passing this station are cut to begin there
+#   begin_at:    branches passing this station are cut to begin there; or
+#                [(via, station)] for branches passing `via`
+#   join_at:     a branch ending at this station carries on into the one starting there
 #   start_at:    branches start (km 0, the "up" end) at the end nearer this station
 #   minor:       stations that never count as regular stops (see REGULAR_SHARE)
 BRANCH_RULES = {
@@ -72,6 +75,10 @@ BRANCH_RULES = {
     "sydneytrains:T5": {"exclude_via": ["Penrith", "Doonside"]},  # nothing west of Blacktown
     "sydneytrains:T9": {"truncate": [("Strathfield", "Hornsby")]},  # via Strathfield only to Hornsby
     "sydneytrains:SHL": {"begin_at": "Campbelltown"},  # the few Central trains run via East Hills
+    # Bondi Junction trains end with the 15/11 timetable; Port Kembla trains
+    # start no further north than Thirroul; Kiama - Bomaderry is one line
+    "sydneytrains:SCO": {"exclude_via": ["Edgecliff"], "begin_at": [("Lysaghts", "Thirroul")],
+                         "join_at": ["Kiama"]},
     # minor: stations skipping which doesn't make a train an express
     "sydneytrains:T1": {"minor": ["Lidcombe", "Auburn", "Clyde", "Granville", "Harris Park"]},  # T1 runs the main lines to Parramatta
     "sydneytrains:BMT": {"minor": ["Zig Zag"]},       # request stop
@@ -80,8 +87,14 @@ BRANCH_RULES = {
 }
 RULE_NEAR_M = 300
 REGULAR_SHARE = 0.3    # a station where this share of passing trips stop is a regular stop;
-                       # skipping one makes a trip an express
+                       # skipping one makes a trip limited stops or express
 SHOW_SHARE = 0.1       # stations served by fewer passing trips aren't listed
+EXPRESS_SKIPS = 8      # a train skipping this many regular stations is an express, fewer a
+                       # limited stops (BRANCH_RULES express_skips overrides it per line)
+
+
+def service_type(skipped: int, express_skips: int = EXPRESS_SKIPS) -> str:
+    return "all" if skipped <= 0 else "lim" if skipped < express_skips else "exp"
 
 
 def to_metric(lonlat: np.ndarray) -> np.ndarray:
@@ -445,6 +458,28 @@ def _updown_stations(static, trips, lines: list, tol: float, minor=()) -> list[l
     return out
 
 
+def trip_skips(static, line: str, data: dict) -> dict:
+    """{trip_id: regular stations it skips}, judged on the branch that sees
+    most of its run among the branches its track actually follows, so a
+    trip's rating is the same wherever it is (an express is an express on the
+    City Circle too)."""
+    branches = data["directions"]["down"]["branches"]
+    trips = static.trips[(static.trips.line == line) & (static.trips.shape_id != "")]
+    in_service = trips[~trips.trip_headsign.str.contains(NOT_IN_SERVICE, regex=True)]
+    if not in_service.empty:
+        trips = in_service
+    lines = [LineString(to_metric(np.asarray(b["lonlat"]))) for b in branches]
+    best = {}
+    for b, (_, runs) in zip(branches, _branch_runs(static, trips, lines, max(static.feed.tolerance_m, 50))):
+        names = [x["name"] for x in b["stations"] if x.get("regular", x.get("share", 1.0) >= REGULAR_SHARE)]
+        for t, served, lo, hi, w in runs:
+            hit = [k for k, n in enumerate(names) if n in served]
+            if len(hit) >= 2:
+                span = names[hit[0]:hit[-1] + 1]
+                best[t] = min(best.get(t, (0, 0)), (-len(span), sum(n not in served for n in span)))
+    return {t: v[1] for t, v in best.items()}
+
+
 def _trim_to_stops(lonlat: np.ndarray, stops, first, last, near_m: float = 400, pad_m: float = 200):
     """The part of a shape from its trip's first stop to its last (plus a little).
     The first stop is matched to the earliest pass of the shape near it and the
@@ -502,6 +537,9 @@ def _apply_rules(static, cands, rules):
     out = []
     excl = [p for p in (_station_points(static, n) for n in rules.get("exclude_via", [])) if p is not None]
     cuts = [(_station_points(static, v), _station_points(static, a)) for v, a in rules.get("truncate", [])]
+    # begin_at: "station", or [(via, station)] for branches passing `via` only
+    b = rules.get("begin_at", [])
+    begins = [("any", b)] if isinstance(b, str) else [(_station_points(static, v), a) for v, a in b]
     for c, length, sid, ll, ml in cands:
         if any(shapely.distance(ml, pts).min() <= RULE_NEAR_M for pts in excl):
             continue
@@ -516,8 +554,10 @@ def _apply_rules(static, cands, rules):
                     ll = _cut(ll, cum, 0, end)
                     ml = LineString(to_metric(ll))
                     length = ml.length
-        if rules.get("begin_at"):
-            at = _station_points(static, rules["begin_at"])
+        for via, name in begins:
+            at = _station_points(static, name)
+            if not isinstance(via, str) and (via is None or shapely.distance(ml, via).min() > RULE_NEAR_M):
+                continue
             if at is not None and shapely.distance(ml, at).min() <= RULE_NEAR_M:
                 begin = float(shapely.line_locate_point(ml, at).min()) - 200
                 if begin > 0:
@@ -536,6 +576,29 @@ def _apply_rules(static, cands, rules):
         if length >= MIN_NEW_TRACK_M:
             out.append((c, length, sid, ll, ml))
     return out
+
+
+def _join(static, chosen, trips_on, stations):
+    """Run a branch on through a branch that starts where it ends (the Kiama -
+    Bomaderry shuttle carries on from the South Coast line)."""
+    for name in stations:
+        at = _station_points(static, name)
+        if at is None:
+            continue
+        ends = [i for i, ch in enumerate(chosen)
+                if shapely.distance(shapely.Point(ch[4].coords[-1]), at).min() <= RULE_NEAR_M + 200]
+        starts = [i for i, ch in enumerate(chosen)
+                  if shapely.distance(shapely.Point(ch[4].coords[0]), at).min() <= RULE_NEAR_M + 200]
+        if not ends or not starts or set(ends) & set(starts):
+            continue
+        a, b = ends[0], starts[0]
+        ll = np.vstack([chosen[a][3], chosen[b][3][1:]])
+        ml = LineString(to_metric(ll))
+        chosen[a] = (chosen[a][0], ml.length, chosen[a][2], ll, ml)
+        trips_on[a] = max(trips_on[a], trips_on[b])
+        chosen = [ch for i, ch in enumerate(chosen) if i != b]
+        trips_on = [t for i, t in enumerate(trips_on) if i != b]
+    return chosen, trips_on
 
 
 BAD_SHAPE_M = 1000  # a trip whose stops are further than this from its shape has the wrong shape
@@ -676,6 +739,7 @@ def build_updown(static: StaticGtfs, line: str) -> dict | None:
                 if (shapely.distance(other, pts) <= tol).mean() > 0.5:
                     n += c2
         trips_on.append(n)
+    chosen, trips_on = _join(static, chosen, trips_on, rules.get("join_at", ()))
     order = sorted(range(len(chosen)), key=lambda i: -trips_on[i])
     chosen = [chosen[i] for i in order]
     trips_on = [trips_on[i] for i in order]

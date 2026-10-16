@@ -17,8 +17,9 @@ speeds.csv columns:
             always cover roughly the last 30 days.
   day       wd = weekday, we = weekend (local time)
   band      night 00-06, am 06-10, mid 10-15, pm 15-19, eve 19-24
-  svc       all = trip stops at every station on its stretch of the branch,
-            exp = trip skips at least one (trains only; others are all "all")
+  svc       all = trip stops at every regular station on its stretch of the branch,
+            lim = skips a few, exp = skips geometry.EXPRESS_SKIPS or more
+            (Sydney Trains only; everything else is "all")
   n, sum, sumsq, hist
             running speed: stopped time left out (GPS fixes under 1 km/h,
             or the dwell before a track-section move)

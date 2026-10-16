@@ -583,9 +583,12 @@
     if (state.feed !== feed || state.line !== key) return;
     const { geom, rows, pos } = state.cache.get(ck);
     state.geom = geom; state.rows = rows; state.pos = pos;
-    const hasExp = rows.some((r) => r.svc === "exp");
-    el.svcWrap.hidden = !hasExp;
-    if (!hasExp) el.svc.value = "any";
+    // service types only mean something on Sydney Trains lines
+    const types = new Set(feed === "sydneytrains" ? rows.map((r) => r.svc || "all") : []);
+    for (const o of el.svc.options) if (o.value !== "any") o.hidden = !types.has(o.value);
+    const hasSvc = types.has("lim") || types.has("exp");
+    el.svcWrap.hidden = !hasSvc;
+    if (!hasSvc || !types.has(el.svc.value)) el.svc.value = "any";
     // trains use an up/down layout (up = towards Central); other modes go by destination
     const updown = geom.layout === "updown";
     el.dir.innerHTML = Object.entries(geom.directions)
