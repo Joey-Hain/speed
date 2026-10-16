@@ -32,6 +32,17 @@ h1 { margin: 0 0 1rem; }
 .top-link a:hover { text-decoration: underline; }
 a { color: var(--muted); }
 
+/* Links: same grey everywhere. Same site: same tab, no arrow.
+   Another joeyhain.org site: new tab, right arrow. External: new tab, top-right arrow. */
+a[target="_blank"]::after {
+  content: "\2197";
+  display: inline-block;
+  padding-left: 0.2em;
+  text-decoration: none;
+}
+a[target="_blank"][href*="joeyhain.org"]::after { content: "\2192"; }
+
+
 /* body text is justified everywhere */
 p { text-align: justify; text-justify: inter-word; }
 
