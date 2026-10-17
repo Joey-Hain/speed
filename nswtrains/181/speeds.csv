@@ -1,0 +1,4 @@
+dir,branch,seg,week,day,band,svc,n,sum,sumsq,hist,n_all,sum_all,sumsq_all,hist_all
+down,0,0,2026-10-12,we,am,all,0,0.0,0.0,,1,78.5,6161.7,78:1
+down,0,1,2026-10-12,we,am,all,1,85.1,7236.0,85:1,2,163.6,13397.7,78:1;85:1
+down,0,2,2026-10-12,we,am,all,1,85.1,7236.0,85:1,1,85.1,7236.0,85:1
