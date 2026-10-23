@@ -11,6 +11,8 @@ profile is complete. The map draws each piece of track only once.
 Once geometry.json exists for a line it is reused as-is, so segment numbers in
 speeds.csv stay valid even when TfNSW reissues shape ids. Delete a line's
 folder (or run with --rebuild LINE) to rebuild it after a real route change.
+Metro and light rail lines rebuild themselves when the timetable starts running
+them over new track (see AUTO_EXTEND_MODES), keeping their totals.
 """
 
 from __future__ import annotations
@@ -202,9 +204,12 @@ def _pick_branches(shape_ids: list[str], shapes: dict, tol: float) -> list[str]:
 NOT_IN_SERVICE = r"(?i)\b(?:empty train|not in service|out of service|non[ _-]?revenue|depot)\b"
 
 
-def build_line(static: StaticGtfs, line: str) -> dict | None:
+def build_line(static: StaticGtfs, line: str, services: set | None = None) -> dict | None:
+    """`services`, when given, limits the build to trips of those service_ids."""
     feed = static.feed
     trips = static.trips[(static.trips.line == line) & (static.trips.shape_id != "")]
+    if services is not None:
+        trips = trips[trips.service_id.isin(services)]
     # empty runs shouldn't pick the branches or name the directions
     in_service = trips[~trips.trip_headsign.str.contains(NOT_IN_SERVICE, regex=True)]
     if not in_service.empty:
@@ -823,14 +828,120 @@ def refresh_stations(static: StaticGtfs, data: dict):
 
 # ---------------------------------------------------------------- persistence
 
+# ------------------------------------------------------------ route extensions
+# Metro and light rail lines get longer (M1 to Bankstown from 30/10/2026,
+# Parramatta Light Rail stage 2). When the timetable starts running a line over
+# track its frozen geometry doesn't cover, the geometry is rebuilt and the old
+# totals are carried over onto the new branches instead of being dropped.
+# Sydney Trains and TrainLink are left alone: their diversions and hand rules
+# (BRANCH_RULES) make an automatic rebuild riskier than a manual one.
+AUTO_EXTEND_MODES = {"metro", "lightrail"}
+EXTEND_NEW_M = 1000        # at least this much new track...
+EXTEND_SHARE = 0.1         # ...run by this share of the line's trips today...
+EXTEND_WINDOW_DAYS = 14    # ...and on this many of the next EXTEND_WINDOW_DAYS days
+EXTEND_MIN_DAYS = 10
+
+
+def _service_date():
+    from datetime import datetime, timedelta
+    from zoneinfo import ZoneInfo
+    now = datetime.now(ZoneInfo("Australia/Sydney"))
+    return (now - timedelta(hours=3)).date()  # trips after midnight belong to the day before
+
+
+def extension_needed(static: StaticGtfs, data: dict, line: str, today=None) -> bool:
+    """True when the line's regular service runs over track the frozen geometry misses."""
+    if static.feed.mode not in AUTO_EXTEND_MODES:
+        return False
+    today = today or _service_date()
+    trips = static.trips[(static.trips.line == line) & (static.trips.shape_id != "")]
+    trips = trips[~trips.trip_headsign.str.contains(NOT_IN_SERVICE, regex=True)]
+    if trips.empty:
+        return False
+    on = static.service_days(today, EXTEND_WINDOW_DAYS)
+    key = today.strftime("%Y%m%d")
+    run_today = trips[[key in on.get(s, ()) for s in trips.service_id]]
+    if run_today.empty:
+        return False
+    days_by_shape: dict[str, set] = {}
+    for sid, svc in zip(trips.shape_id, trips.service_id):
+        days_by_shape.setdefault(sid, set()).update(on.get(svc, ()))
+    shapes = static.shapes()
+    tol = max(static.feed.tolerance_m, 50) * 2
+    branches = [LineString(to_metric(np.asarray(b["lonlat"], dtype=float)))
+                for d in data["directions"].values() for b in d["branches"]]
+    if not branches:
+        return False
+    counts = Counter(run_today.shape_id)
+    for sid, n in counts.items():
+        if n < EXTEND_SHARE * len(run_today) or len(days_by_shape.get(sid, ())) < EXTEND_MIN_DAYS:
+            continue
+        if sid not in shapes or len(shapes[sid]) < 2:
+            continue
+        ml = LineString(to_metric(shapes[sid]))
+        k = max(int(ml.length // 100), 2)
+        pts = shapely.points([ml.interpolate(i / (k - 1), normalized=True).coords[0] for i in range(k)])
+        far = np.ones(k, dtype=bool)
+        for bl in branches:
+            far &= shapely.distance(bl, pts) > tol
+        if far.mean() * ml.length >= EXTEND_NEW_M:
+            return True
+    return False
+
+
+def remap_plan(old: dict, new: dict, tol: float = 100) -> dict[str, dict[int, tuple[int, int]]]:
+    """{direction: {old branch: (new branch, segment shift)}} for every old
+    branch that lies along a new branch of the same direction, same way round."""
+    seg = new["segment_m"]
+    if old.get("segment_m") != seg:
+        return {}
+    plan: dict[str, dict[int, tuple[int, int]]] = {}
+    for d, ov in old["directions"].items():
+        nv = new["directions"].get(d)
+        if not nv:
+            continue
+        for ob in ov["branches"]:
+            ol = LineString(to_metric(np.asarray(ob["lonlat"], dtype=float)))
+            k = max(int(ol.length // 100), 2)
+            pts = shapely.points([ol.interpolate(i / (k - 1), normalized=True).coords[0] for i in range(k)])
+            for nb in nv["branches"]:
+                nl = LineString(to_metric(np.asarray(nb["lonlat"], dtype=float)))
+                if shapely.distance(nl, pts).max() > tol:
+                    continue
+                s = shapely.line_locate_point(nl, pts)
+                if np.any(np.diff(s) < -tol):  # runs the other way along it
+                    continue
+                if abs((s[-1] - s[0]) - ol.length) > 0.03 * ol.length + 200:
+                    continue
+                plan.setdefault(d, {})[ob["id"]] = (nb["id"], int(round(s[0] / seg)))
+                break
+    return plan
+
+
 def geometry_path(store: Path, feed_key: str, line: str) -> Path:
     return store / feed_key / line / "geometry.json"
 
 
-def load_or_build(store: Path, static: StaticGtfs, line: str, rebuild: bool = False):
+def load_or_build(store: Path, static: StaticGtfs, line: str, rebuild: bool = False,
+                  extended: set | None = None):
+    """`extended`, when given, collects the line's key ("feed|line") if it was
+    rebuilt because the route got longer (its totals were carried over)."""
     p = geometry_path(store, static.feed.key, line)
     if p.exists() and not rebuild:
         data = json.loads(p.read_text())
+        if extension_needed(static, data, line):
+            # build from the services running from today, so the old timetable's
+            # shapes (still in the file for the last few days) can't lead
+            running = {sid for sid, days in static.service_days(_service_date(), EXTEND_WINDOW_DAYS).items() if days}
+            new = build_line(static, line, running)
+            if new is not None:
+                plan = remap_plan(data, new, max(static.feed.tolerance_m, 50) * 2)
+                from .store import remap_line
+                remap_line(p.parent, plan)
+                p.write_text(json.dumps(new, separators=(",", ":")))
+                if extended is not None:
+                    extended.add(f"{static.feed.key}|{line}")
+                return LineGeometry(new)
         if UPDOWN_ACTIVE and static.feed.mode in UPDOWN_MODES and data.get("geometry_version", 1) < GEOMETRY_VERSION:
             rebuild = True  # moving to the up/down layout: segment numbers change
     if p.exists() and not rebuild:

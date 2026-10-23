@@ -32,7 +32,11 @@ GitHub Actions (hourly, polls ~50 min)          Cloudflare Pages
   GTFS the first time a line is seen and then frozen in `geometry.json`, so
   segment numbers stay valid when TfNSW reissues shape ids. Each fix is
   projected onto every branch it lies near, so a shared trunk feeds every
-  branch's profile.
+  branch's profile. Metro and light rail lines rebuild automatically on the
+  first service day the timetable runs them over new track (the M1 to
+  Bankstown from 30 October 2026): the new branches are built from the
+  services running from that day, and existing totals are moved onto them
+  rather than dropped.
 * **Storage** is running totals, not raw fixes: `n`, `sum`, `sumsq` and a
   speed histogram per direction, branch, segment, week, weekday/weekend and
   time band. Runs merge by addition. **Retention is a rolling 30 days**: each

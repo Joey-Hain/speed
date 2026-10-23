@@ -100,6 +100,29 @@ class StaticGtfs:
             self._trip_days = {t: n.get(sid, 0) for t, sid in zip(self.trips.trip_id, self.trips.service_id)}
         return self._trip_days
 
+    def service_days(self, start, days: int) -> dict[str, set]:
+        """service_id -> the dates (YYYYMMDD) it runs on in `days` days from `start`."""
+        from datetime import timedelta
+        dates = [start + timedelta(d) for d in range(days)]
+        keys = [d.strftime("%Y%m%d") for d in dates]
+        wd = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"]
+        active: dict[str, set] = {}
+        for r in self._read("calendar.txt").itertuples(index=False):
+            r = r._asdict()
+            active[r["service_id"]] = {k for d, k in zip(dates, keys)
+                                       if r.get("start_date", "0") <= k <= r.get("end_date", "99999999")
+                                       and r.get(wd[d.weekday()]) == "1"}
+        for r in self._read("calendar_dates.txt").itertuples(index=False):
+            r = r._asdict()
+            if r["date"] not in keys:
+                continue
+            on = active.setdefault(r["service_id"], set())
+            if r["exception_type"] == "1":
+                on.add(r["date"])
+            elif r["exception_type"] == "2":
+                on.discard(r["date"])
+        return active
+
     # ------------------------------------------------------------------ io
     def _read(self, name: str, cols: list[str] | None = None, **kw) -> pd.DataFrame:
         with zipfile.ZipFile(self.zip_path) as z:

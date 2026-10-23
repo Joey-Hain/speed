@@ -139,6 +139,34 @@ def merge_speed_file(store: Path, feed: str, line: str, delta_file: Path) -> int
     return write_speed_totals(p, totals)
 
 
+def remap_line(line_dir: Path, plan: dict) -> None:
+    """Move a line's totals onto rebuilt branches: plan is {dir: {old branch:
+    (new branch, segment shift)}} (geometry.remap_plan). Totals on branches the
+    plan doesn't cover are dropped; cells landing together are added up."""
+    sp = line_dir / "speeds.csv"
+    if sp.exists():
+        out: dict[tuple, list] = {}
+        for k, t in read_speed_totals(sp).items():
+            m = plan.get(k[0], {}).get(k[1])
+            if m is not None and k[2] + m[1] >= 0:
+                _add_totals(out, (k[0], m[0], k[2] + m[1], *k[3:]), t)
+        write_speed_totals(sp, out)
+    pp = line_dir / "positions.csv"
+    if pp.exists():
+        pos: dict[tuple, list[int]] = {}
+        for k, (n, tc) in read_positions(pp).items():
+            m = plan.get(k[0], {}).get(k[1])
+            if m is not None and k[2] + m[1] >= 0:
+                t = pos.setdefault((k[0], m[0], k[2] + m[1]), [0, 0])
+                t[0] += n
+                t[1] += tc
+        with pp.open("w", newline="") as f:
+            w = csv.writer(f)
+            w.writerow(["dir", "branch", "seg", "fixes", "tc"])
+            for k in sorted(pos):
+                w.writerow([*k, *pos[k]])
+
+
 def read_positions(p: Path) -> dict[tuple, list[int]]:
     totals: dict[tuple, list[int]] = {}
     if p.exists():

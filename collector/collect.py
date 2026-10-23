@@ -78,6 +78,7 @@ class FeedRunner:
         self.stops_cache: dict[tuple, list[float]] = {}
         self.gps_runs: dict[str, int] = {}
         self.excluded: dict[str, bool] = {}
+        self.extended: set[str] = set()  # "feed|line" rebuilt this run for a longer route
         self.raw_samples: list[str] = []
         self.stats = Counter()
         self.errors: deque[str] = deque(maxlen=20)
@@ -98,7 +99,8 @@ class FeedRunner:
             try:
                 self.geoms[line] = geo.load_or_build(
                     self.store, self.static, line,
-                    rebuild=f"{self.feed.key}:{line}" in self.rebuild)
+                    rebuild=f"{self.feed.key}:{line}" in self.rebuild,
+                    extended=self.extended)
             except Exception as e:  # a bad shape shouldn't stop the feed
                 self.geoms[line] = None
                 self.errors.append(f"geometry {line}: {e}")

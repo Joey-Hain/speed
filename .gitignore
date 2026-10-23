@@ -11,3 +11,4 @@ delta/
 tests/_out_delta/
 tests/_out_metronet/
 tests/_out_fixes/
+tests/_out_extend/

@@ -56,7 +56,8 @@ def write_delta(delta: Path, acc, runners, geometry_store: Path, status: dict,
     valid = {r.feed.key: sorted(r.valid_lines()) for r in runners if r.static is not None}
     (delta / "meta.json").write_text(json.dumps(
         {"source": source, "version": VERSION, "status": status, "metas": metas, "valid": valid, "lines": lines,
-         "rebuilt": sorted(k.replace(":", "|", 1) for k in (rebuilt or ()))}, default=str))
+         "rebuilt": sorted(k.replace(":", "|", 1) for k in (rebuilt or ())),
+         "extended": sorted(k for r in runners for k in getattr(r, "extended", ()))}, default=str))
 
 
 def _compatible(a: dict, b: dict) -> bool:
@@ -96,6 +97,7 @@ def merge_delta(delta: Path, store: Path) -> dict:
     status["migrations"] = st.apply_migrations(store)
     touched, geoms, shares, skipped = {}, {}, {}, []
     rebuilt = set(meta.get("rebuilt", []))
+    extended = set(meta.get("extended", []))
     too_old = []
     for key in meta["lines"]:
         if _too_old(key, int(meta.get("version") or 0)):
@@ -108,6 +110,12 @@ def merge_delta(delta: Path, store: Path) -> dict:
             for f in ("speeds.csv", "positions.csv"):
                 (sp.parent / f).unlink(missing_ok=True)
             sp.unlink(missing_ok=True)
+        if key in extended and sp.exists():
+            sg = json.loads(sp.read_text())
+            if not _compatible(dg, sg):  # route got longer: carry the old totals over
+                from .geometry import remap_plan
+                st.remap_line(sp.parent, remap_plan(sg, dg, 100))
+                sp.write_text(json.dumps(dg, separators=(",", ":")))
         if sp.exists():
             sg = json.loads(sp.read_text())
             if dg.get("geometry_version", 1) > sg.get("geometry_version", 1):
@@ -166,8 +174,13 @@ def combine_delta(src: Path, dst: Path):
         sg = json.loads((s_dir / "geometry.json").read_text())
         if (d_dir / "geometry.json").exists():
             dg = json.loads((d_dir / "geometry.json").read_text())
-            if not _compatible(sg, dg):  # rebuilt in between: the newer one wins
-                shutil.rmtree(d_dir)
+            if not _compatible(sg, dg):
+                if key in set(sm.get("extended", [])):  # route got longer: carry totals over
+                    from .geometry import remap_plan
+                    st.remap_line(d_dir, remap_plan(dg, sg, 100))
+                    shutil.copy(s_dir / "geometry.json", d_dir / "geometry.json")
+                else:  # rebuilt in between: the newer one wins
+                    shutil.rmtree(d_dir)
         if not (d_dir / "geometry.json").exists():
             d_dir.mkdir(parents=True, exist_ok=True)
             shutil.copy(s_dir / "geometry.json", d_dir / "geometry.json")
@@ -183,7 +196,8 @@ def combine_delta(src: Path, dst: Path):
         status[k] = (a.get(k) or 0) + (b.get(k) or 0)
     status["started"] = a.get("started") or b.get("started")
     dm.update(status=status, lines=sorted(lines), valid=sm["valid"] or dm["valid"],
-              rebuilt=sorted(set(dm.get("rebuilt", [])) | set(sm.get("rebuilt", []))))
+              rebuilt=sorted(set(dm.get("rebuilt", [])) | set(sm.get("rebuilt", []))),
+              extended=sorted(set(dm.get("extended", [])) | set(sm.get("extended", []))))
     dm["metas"].update(sm["metas"])
     dm["version"] = min(int(dm.get("version") or 0), int(sm.get("version") or 0))
     (dst / "meta.json").write_text(json.dumps(dm, default=str))
