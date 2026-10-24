@@ -34,13 +34,31 @@ a { color: var(--muted); }
 
 /* Links: same grey everywhere. Same site: same tab, no arrow.
    Another joeyhain.org site: new tab, right arrow. External: new tab, top-right arrow. */
+/* external-link icon drawn as an SVG mask in the text colour: the Unicode
+   arrow U+2197 shows as an emoji on iOS */
 a[target="_blank"]::after {
-  content: "\2197";
+  content: "";
   display: inline-block;
-  padding-left: 0.2em;
+  width: 0.7em;
+  height: 0.7em;
+  margin-left: 0.2em;
+  vertical-align: -0.02em;
+  background-color: currentColor;
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12.5 9v3.5a1 1 0 0 1-1 1h-8a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1H7'/%3E%3Cpath d='M10 2.5h3.5V6'/%3E%3Cpath d='M13.5 2.5 7.5 8.5'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='none' stroke='%23000' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12.5 9v3.5a1 1 0 0 1-1 1h-8a1 1 0 0 1-1-1v-8a1 1 0 0 1 1-1H7'/%3E%3Cpath d='M10 2.5h3.5V6'/%3E%3Cpath d='M13.5 2.5 7.5 8.5'/%3E%3C/svg%3E") center / contain no-repeat;
   text-decoration: none;
 }
-a[target="_blank"][href*="joeyhain.org"]::after { content: "\2192"; }
+a[target="_blank"][href*="joeyhain.org"]::after {
+  content: "\2192";
+  width: auto;
+  height: auto;
+  margin-left: 0;
+  padding-left: 0.2em;
+  vertical-align: baseline;
+  background: none;
+  -webkit-mask: none;
+  mask: none;
+}
 
 
 /* body text is justified everywhere */
