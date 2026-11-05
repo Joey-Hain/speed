@@ -205,3 +205,10 @@ footer { margin-top: 1rem; font-size: 0.8rem; color: var(--muted); }
   .legend { justify-content: flex-start; }
   .legend .bar { width: 110px; }
 }
+
+/* Ad below the map (see ads.js). Nothing shows until a slot ID is filled in. */
+.ad { margin: 1.5rem 0; min-height: 280px; }
+.ad[hidden] { display: none; }
+.ad-label { font-size: 0.7rem; color: var(--muted, #666); margin-bottom: 0.25rem; }
+.ad:has(ins[data-ad-status="unfilled"]) { display: none; }
+@media print { .ad { display: none; } }
