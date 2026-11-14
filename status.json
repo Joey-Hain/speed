@@ -1,0 +1,690 @@
+{
+ "fatal": null,
+ "feeds": {
+  "buses": {
+   "fixes": 28818,
+   "fixes_on_line": 26119,
+   "fixes_shared_position": 107,
+   "lines_seen": 345,
+   "off_line": 2677,
+   "polls_ok": 50,
+   "raw_samples": [
+    "id: \"42558_256804_3000_14\" vehicle { trip { trip_id: \"2664801\" start_time: \"06:40:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"3000_14\" } position { latitude: -32.97294 longitude: 151.69218 bearing: 211.0 speed: 11.6 } timestamp: 1794687399 congestion_level: UNKNOWN_CONGESTION_LEVEL vehicle { id: \"42558_256804_3000_14\" label: \"2809\" license_plate: \"MO8040\" } occupancy_status: MANY_SEATS_AVAILABLE }",
+    "id: \"8999_1000495_2447_168\" vehicle { trip { trip_id: \"2688825\" start_time: \"07:00:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"2447_168\" } position { latitude: -32.85997 longitude: 151.31769 bearing: 90.0 speed: 13.4 } timestamp: 1794687408 congestion_level: UNKNOWN_CONGESTION_LEVEL vehicle { id: \"8999_1000495_2447_168\" label: \"9998\" license_plate: \"9998MO\" } occupancy_status: MANY_SEATS_AVAILABLE }",
+    "id: \"43332_225855139_2503_920\" vehicle { trip { trip_id: \"2741606\" start_time: \"06:43:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"2503_920\" } position { latitude: -33.910606 longitude: 151.03532 bearing: 188.0 speed: 12.6 } timestamp: 1794687408 congestion_level: SEVERE_CONGESTION vehicle { id: \"43332_225855139_2503_920\" label: \"5497\" license_plate: \"MO5497\" } occupancy_status: MANY_SEATS_AVAILABLE }"
+   ],
+   "reported_kmh": {
+    "distinct": 277,
+    "max": 101.5,
+    "n": 20000,
+    "p10": 0.0,
+    "p50": 29.9,
+    "p90": 53.6,
+    "zero_share": 0.228
+   },
+   "samples_estimated": 84,
+   "samples_reported": 23873,
+   "shared_position_share": 0.004,
+   "speed_mode": "auto",
+   "speed_nonzero": 19768,
+   "static_source": "/v1/gtfs/schedule/buses",
+   "still_with_speed_field": 1236,
+   "track_circuit_share": 0.0,
+   "vehicles_with_real_speed": 1247,
+   "with_speed": 26119
+  },
+  "ferries-mff": {
+   "errors": [
+    "/v1/gtfs/vehiclepos/ferries/MFF: HTTP 429 {     \"ErrorDetails\":{         \"TransactionId\":\"000001a1c37c9b99-2e80cd2\",        \"ErrorDateTime\":\"2026-11-15T07:16:58.175+11:00\",        \"Message\":\"Your API quota or rate limit has been exceeded. If"
+   ],
+   "fixes": 147,
+   "fixes_on_line": 147,
+   "lines_seen": 1,
+   "polls_failed": 1,
+   "polls_ok": 49,
+   "raw_samples": [
+    "id: \"1004\" vehicle { trip { trip_id: \"MFF.VJ1095\" start_time: \"17:40:00\" start_date: \"20260701\" schedule_relationship: SCHEDULED route_id: \"MFF\" } position { latitude: -33.829357 longitude: 151.27394 bearing: 36.0 speed: 22.0 } current_stop_sequence: 2 current_status: IN_TRANSIT_TO timestamp: 1782892502 congestion_level: RUNNING_SMOOTHLY stop_id: \"209525\" vehicle { id: \"1004\" label: \"Ocean Flyer\" } occupancy_status: NO_DATA_AVAILABLE }",
+    "id: \"1005\" vehicle { trip { trip_id: \"MFF.VJ1053\" start_time: \"17:50:00\" start_date: \"20260701\" schedule_relationship: SCHEDULED route_id: \"MFF\" } position { latitude: -33.814835 longitude: 151.27718 bearing: 190.0 speed: 22.0 } current_stop_sequence: 2 current_status: IN_TRANSIT_TO timestamp: 1782892501 congestion_level: RUNNING_SMOOTHLY stop_id: \"2000235\" vehicle { id: \"1005\" label: \"Ocean Surfer\" } occupancy_status: NO_DATA_AVAILABLE }",
+    "id: \"1003\" vehicle { trip { trip_id: \"MFF.VJ1096\" start_time: \"18:00:00\" start_date: \"20260701\" schedule_relationship: SCHEDULED route_id: \"MFF\" } position { latitude: -33.8598 longitude: 151.2101 bearing: 196.0 speed: 8.0 } current_stop_sequence: 1 current_status: INCOMING_AT timestamp: 1782892267 congestion_level: RUNNING_SMOOTHLY stop_id: \"2000235\" vehicle { id: \"1003\" label: \"Ocean Tracker\" } occupancy_status: NO_DATA_AVAILABLE }"
+   ],
+   "reported_kmh": {
+    "distinct": 2,
+    "max": 79.2,
+    "n": 3,
+    "p10": 28.8,
+    "p50": 79.2,
+    "p90": 79.2,
+    "zero_share": 0.0
+   },
+   "samples_reported": 3,
+   "shared_position_share": 0.0,
+   "speed_mode": "auto",
+   "speed_nonzero": 147,
+   "static_source": "/v1/gtfs/schedule/ferries/MFF",
+   "track_circuit_share": 0.0,
+   "vehicles_with_real_speed": 3,
+   "with_speed": 147
+  },
+  "ferries-sydneyferries": {
+   "fixes": 249,
+   "fixes_on_line": 237,
+   "lines_seen": 4,
+   "polls_ok": 50,
+   "raw_samples": [
+    "id: \"20261115_071643_3\" vehicle { trip { trip_id: \"RV0707-PAR-OUT-SUN.151126.64.0707\" start_time: \"07:07:00\" start_date: \"20261115\" schedule_relationship: REPLACEMENT route_id: \"9-F3-sj2-1\" } position { latitude: -33.86306 longitude: 151.19861 bearing: 162.7 speed: 4.12 } current_stop_sequence: 2 current_status: IN_TRANSIT_TO timestamp: 1794687400 congestion_level: UNKNOWN_CONGESTION_LEVEL stop_id: \"2000229\" vehicle { id: \"Kurt Fearnley\" label: \"07:07am Circular Quay - Parramatta\" license_plate: \"\" } }",
+    "id: \"20261115_071744_1\" vehicle { trip { trip_id: \"ML0640-SUN-IN.151126.64.0710\" start_time: \"07:10:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"9-F1-sj2-1\" } position { latitude: -33.839363 longitude: 151.26237 bearing: 219.0 speed: 12.45 } current_stop_sequence: 2 current_status: IN_TRANSIT_TO timestamp: 1794687460 congestion_level: UNKNOWN_CONGESTION_LEVEL stop_id: \"20951\" vehicle { id: \"Fred Hollows\" label: \"07:10am Manly - Circular Quay\" license_plate: \"\" } }",
+    "id: \"20261115_071744_2\" vehicle { trip { trip_id: \"ML0710-OUT-SUN.151126.64.0710\" start_time: \"07:10:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"9-F1-sj2-1\" } position { latitude: -33.856316 longitude: 151.23991 bearing: 93.5 speed: 11.99 } current_stop_sequence: 2 current_status: IN_TRANSIT_TO timestamp: 1794687460 congestion_level: UNKNOWN_CONGESTION_LEVEL stop_id: \"2000216\" vehicle { id: \"Balmoral\" label: \"07:10am Circular Quay - Manly\" license_plate: \"\" } }"
+   ],
+   "reported_kmh": {
+    "distinct": 135,
+    "max": 47.4,
+    "n": 237,
+    "p10": 0.4,
+    "p50": 18.1,
+    "p90": 43.0,
+    "zero_share": 0.105
+   },
+   "samples_reported": 236,
+   "shared_position_share": 0.0,
+   "speed_mode": "auto",
+   "speed_nonzero": 230,
+   "static_source": "/v1/gtfs/schedule/ferries/sydneyferries",
+   "still_with_speed_field": 3,
+   "track_circuit_share": 0.0,
+   "vehicles_with_real_speed": 8,
+   "with_speed": 237
+  },
+  "lightrail-cbdandsoutheast": {
+   "fixes": 1281,
+   "fixes_on_line": 1281,
+   "fixes_shared_position": 135,
+   "lines_seen": 2,
+   "polls_ok": 100,
+   "raw_samples": [
+    "id: \"0/2026-11-14T20:16:40Z/X02-X22\" vehicle { trip { trip_id: \"50241-70072:1000\" start_time: \"06:47:30\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"1001_L3\" direction_id: 1 } position { latitude: -33.864697 longitude: 151.20737 bearing: 4.0 speed: 5.0 } current_stop_sequence: 13 current_status: IN_TRANSIT_TO timestamp: 1794687400 congestion_level: RUNNING_SMOOTHLY stop_id: \"2000455\" vehicle { id: \"X02-X22\" label: \"X02-X22\" } }",
+    "id: \"1/2026-11-14T20:16:40Z/X09-X54\" vehicle { trip { trip_id: \"50241-70076:1000\" start_time: \"06:55:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"1001_L2\" direction_id: 1 } position { latitude: -33.883526 longitude: 151.20813 bearing: 20.0 speed: 4.0 } current_stop_sequence: 7 current_status: IN_TRANSIT_TO timestamp: 1794687400 congestion_level: CONGESTION stop_id: \"2000448\" vehicle { id: \"X09-X54\" label: \"X09-X54\" } }",
+    "id: \"2/2026-11-14T20:16:40Z/X14-X53\" vehicle { trip { trip_id: \"50241-70078:1000\" start_time: \"07:00:30\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"1001_L3\" direction_id: 0 } position { latitude: -33.885056 longitude: 151.20702 bearing: 200.0 speed: 3.0 } current_stop_sequence: 8 current_status: IN_TRANSIT_TO timestamp: 1794687400 congestion_level: CONGESTION stop_id: \"2000447\" vehicle { id: \"X14-X53\" label: \"X14-X53\" } }"
+   ],
+   "reported_kmh": {
+    "distinct": 15,
+    "max": 50.4,
+    "n": 1276,
+    "p10": 0.0,
+    "p50": 14.4,
+    "p90": 32.4,
+    "zero_share": 0.219
+   },
+   "samples_estimated": 1,
+   "samples_reported": 1270,
+   "shared_position_share": 0.105,
+   "speed_mode": "auto",
+   "speed_nonzero": 1002,
+   "static_source": "/v1/gtfs/schedule/lightrail/cbdandsoutheast",
+   "still_with_speed_field": 38,
+   "track_circuit_share": 0.0,
+   "vehicles_with_real_speed": 16,
+   "with_speed": 1281
+  },
+  "lightrail-innerwest": {
+   "ceiling_without_hop": 2,
+   "errors": [
+    "/v2/gtfs/vehiclepos/lightrail/innerwest: HTTP 429 {     \"ErrorDetails\":{         \"TransactionId\":\"000001a1c37c9b99-2e95e63\",        \"ErrorDateTime\":\"2026-11-15T07:27:02.168+11:00\",        \"Message\":\"Your API quota or rate limit has been exceeded. If"
+   ],
+   "fixes": 1152,
+   "fixes_at_speed_ceiling": 68,
+   "fixes_on_line": 1152,
+   "fixes_shared_position": 61,
+   "lines_seen": 1,
+   "polls_failed": 1,
+   "polls_ok": 199,
+   "raw_samples": [
+    "id: \"233243232\" vehicle { trip { trip_id: \"49193-7024\" start_time: \"07:15:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"IWLR-191\" direction_id: 1 } position { latitude: -33.90511 longitude: 151.1391 bearing: 334.69962 speed: 0.034890037 } current_stop_sequence: 2 current_status: STOPPED_AT timestamp: 1794687409 congestion_level: UNKNOWN_CONGESTION_LEVEL stop_id: \"220364\" vehicle { id: \"604917\" } }",
+    "id: \"233243220\" vehicle { trip { trip_id: \"49193-7023\" start_time: \"07:00:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"IWLR-191\" direction_id: 0 } position { latitude: -33.87723 longitude: 151.18721 bearing: 281.50238 speed: 5.8571787 } current_stop_sequence: 11 current_status: STOPPED_AT timestamp: 1794687408 congestion_level: UNKNOWN_CONGESTION_LEVEL stop_id: \"203782\" vehicle { id: \"582336\" } }",
+    "id: \"233243222\" vehicle { trip { trip_id: \"49193-7025\" start_time: \"07:15:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"IWLR-191\" direction_id: 0 } position { latitude: -33.880447 longitude: 151.20724 bearing: 302.80115 speed: 1.4994959 } current_stop_sequence: 2 current_status: IN_TRANSIT_TO timestamp: 1794687408 congestion_level: UNKNOWN_CONGESTION_LEVEL stop_id: \"2000256\" vehicle { id: \"798600\" } }"
+   ],
+   "reported_kmh": {
+    "distinct": 345,
+    "max": 50.4,
+    "n": 1048,
+    "p10": 0.2,
+    "p50": 10.1,
+    "p90": 43.9,
+    "zero_share": 0.21
+   },
+   "samples_reported": 1043,
+   "shared_position_share": 0.053,
+   "speed_mode": "auto",
+   "speed_nonzero": 1152,
+   "speeds_from_movement": 66,
+   "static_source": "/v1/gtfs/schedule/lightrail/innerwest",
+   "still_with_speed_field": 166,
+   "track_circuit_share": 0.0,
+   "vehicles_with_real_speed": 6,
+   "with_speed": 1152
+  },
+  "lightrail-newcastle": {
+   "fixes": 147,
+   "fixes_on_line": 147,
+   "fixes_shared_position": 59,
+   "lines_seen": 1,
+   "polls_ok": 100,
+   "raw_samples": [
+    "id: \"20261115_071654_1\" vehicle { trip { trip_id: \"69383.141126.96.0715\" start_time: \"07:15:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"NT_NLR\" } position { latitude: -32.9249 longitude: 151.7608 bearing: 120.8 speed: 0.0 } current_stop_sequence: 2 current_status: IN_TRANSIT_TO timestamp: 1794687406 congestion_level: UNKNOWN_CONGESTION_LEVEL stop_id: \"229315\" vehicle { id: \"2151\" label: \"07:15am Newcastle Intg - Newcastle Beach\" license_plate: \"\" } occupancy_status: MANY_SEATS_AVAILABLE }",
+    "id: \"20261115_071654_2\" vehicle { trip { trip_id: \"72542.141126.96.0715\" start_time: \"07:15:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"NT_NLR\" } position { latitude: -32.9264 longitude: 151.7817 bearing: 0.0 speed: 0.0 } current_stop_sequence: 2 current_status: STOPPED_AT timestamp: 1794687405 congestion_level: UNKNOWN_CONGESTION_LEVEL stop_id: \"2300128\" vehicle { id: \"2156\" label: \"07:15am Newcastle Beach - Newcastle Intg\" license_plate: \"\" } occupancy_status: MANY_SEATS_AVAILABLE }",
+    "id: \"20261115_071724_1\" vehicle { trip { trip_id: \"69383.141126.96.0715\" start_time: \"07:15:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"NT_NLR\" } position { latitude: -32.9257 longitude: 151.7632 bearing: 87.2 speed: 0.0 } current_stop_sequence: 2 current_status: IN_TRANSIT_TO timestamp: 1794687436 congestion_level: UNKNOWN_CONGESTION_LEVEL stop_id: \"229315\" vehicle { id: \"2151\" label: \"07:15am Newcastle Intg - Newcastle Beach\" license_plate: \"\" } occupancy_status: MANY_SEATS_AVAILABLE }"
+   ],
+   "reported_kmh": {
+    "distinct": 1,
+    "max": 0.0,
+    "n": 147,
+    "p10": 0.0,
+    "p50": 0.0,
+    "p90": 0.0,
+    "zero_share": 1.0
+   },
+   "samples_estimated": 67,
+   "shared_position_share": 0.401,
+   "speed_mode": "estimated",
+   "static_source": "/v1/gtfs/schedule/lightrail/newcastle",
+   "still_with_speed_field": 10,
+   "track_circuit_share": 0.0,
+   "with_speed": 147
+  },
+  "lightrail-parramatta": {
+   "fixes": 586,
+   "fixes_on_line": 586,
+   "fixes_shared_position": 59,
+   "lines_seen": 1,
+   "polls_ok": 100,
+   "raw_samples": [
+    "id: \"0/2026-11-14T20:16:41Z/2166\" vehicle { trip { trip_id: \"42688-60032:1001\" start_time: \"07:05:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"ISD-17-6720_L4\" direction_id: 0 } position { latitude: -33.817356 longitude: 151.01764 bearing: 219.51 speed: 3.0 } current_stop_sequence: 6 current_status: IN_TRANSIT_TO timestamp: 1794687401 congestion_level: UNKNOWN_CONGESTION_LEVEL stop_id: \"2150124\" vehicle { id: \"2166\" label: \"2166\" } occupancy_status: MANY_SEATS_AVAILABLE }",
+    "id: \"1/2026-11-14T20:16:42Z/2165\" vehicle { trip { trip_id: \"42688-60033:1001\" start_time: \"07:10:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"ISD-17-6720_L4\" direction_id: 1 } position { latitude: -33.80133 longitude: 151.00165 bearing: 63.83 speed: 5.0 } current_stop_sequence: 4 current_status: IN_TRANSIT_TO timestamp: 1794687402 congestion_level: UNKNOWN_CONGESTION_LEVEL stop_id: \"2151159\" vehicle { id: \"2165\" label: \"2165\" } occupancy_status: MANY_SEATS_AVAILABLE }",
+    "id: \"2/2026-11-14T20:16:44Z/2170\" vehicle { trip { trip_id: \"42688-60026:1001\" start_time: \"06:45:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"ISD-17-6720_L4\" direction_id: 1 } position { latitude: -33.782288 longitude: 151.0469 bearing: 41.67 speed: 4.0 } current_stop_sequence: 15 current_status: IN_TRANSIT_TO timestamp: 1794687404 congestion_level: UNKNOWN_CONGESTION_LEVEL stop_id: \"211751\" vehicle { id: \"2170\" label: \"2170\" } occupancy_status: MANY_SEATS_AVAILABLE }"
+   ],
+   "reported_kmh": {
+    "distinct": 19,
+    "max": 68.4,
+    "n": 586,
+    "p10": 0.0,
+    "p50": 18.0,
+    "p90": 46.8,
+    "zero_share": 0.212
+   },
+   "samples_reported": 585,
+   "shared_position_share": 0.101,
+   "speed_mode": "auto",
+   "speed_nonzero": 462,
+   "static_source": "/v1/gtfs/schedule/lightrail/parramatta",
+   "still_with_speed_field": 7,
+   "track_circuit_share": 0.0,
+   "vehicles_with_real_speed": 7,
+   "with_speed": 586
+  },
+  "metro": {
+   "errors": [
+    "/v2/gtfs/vehiclepos/metro: HTTP 429 {     \"ErrorDetails\":{         \"TransactionId\":\"000001a1c37c9b99-2e9ff2c\",        \"ErrorDateTime\":\"2026-11-15T07:32:02.067+11:00\",        \"Message\":\"Your API quota or rate limit has been exceeded. If",
+    "/v2/gtfs/vehiclepos/metro: HTTP 429 {     \"ErrorDetails\":{         \"TransactionId\":\"000001a1c37c9b99-2edb26a\",        \"ErrorDateTime\":\"2026-11-15T08:02:02.067+11:00\",        \"Message\":\"Your API quota or rate limit has been exceeded. If"
+   ],
+   "fixes": 3219,
+   "fixes_on_line": 3219,
+   "fixes_shared_position": 950,
+   "lines_seen": 1,
+   "polls_failed": 2,
+   "polls_ok": 198,
+   "raw_samples": [
+    "id: \"0/2026-11-14T20:16:38Z/RS001\" vehicle { trip { trip_id: \"0275-001-111-003:1000\" start_time: \"07:11:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"SMNW_M1\" direction_id: 0 } position { latitude: -33.920807 longitude: 151.07376 bearing: 68.15 speed: 12.0 } current_stop_sequence: 3 current_status: IN_TRANSIT_TO timestamp: 1794687398 congestion_level: RUNNING_SMOOTHLY stop_id: \"2195141\" vehicle { id: \"RS001\" label: \"RS001\" license_plate: \"RS001\" } occupancy_status: MANY_SEATS_AVAILABLE }",
+    "id: \"1/2026-11-14T20:16:45Z/RS015\" vehicle { trip { trip_id: \"0275-001-155-002:1000\" start_time: \"06:35:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"SMNW_M1\" direction_id: 1 } position { latitude: -33.83021 longitude: 151.20659 bearing: 138.67 speed: 24.0 } current_stop_sequence: 14 current_status: IN_TRANSIT_TO timestamp: 1794687405 congestion_level: RUNNING_SMOOTHLY stop_id: \"2065163\" vehicle { id: \"RS015\" label: \"RS015\" license_plate: \"RS015\" } occupancy_status: MANY_SEATS_AVAILABLE }",
+    "id: \"2/2026-11-14T20:16:44Z/RS031\" vehicle { trip { trip_id: \"0275-001-109-003:1000\" start_time: \"06:51:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"SMNW_M1\" direction_id: 0 } position { latitude: -33.89768 longitude: 151.20023 bearing: 344.73 speed: 10.0 } current_stop_sequence: 11 current_status: IN_TRANSIT_TO timestamp: 1794687404 congestion_level: RUNNING_SMOOTHLY stop_id: \"204471\" vehicle { id: \"RS031\" label: \"RS031\" license_plate: \"RS031\" } occupancy_status: MANY_SEATS_AVAILABLE }"
+   ],
+   "reported_kmh": {
+    "distinct": 29,
+    "max": 100.8,
+    "n": 3099,
+    "p10": 0.0,
+    "p50": 54.0,
+    "p90": 97.2,
+    "zero_share": 0.239
+   },
+   "samples_reported": 3093,
+   "shared_position_share": 0.295,
+   "speed_mode": "auto",
+   "speed_nonzero": 2431,
+   "static_source": "/v2/gtfs/schedule/metro",
+   "still_but_speed_over_5": 37,
+   "still_with_speed_field": 540,
+   "track_circuit_share": 0.0,
+   "vehicles_with_real_speed": 17,
+   "with_speed": 3219
+  },
+  "nswtrains": {
+   "direction_unknown": 335,
+   "fixes": 2782,
+   "fixes_on_line": 2323,
+   "lines_seen": 21,
+   "lines_without_geometry": [
+    "730"
+   ],
+   "no_geometry": 68,
+   "off_line": 56,
+   "polls_ok": 100,
+   "raw_samples": [
+    "id: \"20261115_071704_1\" vehicle { trip { trip_id: \"136.091126.127.0600\" start_time: \"06:00:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"4T.C.136\" } position { latitude: -32.009666 longitude: 151.95819 bearing: 156.0 speed: 0.0 } current_stop_sequence: 9 current_status: IN_TRANSIT_TO timestamp: 1794687342 congestion_level: UNKNOWN_CONGESTION_LEVEL stop_id: \"24224\" vehicle { id: \"TV9400\" label: \"06:00am (136)  Taree Town - Broadmeadow\" license_plate: \"\" } }",
+    "id: \"20261115_071704_4\" vehicle { trip { trip_id: \"164.091126.127.0400\" start_time: \"04:00:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"4T.C.164\" } position { latitude: -28.813473 longitude: 153.39565 bearing: 285.0 speed: 0.0 } current_stop_sequence: 19 current_status: IN_TRANSIT_TO timestamp: 1794687338 congestion_level: UNKNOWN_CONGESTION_LEVEL stop_id: \"247723\" vehicle { id: \"1770MO\" label: \"04:00am (164)  Surfers Paradise - Casino\" license_plate: \"\" } }",
+    "id: \"20261115_071704_6\" vehicle { trip { trip_id: \"328.091126.127.0540\" start_time: \"05:40:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"4T.C.328\" } position { latitude: -29.889486 longitude: 151.733 bearing: 174.0 speed: 0.0 } current_stop_sequence: 6 current_status: IN_TRANSIT_TO timestamp: 1794687347 congestion_level: UNKNOWN_CONGESTION_LEVEL stop_id: \"23701\" vehicle { id: \"TV633C\" label: \"05:40am (328)  Tenterfield - Armidale Town\" license_plate: \"\" } }"
+   ],
+   "reported_kmh": {
+    "distinct": 1,
+    "max": 0.0,
+    "n": 1288,
+    "p10": 0.0,
+    "p50": 0.0,
+    "p90": 0.0,
+    "zero_share": 1.0
+   },
+   "samples_estimated": 1066,
+   "shared_position_share": 0.0,
+   "speed_mode": "auto",
+   "static_source": "/v1/gtfs/schedule/nswtrains",
+   "still_with_speed_field": 22,
+   "track_circuit_share": 0.0,
+   "trips_all_stations": 11,
+   "trips_express": 1,
+   "trips_limited": 2,
+   "vehicles_with_real_speed": 0,
+   "with_speed": 2323
+  },
+  "regionbuses-centralwestandorana": {
+   "fixes": 36,
+   "fixes_on_line": 22,
+   "lines_seen": 3,
+   "off_line": 14,
+   "polls_ok": 25,
+   "raw_samples": [
+    "id: \"1/2026-11-14T20:38:45Z/9656MO\" vehicle { trip { trip_id: \"2624074\" start_time: \"07:40:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"6003_6003_570\" } position { latitude: -32.255333 longitude: 148.62961 bearing: 184.0 odometer: 4779203.0 speed: 10.59 } current_stop_sequence: 1 current_status: INCOMING_AT timestamp: 1794688725 congestion_level: RUNNING_SMOOTHLY stop_id: \"283018\" vehicle { id: \"9656MO\" label: \"3581049656\" license_plate: \"9656MO\" } }",
+    "id: \"1/2026-11-14T20:40:49Z/9656MO\" vehicle { trip { trip_id: \"2624074\" start_time: \"07:40:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"6003_6003_570\" } position { latitude: -32.25627 longitude: 148.62944 bearing: 188.0 odometer: 4779306.0 speed: 6.53 } current_stop_sequence: 2 current_status: IN_TRANSIT_TO timestamp: 1794688849 congestion_level: RUNNING_SMOOTHLY stop_id: \"2830343\" vehicle { id: \"9656MO\" label: \"3581049656\" license_plate: \"9656MO\" } occupancy_status: MANY_SEATS_AVAILABLE }",
+    "id: \"1/2026-11-14T20:42:46Z/9656MO\" vehicle { trip { trip_id: \"2624074\" start_time: \"07:40:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"6003_6003_570\" } position { latitude: -32.251854 longitude: 148.63596 bearing: 85.4 odometer: 4780667.0 speed: 15.84 } current_stop_sequence: 4 current_status: IN_TRANSIT_TO timestamp: 1794688966 congestion_level: RUNNING_SMOOTHLY stop_id: \"28301230\" vehicle { id: \"9656MO\" label: \"3581049656\" license_plate: \"9656MO\" } occupancy_status: MANY_SEATS_AVAILABLE }"
+   ],
+   "reported_kmh": {
+    "distinct": 17,
+    "max": 57.0,
+    "n": 22,
+    "p10": 0.0,
+    "p50": 28.3,
+    "p90": 42.0,
+    "zero_share": 0.227
+   },
+   "samples_reported": 19,
+   "shared_position_share": 0.0,
+   "speed_mode": "auto",
+   "speed_nonzero": 17,
+   "static_source": "/v1/gtfs/schedule/regionbuses/centralwestandorana",
+   "track_circuit_share": 0.0,
+   "vehicles_with_real_speed": 2,
+   "with_speed": 22
+  },
+  "regionbuses-centralwestandorana2": {
+   "fixes": 27,
+   "fixes_on_line": 20,
+   "lines_seen": 2,
+   "off_line": 7,
+   "polls_ok": 25,
+   "raw_samples": [
+    "id: \"0/2026-11-14T20:30:49Z/9623MO\" vehicle { trip { trip_id: \"2624719\" start_time: \"07:30:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"6004_6004_520\" } position { latitude: -33.415554 longitude: 149.57976 bearing: 325.0 odometer: 6075610.0 speed: 8.95 } current_stop_sequence: 2 current_status: IN_TRANSIT_TO timestamp: 1794688249 congestion_level: RUNNING_SMOOTHLY stop_id: \"279598\" vehicle { id: \"9623MO\" label: \"3581229623\" license_plate: \"9623MO\" } occupancy_status: MANY_SEATS_AVAILABLE }",
+    "id: \"0/2026-11-14T20:32:44Z/9623MO\" vehicle { trip { trip_id: \"2624719\" start_time: \"07:30:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"6004_6004_520\" } position { latitude: -33.415253 longitude: 149.57303 bearing: 319.8 odometer: 6076681.0 speed: 2.36 } current_stop_sequence: 5 current_status: IN_TRANSIT_TO timestamp: 1794688364 congestion_level: RUNNING_SMOOTHLY stop_id: \"2795472\" vehicle { id: \"9623MO\" label: \"3581229623\" license_plate: \"9623MO\" } occupancy_status: MANY_SEATS_AVAILABLE }",
+    "id: \"0/2026-11-14T20:34:50Z/9623MO\" vehicle { trip { trip_id: \"2624719\" start_time: \"07:30:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"6004_6004_520\" } position { latitude: -33.412746 longitude: 149.56418 bearing: 329.0 odometer: 6078133.0 speed: 5.86 } current_stop_sequence: 7 current_status: IN_TRANSIT_TO timestamp: 1794688490 congestion_level: RUNNING_SMOOTHLY stop_id: \"2795110\" vehicle { id: \"9623MO\" label: \"3581229623\" license_plate: \"9623MO\" } occupancy_status: MANY_SEATS_AVAILABLE }"
+   ],
+   "reported_kmh": {
+    "distinct": 17,
+    "max": 42.6,
+    "n": 20,
+    "p10": 0.0,
+    "p50": 30.0,
+    "p90": 40.0,
+    "zero_share": 0.2
+   },
+   "samples_reported": 18,
+   "shared_position_share": 0.0,
+   "speed_mode": "auto",
+   "speed_nonzero": 16,
+   "static_source": "/v1/gtfs/schedule/regionbuses/centralwestandorana2",
+   "still_with_speed_field": 1,
+   "track_circuit_share": 0.0,
+   "vehicles_with_real_speed": 1,
+   "with_speed": 20
+  },
+  "regionbuses-farwest": {
+   "lines_seen": 0,
+   "polls_ok": 25,
+   "speed_mode": "auto",
+   "static_source": "/v1/gtfs/schedule/regionbuses/farwest",
+   "vehicles_with_real_speed": 0
+  },
+  "regionbuses-newcastlehunter": {
+   "fixes": 25,
+   "fixes_on_line": 25,
+   "lines_seen": 1,
+   "polls_ok": 25,
+   "raw_samples": [
+    "id: \"0/2026-11-14T20:16:51Z/9584MO\" vehicle { trip { trip_id: \"2480185\" start_time: \"06:42:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"5970_5970_151\" } position { latitude: -32.170467 longitude: 152.502 bearing: 188.0 odometer: 12004461.0 speed: 11.62 } current_stop_sequence: 3 current_status: IN_TRANSIT_TO timestamp: 1794687411 congestion_level: RUNNING_SMOOTHLY stop_id: \"2428133\" vehicle { id: \"9584MO\" label: \"3581149584\" license_plate: \"9584MO\" } occupancy_status: MANY_SEATS_AVAILABLE }",
+    "id: \"0/2026-11-14T20:18:41Z/9584MO\" vehicle { trip { trip_id: \"2480185\" start_time: \"06:42:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"5970_5970_151\" } position { latitude: -32.174484 longitude: 152.49956 odometer: 12005069.0 speed: 0.0 } current_stop_sequence: 3 current_status: STOPPED_AT timestamp: 1794687521 congestion_level: RUNNING_SMOOTHLY stop_id: \"2428133\" vehicle { id: \"9584MO\" label: \"3581149584\" license_plate: \"9584MO\" } occupancy_status: MANY_SEATS_AVAILABLE }",
+    "id: \"0/2026-11-14T20:20:41Z/9584MO\" vehicle { trip { trip_id: \"2480185\" start_time: \"06:42:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"5970_5970_151\" } position { latitude: -32.175484 longitude: 152.49968 bearing: 155.3 odometer: 12005199.0 speed: 12.6 } current_stop_sequence: 4 current_status: IN_TRANSIT_TO timestamp: 1794687641 congestion_level: RUNNING_SMOOTHLY stop_id: \"24281\" vehicle { id: \"9584MO\" label: \"3581149584\" license_plate: \"9584MO\" } occupancy_status: MANY_SEATS_AVAILABLE }"
+   ],
+   "reported_kmh": {
+    "distinct": 22,
+    "max": 97.0,
+    "n": 25,
+    "p10": 0.0,
+    "p50": 55.2,
+    "p90": 85.7,
+    "zero_share": 0.12
+   },
+   "samples_reported": 25,
+   "shared_position_share": 0.0,
+   "speed_mode": "auto",
+   "speed_nonzero": 22,
+   "static_source": "/v1/gtfs/schedule/regionbuses/newcastlehunter",
+   "track_circuit_share": 0.0,
+   "vehicles_with_real_speed": 1,
+   "with_speed": 25
+  },
+  "regionbuses-newenglandnorthwest": {
+   "fixes": 8,
+   "fixes_on_line": 4,
+   "lines_seen": 1,
+   "off_line": 4,
+   "polls_ok": 25,
+   "raw_samples": [
+    "id: \"0/2026-11-14T20:58:42Z/6025MO\" vehicle { trip { trip_id: \"2252363\" start_time: \"08:05:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"5962_5962_481\" } position { latitude: -30.513268 longitude: 151.66733 odometer: 2434.0 speed: 0.0 } current_stop_sequence: 1 current_status: STOPPED_AT timestamp: 1794689922 congestion_level: RUNNING_SMOOTHLY stop_id: \"235012\" vehicle { id: \"6025MO\" label: \"3581666025\" license_plate: \"6025MO\" } }",
+    "id: \"0/2026-11-14T21:00:46Z/6025MO\" vehicle { trip { trip_id: \"2252363\" start_time: \"08:05:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"5962_5962_481\" } position { latitude: -30.513285 longitude: 151.66731 odometer: 2434.0 speed: 0.0 } current_stop_sequence: 1 current_status: STOPPED_AT timestamp: 1794690046 congestion_level: RUNNING_SMOOTHLY stop_id: \"235012\" vehicle { id: \"6025MO\" label: \"3581666025\" license_plate: \"6025MO\" } }",
+    "id: \"0/2026-11-14T21:02:50Z/6025MO\" vehicle { trip { trip_id: \"2252363\" start_time: \"08:05:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"5962_5962_481\" } position { latitude: -30.513268 longitude: 151.66733 odometer: 2434.0 speed: 0.0 } current_stop_sequence: 1 current_status: STOPPED_AT timestamp: 1794690170 congestion_level: RUNNING_SMOOTHLY stop_id: \"235012\" vehicle { id: \"6025MO\" label: \"3581666025\" license_plate: \"6025MO\" } }"
+   ],
+   "reported_kmh": {
+    "distinct": 1,
+    "max": 0.0,
+    "n": 4,
+    "p10": 0.0,
+    "p50": 0.0,
+    "p90": 0.0,
+    "zero_share": 1.0
+   },
+   "shared_position_share": 0.0,
+   "speed_mode": "auto",
+   "static_source": "/v1/gtfs/schedule/regionbuses/newenglandnorthwest",
+   "track_circuit_share": 0.0,
+   "vehicles_with_real_speed": 0,
+   "with_speed": 4
+  },
+  "regionbuses-northcoast": {
+   "fixes": 130,
+   "fixes_on_line": 99,
+   "lines_seen": 6,
+   "off_line": 31,
+   "polls_ok": 25,
+   "raw_samples": [
+    "id: \"0/2026-11-14T20:16:37Z/2459MO\" vehicle { trip { trip_id: \"2633817\" start_time: \"06:56:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"5966_5966_380\" } position { latitude: -29.437675 longitude: 153.35933 odometer: 6687144.0 speed: 0.0 } current_stop_sequence: 11 current_status: STOPPED_AT timestamp: 1794687397 congestion_level: RUNNING_SMOOTHLY stop_id: \"246429\" vehicle { id: \"2459MO\" label: \"3581142459\" license_plate: \"2459MO\" } occupancy_status: MANY_SEATS_AVAILABLE }",
+    "id: \"1/2026-11-14T20:16:19Z/8488MO\" vehicle { trip { trip_id: \"2633731\" start_time: \"07:25:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"5966_5966_380\" } position { latitude: -29.702581 longitude: 152.9383 bearing: 118.0 odometer: 1908194.0 speed: 8.64 } current_stop_sequence: 1 current_status: IN_TRANSIT_TO timestamp: 1794687379 congestion_level: RUNNING_SMOOTHLY stop_id: \"246025\" vehicle { id: \"8488MO\" label: \"3581148488\" license_plate: \"8488MO\" } }",
+    "id: \"1/2026-11-14T20:18:47Z/2459MO\" vehicle { trip { trip_id: \"2633817\" start_time: \"06:56:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"5966_5966_380\" } position { latitude: -29.437775 longitude: 153.3548 bearing: 297.7 odometer: 6687679.0 speed: 10.95 } current_stop_sequence: 12 current_status: IN_TRANSIT_TO timestamp: 1794687527 congestion_level: RUNNING_SMOOTHLY stop_id: \"246430\" vehicle { id: \"2459MO\" label: \"3581142459\" license_plate: \"2459MO\" } occupancy_status: MANY_SEATS_AVAILABLE }"
+   ],
+   "reported_kmh": {
+    "distinct": 75,
+    "max": 103.3,
+    "n": 99,
+    "p10": 0.0,
+    "p50": 38.3,
+    "p90": 85.2,
+    "zero_share": 0.131
+   },
+   "samples_reported": 97,
+   "shared_position_share": 0.0,
+   "speed_mode": "auto",
+   "speed_nonzero": 86,
+   "static_source": "/v1/gtfs/schedule/regionbuses/northcoast",
+   "track_circuit_share": 0.0,
+   "vehicles_with_real_speed": 6,
+   "with_speed": 99
+  },
+  "regionbuses-northcoast2": {
+   "fixes": 273,
+   "fixes_on_line": 197,
+   "lines_seen": 8,
+   "off_line": 76,
+   "polls_ok": 25,
+   "raw_samples": [
+    "id: \"0/2026-11-14T20:16:49Z/9603MO\" vehicle { trip { trip_id: \"2678908\" start_time: \"06:27:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"5955_5955_603\" } position { latitude: -28.342363 longitude: 153.5715 bearing: 180.3 odometer: 8500827.0 speed: 13.16 } current_stop_sequence: 37 current_status: IN_TRANSIT_TO timestamp: 1794687409 congestion_level: RUNNING_SMOOTHLY stop_id: \"248920\" vehicle { id: \"9603MO\" label: \"3581299603\" license_plate: \"9603MO\" } occupancy_status: MANY_SEATS_AVAILABLE }",
+    "id: \"0/2026-11-14T20:18:30Z/9603MO\" vehicle { trip { trip_id: \"2678908\" start_time: \"06:27:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"5955_5955_603\" } position { latitude: -28.356163 longitude: 153.57349 bearing: 175.3 odometer: 8502485.0 speed: 12.5 } current_stop_sequence: 38 current_status: IN_TRANSIT_TO timestamp: 1794687510 congestion_level: RUNNING_SMOOTHLY stop_id: \"248916\" vehicle { id: \"9603MO\" label: \"3581299603\" license_plate: \"9603MO\" } occupancy_status: MANY_SEATS_AVAILABLE }",
+    "id: \"1/2026-11-14T20:18:46Z/1968MO\" vehicle { trip { trip_id: \"2454058\" start_time: \"07:21:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"5955_5955_605\" } position { latitude: -28.172167 longitude: 153.54338 odometer: 8625189.0 speed: 0.46 } current_stop_sequence: 1 current_status: INCOMING_AT timestamp: 1794687526 congestion_level: RUNNING_SMOOTHLY stop_id: \"24852\" vehicle { id: \"1968MO\" label: \"3581291968\" license_plate: \"1968MO\" } occupancy_status: MANY_SEATS_AVAILABLE }"
+   ],
+   "reported_kmh": {
+    "distinct": 118,
+    "max": 93.9,
+    "n": 197,
+    "p10": 0.0,
+    "p50": 26.1,
+    "p90": 54.4,
+    "zero_share": 0.31
+   },
+   "samples_reported": 189,
+   "shared_position_share": 0.0,
+   "speed_mode": "auto",
+   "speed_nonzero": 136,
+   "static_source": "/v1/gtfs/schedule/regionbuses/northcoast2",
+   "still_with_speed_field": 9,
+   "track_circuit_share": 0.0,
+   "vehicles_with_real_speed": 11,
+   "with_speed": 197
+  },
+  "regionbuses-riverinamurray": {
+   "errors": [
+    "/v1/gtfs/vehiclepos/regionbuses/riverinamurray: HTTP 429 {     \"ErrorDetails\":{         \"TransactionId\":\"000001a1c37c9b99-2e8e0e9\",        \"ErrorDateTime\":\"2026-11-15T07:23:02.686+11:00\",        \"Message\":\"Your API quota or rate limit has been exceeded. If",
+    "/v1/gtfs/vehiclepos/regionbuses/riverinamurray: HTTP 429 {     \"ErrorDetails\":{         \"TransactionId\":\"000001a1c37c9b99-2ea1ed5\",        \"ErrorDateTime\":\"2026-11-15T07:33:02.567+11:00\",        \"Message\":\"Your API quota or rate limit has been exceeded. If",
+    "/v1/gtfs/vehiclepos/regionbuses/riverinamurray: HTTP 429 {     \"ErrorDetails\":{         \"TransactionId\":\"000001a1c37c9b99-2eb593b\",        \"ErrorDateTime\":\"2026-11-15T07:43:02.567+11:00\",        \"Message\":\"Your API quota or rate limit has been exceeded. If",
+    "/v1/gtfs/vehiclepos/regionbuses/riverinamurray: HTTP 429 {     \"ErrorDetails\":{         \"TransactionId\":\"000001a1c37c9b99-2edd21c\",        \"ErrorDateTime\":\"2026-11-15T08:03:02.567+11:00\",        \"Message\":\"Your API quota or rate limit has been exceeded. If",
+    "/v1/gtfs/vehiclepos/regionbuses/riverinamurray: HTTP 429 {     \"ErrorDetails\":{         \"TransactionId\":\"000001a1c37c9b99-2ee113c\",        \"ErrorDateTime\":\"2026-11-15T08:05:02.567+11:00\",        \"Message\":\"Your API quota or rate limit has been exceeded. If"
+   ],
+   "fixes": 15,
+   "fixes_on_line": 12,
+   "lines_seen": 3,
+   "off_line": 3,
+   "polls_failed": 7,
+   "polls_ok": 6,
+   "raw_samples": [
+    "id: \"1/2026-11-14T20:52:38Z/4004MO\" vehicle { trip { trip_id: \"2700991\" start_time: \"07:51:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"6014_6014_966\" } position { latitude: -35.07523 longitude: 147.36082 bearing: 274.9 odometer: 67500604.0 speed: 9.36 } current_stop_sequence: 3 current_status: IN_TRANSIT_TO timestamp: 1794689558 congestion_level: RUNNING_SMOOTHLY stop_id: \"2650399\" vehicle { id: \"4004MO\" label: \"3581434004\" license_plate: \"4004MO\" } occupancy_status: MANY_SEATS_AVAILABLE }",
+    "id: \"2/2026-11-14T20:52:34Z/4005MO\" vehicle { trip { trip_id: \"2700977\" start_time: \"07:54:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"6014_6014_962\" } position { latitude: -35.123688 longitude: 147.34195 odometer: 7217.0 speed: 0.0 } current_stop_sequence: 1 current_status: IN_TRANSIT_TO timestamp: 1794689554 congestion_level: RUNNING_SMOOTHLY stop_id: \"265028\" vehicle { id: \"4005MO\" label: \"3581434005\" license_plate: \"4005MO\" } }",
+    "id: \"1/2026-11-14T20:54:44Z/4004MO\" vehicle { trip { trip_id: \"2700991\" start_time: \"07:51:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"6014_6014_966\" } position { latitude: -35.076412 longitude: 147.35297 bearing: 344.6 odometer: 67501639.0 speed: 8.38 } current_stop_sequence: 6 current_status: IN_TRANSIT_TO timestamp: 1794689684 congestion_level: RUNNING_SMOOTHLY stop_id: \"2650314\" vehicle { id: \"4004MO\" label: \"3581434004\" license_plate: \"4004MO\" } occupancy_status: MANY_SEATS_AVAILABLE }"
+   ],
+   "reported_kmh": {
+    "distinct": 9,
+    "max": 49.1,
+    "n": 12,
+    "p10": 0.0,
+    "p50": 30.2,
+    "p90": 42.6,
+    "zero_share": 0.333
+   },
+   "samples_reported": 10,
+   "shared_position_share": 0.0,
+   "speed_mode": "auto",
+   "speed_nonzero": 8,
+   "static_source": "/v1/gtfs/schedule/regionbuses/riverinamurray",
+   "track_circuit_share": 0.0,
+   "vehicles_with_real_speed": 3,
+   "with_speed": 12
+  },
+  "regionbuses-riverinamurray2": {
+   "errors": [
+    "/v1/gtfs/vehiclepos/regionbuses/riverinamurray2: HTTP 429 {     \"ErrorDetails\":{         \"TransactionId\":\"000001a1c37c9b99-2e99db9\",        \"ErrorDateTime\":\"2026-11-15T07:29:02.710+11:00\",        \"Message\":\"Your API quota or rate limit has been exceeded. If",
+    "/v1/gtfs/vehiclepos/regionbuses/riverinamurray2: HTTP 429 {     \"ErrorDetails\":{         \"TransactionId\":\"000001a1c37c9b99-2ebd743\",        \"ErrorDateTime\":\"2026-11-15T07:47:02.612+11:00\",        \"Message\":\"Your API quota or rate limit has been exceeded. If",
+    "/v1/gtfs/vehiclepos/regionbuses/riverinamurray2: HTTP 429 {     \"ErrorDetails\":{         \"TransactionId\":\"000001a1c37c9b99-2ec94e0\",        \"ErrorDateTime\":\"2026-11-15T07:53:02.817+11:00\",        \"Message\":\"Your API quota or rate limit has been exceeded. If",
+    "/v1/gtfs/vehiclepos/regionbuses/riverinamurray2: HTTP 429 {     \"ErrorDetails\":{         \"TransactionId\":\"000001a1c37c9b99-2ecd357\",        \"ErrorDateTime\":\"2026-11-15T07:55:02.818+11:00\",        \"Message\":\"Your API quota or rate limit has been exceeded. If",
+    "/v1/gtfs/vehiclepos/regionbuses/riverinamurray2: HTTP 429 {     \"ErrorDetails\":{         \"TransactionId\":\"000001a1c37c9b99-2ed12bd\",        \"ErrorDateTime\":\"2026-11-15T07:57:02.817+11:00\",        \"Message\":\"Your API quota or rate limit has been exceeded. If"
+   ],
+   "fixes": 1,
+   "lines_seen": 1,
+   "off_line": 1,
+   "polls_failed": 7,
+   "polls_ok": 10,
+   "speed_mode": "auto",
+   "static_source": "/v1/gtfs/schedule/regionbuses/riverinamurray2",
+   "vehicles_with_real_speed": 0
+  },
+  "regionbuses-southeasttablelands": {
+   "lines_seen": 0,
+   "polls_ok": 25,
+   "speed_mode": "auto",
+   "static_source": "/v1/gtfs/schedule/regionbuses/southeasttablelands",
+   "vehicles_with_real_speed": 0
+  },
+  "regionbuses-southeasttablelands2": {
+   "errors": [
+    "/v1/gtfs/vehiclepos/regionbuses/southeasttablelands2: HTTP 429 {     \"ErrorDetails\":{         \"TransactionId\":\"000001a1c37c9b99-2e89a85\",        \"ErrorDateTime\":\"2026-11-15T07:21:03.612+11:00\",        \"Message\":\"Your API quota or rate limit has been exceeded. If"
+   ],
+   "fixes": 48,
+   "fixes_on_line": 48,
+   "lines_seen": 2,
+   "polls_failed": 1,
+   "polls_ok": 24,
+   "raw_samples": [
+    "id: \"0/2026-11-14T20:17:00Z/8627MO\" vehicle { trip { trip_id: \"2578306\" start_time: \"07:32:00\" start_date: \"20261115\" schedule_relationship: REPLACEMENT route_id: \"6015_6015_830\" } position { latitude: -35.384796 longitude: 149.23569 bearing: 214.6 odometer: 5504719.0 speed: 18.67 } current_stop_sequence: 1 current_status: IN_TRANSIT_TO timestamp: 1794687420 congestion_level: RUNNING_SMOOTHLY stop_id: \"2620310\" vehicle { id: \"8627MO\" label: \"3581608627\" license_plate: \"8627MO\" } }",
+    "id: \"1/2026-11-14T20:16:31Z/1522MO\" vehicle { trip { trip_id: \"2633977\" start_time: \"07:29:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"6015_6015_831\" } position { latitude: -35.370693 longitude: 149.2319 odometer: 4872083.0 speed: 0.0 } current_stop_sequence: 1 current_status: IN_TRANSIT_TO timestamp: 1794687391 congestion_level: RUNNING_SMOOTHLY stop_id: \"262024\" vehicle { id: \"1522MO\" label: \"3581601522\" license_plate: \"1522MO\" } occupancy_status: MANY_SEATS_AVAILABLE }",
+    "id: \"0/2026-11-14T20:18:58Z/8627MO\" vehicle { trip { trip_id: \"2578306\" start_time: \"07:32:00\" start_date: \"20261115\" schedule_relationship: REPLACEMENT route_id: \"6015_6015_830\" } position { latitude: -35.403625 longitude: 149.22958 bearing: 198.3 odometer: 5506957.0 speed: 21.24 } current_stop_sequence: 1 current_status: IN_TRANSIT_TO timestamp: 1794687538 congestion_level: RUNNING_SMOOTHLY stop_id: \"2620310\" vehicle { id: \"8627MO\" label: \"3581608627\" license_plate: \"8627MO\" } }"
+   ],
+   "reported_kmh": {
+    "distinct": 29,
+    "max": 79.4,
+    "n": 48,
+    "p10": 0.0,
+    "p50": 15.2,
+    "p90": 68.1,
+    "zero_share": 0.417
+   },
+   "samples_reported": 42,
+   "shared_position_share": 0.0,
+   "speed_mode": "auto",
+   "speed_nonzero": 28,
+   "static_source": "/v1/gtfs/schedule/regionbuses/southeasttablelands2",
+   "still_with_speed_field": 4,
+   "track_circuit_share": 0.0,
+   "vehicles_with_real_speed": 2,
+   "with_speed": 48
+  },
+  "regionbuses-sydneysurrounds": {
+   "fixes": 8,
+   "fixes_on_line": 3,
+   "lines_seen": 1,
+   "off_line": 5,
+   "polls_ok": 25,
+   "raw_samples": [
+    "id: \"0/2026-11-14T21:02:53Z/9600MO\" vehicle { trip { trip_id: \"2553909\" start_time: \"08:31:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"6008_6008_102\" } position { latitude: -34.907673 longitude: 150.5871 bearing: 34.5 odometer: 5345344.0 speed: 1.8 } current_stop_sequence: 1 current_status: IN_TRANSIT_TO timestamp: 1794690173 congestion_level: RUNNING_SMOOTHLY stop_id: \"2540130\" vehicle { id: \"9600MO\" label: \"3581479600\" license_plate: \"9600MO\" } occupancy_status: MANY_SEATS_AVAILABLE }",
+    "id: \"0/2026-11-14T21:04:54Z/9600MO\" vehicle { trip { trip_id: \"2553909\" start_time: \"08:31:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"6008_6008_102\" } position { latitude: -34.911762 longitude: 150.5989 bearing: 188.8 odometer: 5346960.0 speed: 15.99 } current_stop_sequence: 1 current_status: IN_TRANSIT_TO timestamp: 1794690294 congestion_level: RUNNING_SMOOTHLY stop_id: \"2540130\" vehicle { id: \"9600MO\" label: \"3581479600\" license_plate: \"9600MO\" } occupancy_status: MANY_SEATS_AVAILABLE }",
+    "id: \"1/2026-11-14T21:04:47Z/2512MO\" vehicle { trip { trip_id: \"2552659\" start_time: \"08:29:00\" start_date: \"20261115\" schedule_relationship: SCHEDULED route_id: \"6008_6008_102\" } position { latitude: -34.906498 longitude: 150.60233 bearing: 323.7 odometer: 5216848.0 speed: 12.86 } current_stop_sequence: 1 current_status: IN_TRANSIT_TO timestamp: 1794690287 congestion_level: RUNNING_SMOOTHLY stop_id: \"254111\" vehicle { id: \"2512MO\" label: \"3581472512\" license_plate: \"2512MO\" } occupancy_status: MANY_SEATS_AVAILABLE }"
+   ],
+   "reported_kmh": {
+    "distinct": 3,
+    "max": 57.6,
+    "n": 3,
+    "p10": 6.5,
+    "p50": 46.3,
+    "p90": 57.6,
+    "zero_share": 0.0
+   },
+   "samples_reported": 3,
+   "shared_position_share": 0.0,
+   "speed_mode": "auto",
+   "speed_nonzero": 3,
+   "static_source": "/v1/gtfs/schedule/regionbuses/sydneysurrounds",
+   "track_circuit_share": 0.0,
+   "vehicles_with_real_speed": 2,
+   "with_speed": 3
+  },
+  "sydneytrains": {
+   "direction_unknown": 4698,
+   "fixes": 35220,
+   "fixes_bad_position": 10,
+   "fixes_metronet": 438,
+   "fixes_on_line": 20276,
+   "fixes_shared_position": 14677,
+   "fixes_stale": 1138,
+   "fixes_track_circuit": 18431,
+   "lines_seen": 14,
+   "non_timetabled": 3997,
+   "non_timetabled_examples": [
+    {
+     "id": "LE78 Loc",
+     "label": "",
+     "route": "",
+     "sched": 2,
+     "start": "",
+     "trip": "NonTimetabled.722S"
+    },
+    {
+     "id": "SY521 Loc",
+     "label": "",
+     "route": "",
+     "sched": 2,
+     "start": "",
+     "trip": "NonTimetabled.S01S"
+    },
+    {
+     "id": "LE94 Loc",
+     "label": "",
+     "route": "",
+     "sched": 2,
+     "start": "",
+     "trip": "NonTimetabled.540R"
+    },
+    {
+     "id": "SY509 Loc",
+     "label": "",
+     "route": "",
+     "sched": 2,
+     "start": "",
+     "trip": "NonTimetabled.95-S"
+    },
+    {
+     "id": "LE104 Loc",
+     "label": "",
+     "route": "",
+     "sched": 2,
+     "start": "",
+     "trip": "NonTimetabled.60--"
+    },
+    {
+     "id": "NJ10/23 Loc",
+     "label": "",
+     "route": "",
+     "sched": 2,
+     "start": "",
+     "trip": "NonTimetabled.CA06"
+    }
+   ],
+   "off_line": 202,
+   "polls_ok": 200,
+   "raw_samples": [
+    "id: \"4\" vehicle { trip { trip_id: \"N420.2018.102.2.D.10.92896050\" schedule_relationship: SCHEDULED route_id: \"CCN_2a\" } position { latitude: -33.497032 longitude: 151.3066 } timestamp: 1794687409 congestion_level: UNKNOWN_CONGESTION_LEVEL stop_id: \"CentralCoast.N44.0 Loc\" vehicle { id: \"5255.3263.4743.5695.4930.1201.1146.9647.7427.5447\" label: \"05:48 Newcastle Interchange Station to Central Station \" } }",
+    "id: \"11\" vehicle { trip { trip_id: \"W714.2018.102.2.D.6.92898398\" schedule_relationship: SCHEDULED route_id: \"BMT_2\" } position { latitude: -33.833035 longitude: 151.01248 } timestamp: 1794687413 congestion_level: UNKNOWN_CONGESTION_LEVEL stop_id: \"Lidcombe.Granville 1 Loc\" vehicle { id: \"4834.8430.8556.6268.1309.6926\" label: \"05:15 Mount Victoria Station to Central Station \" } occupancy_status: MANY_SEATS_AVAILABLE }",
+    "id: \"12\" vehicle { trip { trip_id: \"W422.2018.102.2.D.10.92895292\" schedule_relationship: SCHEDULED route_id: \"BMT_2\" } position { latitude: -33.70107 longitude: 150.55794 } timestamp: 1794687407 congestion_level: UNKNOWN_CONGESTION_LEVEL stop_id: \"Mountains.SD44 Loc\" vehicle { id: \"8142.2970.9868.7717.4012.1892.4206.9976.4133.4529\" label: \"05:46 Lithgow Station to Central Station \" } }"
+   ],
+   "rejected_fast": 16,
+   "samples_beacon": 26,
+   "samples_estimated": 3958,
+   "shared_position_share": 0.724,
+   "skipped_duplicate_regional": 3654,
+   "skipped_gps_duplicate": 1255,
+   "speed_mode": "estimated",
+   "static_source": "/v1/gtfs/schedule/sydneytrains",
+   "track_circuit_share": 0.909,
+   "trips_all_stations": 191,
+   "trips_express": 39,
+   "trips_limited": 27,
+   "unmatched": 3997
+  }
+ },
+ "finished": "2026-11-14T21:08:13Z",
+ "migrations": [],
+ "minutes": 50.0,
+ "removed_lines": [],
+ "requests": 1430,
+ "samples": 42751,
+ "started": "2026-11-14T20:16:53Z",
+ "stopped": false
+}
