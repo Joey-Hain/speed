@@ -166,6 +166,11 @@ To view the site against local data: `ln -s ../store site/data`, then
   second. The intervals in `feeds.py` come to about 38,000 a day. If you add
   feeds or shorten intervals, keep under the quota or ask TfNSW for a higher
   plan. On a quota error the run stops polling and still saves what it has.
+* **Rare services** don't make branches on their own (a branch needs 10% of
+  the line's trips). To force one, add the end station to `keep_via` in
+  `BRANCH_RULES` (`collector/geometry.py`), as for the Griffith Xplorer on
+  Southern NSW. The next run appends it after the existing branches, so
+  collected totals are kept.
 * **Rebuilding a line** after a real route change: run the workflow with
   `rebuild` set to e.g. `buses:333`. That line's totals restart from zero.
 * **Scheduled workflows pause after 60 days without repo activity.** The

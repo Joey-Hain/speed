@@ -74,6 +74,24 @@ def _compatible(a: dict, b: dict) -> bool:
     return True
 
 
+def _extends(a: dict, b: dict) -> bool:
+    """`a` is `b` with branches added after `b`'s own (BRANCH_RULES keep_via):
+    every segment number of `b` means the same in `a`."""
+    if a.get("segment_m") != b.get("segment_m") or set(a["directions"]) != set(b["directions"]):
+        return False
+    grew = False
+    for d in a["directions"]:
+        ba, bb = a["directions"][d]["branches"], b["directions"][d]["branches"]
+        if len(ba) < len(bb):
+            return False
+        grew |= len(ba) > len(bb)
+        for x, y in zip(ba, bb):
+            if abs(x["length_m"] - y["length_m"]) > 1 or x["lonlat"][0] != y["lonlat"][0] \
+                    or x["lonlat"][-1] != y["lonlat"][-1]:
+                return False
+    return grew
+
+
 # Deltas from an older collector are dropped for the lines a later fix
 # affects, so an old local copy can't bring the bad numbers back.
 # feed or "feed|line" -> lowest collector version accepted (see version.py).
@@ -118,13 +136,16 @@ def merge_delta(delta: Path, store: Path) -> dict:
                 sp.write_text(json.dumps(dg, separators=(",", ":")))
         if sp.exists():
             sg = json.loads(sp.read_text())
+            if _extends(dg, sg):  # branch added after the existing ones: totals still line up
+                sp.write_text(json.dumps(dg, separators=(",", ":")))
+                sg = dg
             if dg.get("geometry_version", 1) > sg.get("geometry_version", 1):
                 # line rebuilt in a newer layout: its old totals don't line up
                 for f in ("speeds.csv", "positions.csv"):
                     (sp.parent / f).unlink(missing_ok=True)
                 sp.write_text(json.dumps(dg, separators=(",", ":")))
                 sg = dg
-            if not _compatible(dg, sg):
+            if not (_compatible(dg, sg) or _extends(sg, dg)):  # (a delta from before a branch was added fits)
                 skipped.append(key)  # built differently elsewhere; don't mix segments
                 continue
             if dg.get("stations_version", 1) > sg.get("stations_version", 1):
@@ -174,7 +195,11 @@ def combine_delta(src: Path, dst: Path):
         sg = json.loads((s_dir / "geometry.json").read_text())
         if (d_dir / "geometry.json").exists():
             dg = json.loads((d_dir / "geometry.json").read_text())
-            if not _compatible(sg, dg):
+            if _extends(sg, dg):  # src has a branch added: its geometry covers dst's totals
+                shutil.copy(s_dir / "geometry.json", d_dir / "geometry.json")
+            elif _extends(dg, sg):
+                pass  # dst already has the added branch; src's segments fit it
+            elif not _compatible(sg, dg):
                 if key in set(sm.get("extended", [])):  # route got longer: carry totals over
                     from .geometry import remap_plan
                     st.remap_line(d_dir, remap_plan(dg, sg, 100))

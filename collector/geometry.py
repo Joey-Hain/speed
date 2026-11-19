@@ -69,6 +69,9 @@ INTERIOR_SPLIT_M = 5000  # see _pieces
 #   join_at:     a branch ending at this station carries on into the one starting there
 #   start_at:    branches start (km 0, the "up" end) at the end nearer this station
 #   minor:       stations that never count as regular stops (see REGULAR_SHARE)
+#   keep_via:    track to these stations always becomes a branch, however few
+#                trips run it; a frozen geometry missing one gets it appended
+#                (existing branches and their totals are left as they are)
 BRANCH_RULES = {
     "sydneytrains:T8": {"exclude_via": ["Sydenham"]},      # via Sydenham ends with the 15/11 timetable
     # Blacktown and Central trains are special workings; the shuttle's down
@@ -86,6 +89,8 @@ BRANCH_RULES = {
     "sydneytrains:BMT": {"minor": ["Zig Zag"]},       # request stop
     "sydneytrains:CCN": {"minor": ["Wondabyne"]},     # request stop
     "nswtrains:North_Coast_NSW": {"minor": ["Eungai"]},  # request stop
+    # the Griffith Xplorer runs a few times a month, far under MIN_BRANCH_SHARE
+    "nswtrains:Southern_NSW": {"keep_via": ["Griffith"]},
 }
 RULE_NEAR_M = 300
 REGULAR_SHARE = 0.3    # a station where this share of passing trips stop is a regular stop;
@@ -680,6 +685,10 @@ def build_updown(static: StaticGtfs, line: str) -> dict | None:
     weights = [days.get(t, 0) for t in trips.trip_id]
     if sum(weights) == 0:  # no usable calendar: count every trip once
         weights = [1] * len(trips)
+    rules = BRANCH_RULES.get(f"{feed.key}:{line}", {})
+    keep = _keep_trips(static, trips, rules)
+    if keep:  # rare services to a kept station still count, even with no run in the window
+        weights = [max(w, 1) if t in keep else w for t, w in zip(trips.trip_id, weights)]
     # a trip's shape can run well past its first and last stop (every T7
     # shuttle uses a shape that carries on to Blacktown), so cut each shape
     # to the stretch its trips actually serve
@@ -701,7 +710,6 @@ def build_updown(static: StaticGtfs, line: str) -> dict | None:
             ml = LineString(to_metric(ll))
             if ml.length >= MIN_NEW_TRACK_M:
                 cands.append((c, ml.length, sid, ll, ml))
-    rules = BRANCH_RULES.get(f"{feed.key}:{line}", {})
     if rules:
         cands = _apply_rules(static, cands, rules)
     if not cands:
@@ -717,7 +725,9 @@ def build_updown(static: StaticGtfs, line: str) -> dict | None:
     cands = [(r, length, sid, ll, ml) for r, (c, length, sid, ll, ml) in zip(runs, cands)]
     # pieces run by a fair share of trips, longest first, so a short working
     # is always met after the branch that contains it
-    busy = [x for x in cands if x[0] >= max(2, MIN_BRANCH_SHARE * total)] or cands
+    kept_pts = [p for p in (_station_points(static, n) for n in rules.get("keep_via", [])) if p is not None]
+    busy = [x for x in cands if x[0] >= max(2, MIN_BRANCH_SHARE * total)
+            or any(shapely.distance(x[4], p).min() <= RULE_NEAR_M for p in kept_pts)] or cands
     busy.sort(key=lambda x: -x[1])
     chosen = []
     for c, length, sid, ll, ml in busy:
@@ -748,6 +758,24 @@ def build_updown(static: StaticGtfs, line: str) -> dict | None:
     order = sorted(range(len(chosen)), key=lambda i: -trips_on[i])
     chosen = [chosen[i] for i in order]
     trips_on = [trips_on[i] for i in order]
+
+    # a kept branch timetabled from partway along another (the Griffith Xplorer
+    # from Goulburn) is carried back along it, so its km count from Central too
+    for i, (c, length, sid, ll, ml) in enumerate(chosen):
+        if not any(shapely.distance(ml, p).min() <= RULE_NEAR_M for p in kept_pts):
+            continue
+        start = shapely.Point(ml.coords[0])
+        for j, other in enumerate(chosen):
+            if j == i or shapely.distance(other[4], start) > tol:
+                continue
+            s0 = float(shapely.line_locate_point(other[4], start))
+            if s0 >= MIN_NEW_TRACK_M:
+                xy = to_metric(other[3])
+                cum = np.concatenate([[0], np.cumsum(np.hypot(*np.diff(xy, axis=0).T))])
+                ll = np.vstack([_cut(other[3], cum, 0, s0)[:-1], ll])
+                ml = LineString(to_metric(ll))
+                chosen[i] = (c, ml.length, sid, ll, ml)
+            break
 
     down_lines = [ch[4] for ch in chosen]
     up_ll = [ch[3][::-1] for ch in chosen]
@@ -918,6 +946,91 @@ def remap_plan(old: dict, new: dict, tol: float = 100) -> dict[str, dict[int, tu
     return plan
 
 
+def _keep_trips(static, trips, rules) -> set:
+    """Trips stopping at a keep_via station."""
+    names = set(rules.get("keep_via", ()))
+    if not names:
+        return set()
+    stops = static.stops()
+    ids = set(stops.index[stops.station.isin(names)])
+    stop_lists = static.all_stop_lists()
+    return {t for t in trips.trip_id if ids.intersection(stop_lists.get(t, ()))}
+
+
+def missing_kept(static: StaticGtfs, data: dict, line: str) -> list[str]:
+    """keep_via stations of an up/down line that none of its frozen branches reaches."""
+    rules = BRANCH_RULES.get(f"{static.feed.key}:{line}", {})
+    if data.get("layout") != "updown" or not rules.get("keep_via"):
+        return []
+    lines = [LineString(to_metric(np.asarray(b["lonlat"], dtype=float)))
+             for b in data["directions"]["down"]["branches"]]
+    out = []
+    for name in rules["keep_via"]:
+        pts = _station_points(static, name)
+        if pts is not None and not any(shapely.distance(ml, pts).min() <= RULE_NEAR_M for ml in lines):
+            out.append(name)
+    return out
+
+
+def _from_trunk(b: dict, existing: list[dict], tol: float) -> dict:
+    """A down branch starting partway along an existing branch (the Griffith
+    Xplorer timetabled from Goulburn) carried back along it to its start, so
+    km count from Central like every other branch. The trunk's stations come
+    with it."""
+    ll = np.asarray(b["lonlat"], dtype=float)
+    start = shapely.Point(to_metric(ll[:1])[0])
+    for e in existing:
+        ell = np.asarray(e["lonlat"], dtype=float)
+        eml = LineString(to_metric(ell))
+        if shapely.distance(eml, start) > tol:
+            continue
+        s0 = float(shapely.line_locate_point(eml, start))
+        if s0 < MIN_NEW_TRACK_M:
+            return b
+        xy = to_metric(ell)
+        cum = np.concatenate([[0], np.cumsum(np.hypot(*np.diff(xy, axis=0).T))])
+        joined = np.vstack([_cut(ell, cum, 0, s0)[:-1], ll])
+        L = LineString(to_metric(joined)).length
+        shift = L - b["length_m"]
+        stations = [x for x in e["stations"] if x["s"] < s0 - RULE_NEAR_M] + \
+                   [{**x, "s": round(x["s"] + shift, 1)} for x in b["stations"]]
+        return {**b, "length_m": round(L, 1), "stations": stations,
+                "lonlat": [[round(float(a), 6), round(float(c), 6)] for a, c in joined]}
+    return b
+
+
+def append_branches(old: dict, new: dict, names: list[str], static: StaticGtfs) -> dict | None:
+    """`old` with the branches of `new` that reach `names` added after its own.
+    Old branches keep their ids, track, stations and draw flags, so their
+    segment numbers (and the totals collected on them) stay valid."""
+    pts = [p for p in (_station_points(static, n) for n in names) if p is not None]
+    tol = max(static.feed.tolerance_m, 50)
+    down = old["directions"]["down"]["branches"]
+    add = []
+    for b in new["directions"]["down"]["branches"]:
+        ml = LineString(to_metric(np.asarray(b["lonlat"], dtype=float)))
+        if any(shapely.distance(ml, p).min() <= RULE_NEAR_M for p in pts):
+            add.append(_from_trunk(b, down, tol))
+    if not add:
+        return None
+    out = json.loads(json.dumps(old))
+    for d in ("down", "up"):
+        branches = out["directions"][d]["branches"]
+        n_old = len(branches)
+        for b in add:
+            if d == "up":  # same track the other way round, km from the far end
+                L = b["length_m"]
+                b = {**b, "lonlat": b["lonlat"][::-1], "stations": sorted(
+                    ({**x, "s": round(L - x["s"], 1)} for x in b["stations"]), key=lambda x: x["s"])}
+            branches.append({**b, "id": len(branches)})
+        lines = [LineString(to_metric(np.asarray(b["lonlat"], dtype=float))) for b in branches]
+        flags = _draw_flags(lines, out["segment_m"], tol)
+        for b, f in list(zip(branches, flags))[n_old:]:
+            b["draw"] = f  # existing branches keep theirs
+    out["built"] = new["built"]
+    return out
+
+
 def geometry_path(store: Path, feed_key: str, line: str) -> Path:
     return store / feed_key / line / "geometry.json"
 
@@ -944,6 +1057,14 @@ def load_or_build(store: Path, static: StaticGtfs, line: str, rebuild: bool = Fa
                 return LineGeometry(new)
         if UPDOWN_ACTIVE and static.feed.mode in UPDOWN_MODES and data.get("geometry_version", 1) < GEOMETRY_VERSION:
             rebuild = True  # moving to the up/down layout: segment numbers change
+        elif missing := missing_kept(static, data, line):
+            # a kept branch (BRANCH_RULES keep_via) the frozen geometry lacks:
+            # add it after the existing branches, which stay exactly as they are
+            new = build_updown(static, line)
+            grown = append_branches(data, new, missing, static) if new else None
+            if grown is not None:
+                p.write_text(json.dumps(grown, separators=(",", ":")))
+                data = grown
     if p.exists() and not rebuild:
         if data.get("stations_version", 1) < STATIONS_VERSION and static.feed.mode in STATION_MODES:
             refresh_stations(static, data)
