@@ -1,0 +1,7 @@
+dir,branch,seg,fixes,tc
+down,0,12,15,0
+down,0,13,3,0
+down,0,14,3,0
+up,0,153,3,0
+up,0,165,3,0
+up,0,166,8,0
